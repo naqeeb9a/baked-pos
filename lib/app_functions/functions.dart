@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 import 'package:baked_pos/utils/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -218,6 +217,9 @@ getTimeSlots(date) async {
 
 getMenu() async {
   try {
+    SharedPreferences loginUser = await SharedPreferences.getInstance();
+    dynamic temp = loginUser.getString("userResponse");
+    userResponse = temp == null ? "" : await json.decode(temp);
     var response = await http.post(Uri.parse(callBackUrl + "/api/searchmenu"),
         body:
             json.encode({"outletid": userResponse["outlet_id"], "term": "all"}),

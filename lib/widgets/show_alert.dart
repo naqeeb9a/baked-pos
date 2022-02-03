@@ -91,7 +91,7 @@ dialogueCustom(
                                   onTap: () async {
                                     if (customColor == myGrey) {
                                       MotionToast.error(
-                                        description: Text("Table Already reserved"),
+                                        description: const Text("Table Already reserved"),
                                         dismissable: true,
                                       ).show(context);
                                     } else if (snapshotTable[indexTable]
@@ -102,7 +102,7 @@ dialogueCustom(
                                                 .toLowerCase() ==
                                             "Floor Manager".toLowerCase()) {
                                       MotionToast.error(
-                                        description: Text("Assign waiter first"),
+                                        description: const Text("Assign waiter first"),
                                         dismissable: true,
                                       ).show(context);
                                     } else {
@@ -130,7 +130,7 @@ dialogueCustom(
                                               .pop();
                                           MotionToast.error(
                                             description:
-                                                Text("Waiter not assigned Check your internet"),
+                                                const Text("Waiter not assigned Check your internet"),
                                             dismissable: true,
                                           ).show(context);
                                         } else {
@@ -148,7 +148,7 @@ dialogueCustom(
                                                 .pop();
                                             MotionToast.error(
                                               description:
-                                                  Text("Table not assigned Check your internet"),
+                                                  const Text("Table not assigned Check your internet"),
                                               dismissable: true,
                                             ).show(context);
                                           } else {
@@ -195,7 +195,7 @@ dialogueCustom(
                                               .pop();
                                           MotionToast.error(
                                             description:
-                                                Text("Table not assigned Check your internet"),
+                                                const Text("Table not assigned Check your internet"),
                                             dismissable: true,
                                           ).show(context);
                                         } else {
@@ -314,7 +314,7 @@ dialogueCustomWaiter(
                             Navigator.of(context, rootNavigator: true).pop();
                             MotionToast.error(
                               description:
-                                  Text("Waiter not assigned Check your internet"),
+                                  const Text("Waiter not assigned Check your internet"),
                               dismissable: true,
                             ).show(context);
                           } else {
@@ -324,7 +324,7 @@ dialogueCustomWaiter(
                               searchDelegate();
                             }
                             MotionToast.success(
-                              description: Text("Waiter assigned"),
+                              description: const Text("Waiter assigned"),
                               dismissable: true,
                             ).show(context);
                           }

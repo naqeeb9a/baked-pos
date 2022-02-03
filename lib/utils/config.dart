@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-const myWhite = Color(0xffffffff);
+const myWhite = Color(0xfff9f9f9);
 const myGrey = Colors.grey;
 const myBrown = Color(0xff684f40);
 const myBlack = Color(0xff000000);
-const myYellow = Color(0xfffdb822);
+const myYellow = Color(0xfffdb821);
 const myGreen = Color(0xFF008000);
 const myRed = Color(0xFFff0000);
 const noColor = Colors.transparent;

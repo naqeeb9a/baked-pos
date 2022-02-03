@@ -82,7 +82,7 @@ class _BasicPageState extends State<BasicPage> with TickerProviderStateMixin {
         child: bodyPage(pageDecider),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
+        type: BottomNavigationBarType.shifting,
         currentIndex: indexPage,
         onTap: (value) {
           if (value == 0) {
@@ -98,22 +98,25 @@ class _BasicPageState extends State<BasicPage> with TickerProviderStateMixin {
             indexPage = value;
           });
         },
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w900),
         unselectedItemColor: myWhite,
         unselectedIconTheme: const IconThemeData(color: myWhite),
         selectedItemColor: myYellow,
-        backgroundColor: myBrown,
         showUnselectedLabels: true,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(LineIcons.home),
+            backgroundColor: Colors.brown.shade400,
+            icon: const Icon(LineIcons.home),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(LineIcons.shoppingCart),
+            backgroundColor: Colors.brown.shade400,
+            icon: const Icon(LineIcons.shoppingCart),
             label: "Cart",
           ),
           BottomNavigationBarItem(
-            icon: Icon(LineIcons.user),
+            backgroundColor: Colors.brown.shade400,
+            icon: const Icon(LineIcons.user),
             label: "Profile",
           ),
         ],

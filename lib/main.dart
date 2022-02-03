@@ -114,7 +114,7 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
             checkLoginStatus(context);
             return loader == true
                 ? Scaffold(
-                    backgroundColor: myBlack,
+                    backgroundColor: myWhite,
                     body: Center(
                       child: LottieBuilder.asset(
                         "assets/loader.json",
@@ -123,6 +123,7 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
                     ),
                   )
                 : Scaffold(
+                    backgroundColor: myWhite,
                     drawerEnableOpenDragGesture: false,
                     endDrawerEnableOpenDragGesture: false,
                     key: _scaffoldKey,

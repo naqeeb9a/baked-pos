@@ -1,9 +1,6 @@
-import 'package:badges/badges.dart';
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/utils/dynamic_sizes.dart';
-import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 bar(
@@ -12,11 +9,11 @@ bar(
   function1 = "",
 }) {
   return AppBar(
-    backgroundColor: myBlack,
+    backgroundColor: myWhite,
     title: Center(
       child: Image.asset(
         "assets/logo.png",
-        color: myWhite,
+        color: myBlack,
         width: dynamicWidth(context, 0.24),
         fit: BoxFit.contain,
         height: dynamicHeight(context, 0.05),

@@ -1,4 +1,3 @@
-
 import 'package:baked_pos/utils/dynamic_sizes.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,7 @@ Widget text(context, text, size, color,
     style: TextStyle(
       color: color,
       fontSize: dynamicWidth(context, size),
-      fontWeight: bold == true ? FontWeight.bold : FontWeight.normal,
+      fontWeight: bold == true ? FontWeight.w900 : FontWeight.normal,
     ),
   );
 }

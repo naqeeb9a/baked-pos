@@ -1,5 +1,3 @@
-
-import 'package:baked_pos/app_functions/bottom_ad_bar.dart';
 import 'package:baked_pos/app_functions/functions.dart';
 import 'package:baked_pos/utils/app_routes.dart';
 import 'package:baked_pos/utils/config.dart';
@@ -280,7 +278,8 @@ Widget drawerItems2(context) {
                         if (response == false) {
                           Navigator.of(context, rootNavigator: true).pop();
                           MotionToast.error(
-                            description: const Text("Server Error or check your internet"),
+                            description: const Text(
+                                "Server Error or check your internet"),
                             dismissable: true,
                           ).show(context);
                         } else {
@@ -331,20 +330,23 @@ cartCards(context, index, function) {
     children: [
       Row(
         children: [
-          Image.network(
-            cartItems[index]["photo"] ??
-                "https://neurologist-ahmedabad.com/wp-content/themes/apexclinic/images/no-image/No-Image-Found-400x264.png",
-            height: dynamicWidth(context, 0.2),
-            width: dynamicWidth(context, 0.15),
-            fit: BoxFit.cover,
-            errorBuilder: (context, yrl, error) {
-              return const Icon(
-                Icons.error,
-                color: myWhite,
-              );
-            },
+          ClipRRect(
+            borderRadius: BorderRadius.circular(dynamicWidth(context, 0.02)),
+            child: Image.network(
+              cartItems[index]["photo"] ??
+                  "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHx8&w=1000&q=80",
+              height: dynamicWidth(context, 0.3),
+              width: dynamicWidth(context, 0.3),
+              fit: BoxFit.cover,
+              errorBuilder: (context, yrl, error) {
+                return const Icon(
+                  Icons.error,
+                  color: myBlack,
+                );
+              },
+            ),
           ),
-          widthBox(context, 0.02),
+          widthBox(context, 0.05),
           FittedBox(
             child: SizedBox(
               width: dynamicWidth(context, 0.3),
@@ -356,12 +358,13 @@ cartCards(context, index, function) {
                     context,
                     cartItems[index]["name"].toString(),
                     0.04,
-                    myWhite,
+                    myBlack,
                   ),
                   heightBox(context, 0.01),
                   Container(
                       width: dynamicWidth(context, 0.25),
                       decoration: BoxDecoration(
+                          color: myGrey.withOpacity(0.3),
                           borderRadius: BorderRadius.circular(
                               dynamicWidth(context, 0.02)),
                           border: Border.all(color: myWhite, width: 1)),
@@ -387,7 +390,7 @@ cartCards(context, index, function) {
                                   width: dynamicWidth(context, .1),
                                   height: dynamicWidth(context, .07),
                                   child: Center(
-                                    child: text(context, "-", 0.04, myYellow,
+                                    child: text(context, "-", 0.04, myBlack,
                                         bold: true,
                                         alignText: TextAlign.center),
                                   )),
@@ -395,7 +398,7 @@ cartCards(context, index, function) {
                             Text(
                               cartItems[index]["qty"].toString(),
                               style: TextStyle(
-                                color: myYellow,
+                                color: myBlack,
                                 fontWeight: FontWeight.bold,
                                 fontSize: dynamicWidth(context, .03),
                               ),
@@ -418,7 +421,7 @@ cartCards(context, index, function) {
                                   width: dynamicWidth(context, .1),
                                   height: dynamicWidth(context, .07),
                                   child: Center(
-                                    child: text(context, "+", 0.04, myYellow,
+                                    child: text(context, "+", 0.04, myBlack,
                                         bold: true,
                                         alignText: TextAlign.center),
                                   )),
@@ -435,12 +438,11 @@ cartCards(context, index, function) {
       InkWell(
         onTap: () {
           cartItems.remove(cartItems[index]);
-          menuRefresh();
           function();
         },
         child: const Icon(
           Icons.close,
-          color: myWhite,
+          color: myBlack,
         ),
       )
     ],
@@ -455,7 +457,7 @@ Widget dividerRowWidgets(context, text1, text2, {check = false}) {
       children: [
         SizedBox(
             width: dynamicWidth(context, 0.2),
-            child: FittedBox(child: text(context, text1, 0.04, myWhite))),
+            child: FittedBox(child: text(context, text1, 0.04, myBlack))),
         check == true
             ? SizedBox(
                 width: dynamicWidth(context, 0.2),
@@ -464,7 +466,7 @@ Widget dividerRowWidgets(context, text1, text2, {check = false}) {
                     context,
                     "$text2",
                     0.04,
-                    myWhite,
+                    myBlack,
                   ),
                 ),
               )
@@ -474,7 +476,7 @@ Widget dividerRowWidgets(context, text1, text2, {check = false}) {
                 },
                 child: Icon(
                   Icons.close_rounded,
-                  color: myWhite,
+                  color: myBlack,
                   size: dynamicWidth(context, .08),
                 ),
               ),

@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: myBrown,
+      backgroundColor: myWhite,
       body: (loading == true)
           ? Center(
               child: LottieBuilder.asset(
@@ -71,20 +71,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Image.asset(
                         "assets/logo.png",
-                        color: myWhite,
+                        color: myBlack,
                         width: dynamicWidth(context, 0.3),
                       ),
                       text(
                         context,
                         "TEAM LOGIN",
                         .08,
-                        myWhite,
+                        myYellow,
                         bold: true,
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          text(context, "Email", .05, myWhite),
+                          text(context, "Email", .05, myBrown),
                           heightBox(context, .01),
                           inputTextField(
                             context,
@@ -92,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             email,
                           ),
                           heightBox(context, .02),
-                          text(context, "Password", .05, myWhite),
+                          text(context, "Password", .05, myBrown),
                           heightBox(context, .01),
                           inputTextField(
                             context,

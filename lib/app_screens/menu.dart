@@ -22,14 +22,18 @@ class MenuPage extends StatefulWidget {
   State<MenuPage> createState() => _MenuPageState();
 }
 
-class _MenuPageState extends State<MenuPage> {
+class _MenuPageState extends State<MenuPage>
+    with AutomaticKeepAliveClientMixin<MenuPage> {
+  @override
+  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     saleIdGlobal = widget.saleId;
     tableNoGlobal = widget.tableNo;
     tableNameGlobal = widget.tableName;
     return Scaffold(
-      backgroundColor: myBlack,
+      backgroundColor: myWhite,
       body: WillPopScope(
         onWillPop: () async {
           if (cartItems.isEmpty) {
@@ -66,12 +70,12 @@ class _MenuPageState extends State<MenuPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  text(context, "Menu", 0.05, myWhite),
+                  text(context, "Menu", 0.07, myBrown, bold: true),
                 ],
               ),
               const Divider(
                 thickness: 1,
-                color: myWhite,
+                color: myBlack,
               ),
               Expanded(
                 child: FutureBuilder(
@@ -103,13 +107,15 @@ class _MenuPageState extends State<MenuPage> {
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
-                                        color: myWhite,
+                                        color: Colors.brown.shade400,
                                         borderRadius: BorderRadius.circular(
                                             dynamicWidth(context, 0.1))),
                                     child: TextFormField(
                                       decoration: InputDecoration(
                                           border: const UnderlineInputBorder(
                                               borderSide: BorderSide.none),
+                                          hintStyle:
+                                              const TextStyle(color: myWhite),
                                           hintText: "Search",
                                           enabled: false,
                                           contentPadding: EdgeInsets.symmetric(
@@ -133,7 +139,7 @@ class _MenuPageState extends State<MenuPage> {
                                               mainAxisSpacing: 10,
                                               childAspectRatio: dynamicWidth(
                                                       context, 0.5) /
-                                                  dynamicWidth(context, 0.5)),
+                                                  dynamicWidth(context, 0.6)),
                                       itemCount: snapshot.data.length,
                                       itemBuilder:
                                           (BuildContext context, int index) {
@@ -168,11 +174,17 @@ class _MenuPageState extends State<MenuPage> {
 menuCards(context, snapshot, index) {
   return Container(
     decoration: BoxDecoration(
-      color: myBrown,
-      borderRadius: BorderRadius.circular(
-        dynamicWidth(context, 0.02),
-      ),
-    ),
+        color: myWhite,
+        borderRadius: BorderRadius.circular(
+          dynamicWidth(context, 0.02),
+        ),
+        boxShadow: [
+          BoxShadow(
+              color: myBrown.withOpacity(0.1),
+              offset: const Offset(1, 1),
+              spreadRadius: 2,
+              blurRadius: 2)
+        ]),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,8 +202,8 @@ menuCards(context, snapshot, index) {
             ),
             child: Image.network(
               snapshot[index]["photo"] ??
-                  "https://neurologist-ahmedabad.com/wp-content/themes/apexclinic/images/no-image/No-Image-Found-400x264.png",
-              height: dynamicWidth(context, 0.2),
+                  "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHx8&w=1000&q=80",
+              height: dynamicWidth(context, 0.3),
               width: dynamicWidth(context, 0.5),
               fit: BoxFit.cover,
               errorBuilder: (context, yrl, error) {
@@ -209,23 +221,16 @@ menuCards(context, snapshot, index) {
           ),
           child: FittedBox(
             clipBehavior: Clip.antiAlias,
-            child: text(
-              context,
-              snapshot[index]["name"],
-              0.03,
-              myWhite,
-            ),
+            child: text(context, snapshot[index]["name"], 0.03, myBrown,
+                bold: true),
           ),
         ),
         Padding(
           padding:
               EdgeInsets.symmetric(horizontal: dynamicWidth(context, 0.02)),
           child: text(
-            context,
-            "Rs ." + snapshot[index]["sale_price"],
-            0.04,
-            myWhite,
-          ),
+              context, "Rs ." + snapshot[index]["sale_price"], 0.04, myYellow,
+              bold: true),
         ),
         Padding(
           padding:
@@ -270,7 +275,7 @@ iconsRow(context, snapshot) {
                     context,
                     cartItems.contains(snapshot) ? "Added" : "Add to Cart",
                     0.04,
-                    cartItems.contains(snapshot) ? myWhite : myBrown,
+                    cartItems.contains(snapshot) ? myBrown : myWhite,
                     alignText: TextAlign.center,
                     bold: true,
                   ),
@@ -278,7 +283,7 @@ iconsRow(context, snapshot) {
                 decoration: BoxDecoration(
                   borderRadius:
                       BorderRadius.circular(dynamicWidth(context, 0.02)),
-                  color: cartItems.contains(snapshot) ? myYellow : myWhite,
+                  color: cartItems.contains(snapshot) ? myYellow : myBrown,
                 ),
               )),
         ),
@@ -297,14 +302,15 @@ class CustomSearchDelegate extends SearchDelegate {
     return ThemeData(
         textSelectionTheme: const TextSelectionThemeData(cursorColor: myWhite),
         inputDecorationTheme: const InputDecorationTheme(
+          hintStyle: TextStyle(color: myWhite),
           enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: myBrown),
+            borderSide: BorderSide(color: noColor),
           ),
           focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: myBrown),
+            borderSide: BorderSide(color: noColor),
           ),
           border: UnderlineInputBorder(
-            borderSide: BorderSide(color: myBrown),
+            borderSide: BorderSide(color: noColor),
           ),
         ),
         textTheme: const TextTheme(
@@ -314,15 +320,20 @@ class CustomSearchDelegate extends SearchDelegate {
             fontWeight: FontWeight.bold,
           ),
         ),
-        appBarTheme: const AppBarTheme(color: myBrown),
-        scaffoldBackgroundColor: myBrown);
+        appBarTheme: AppBarTheme(
+          color: Colors.brown.shade400,
+        ),
+        scaffoldBackgroundColor: myWhite);
   }
 
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: const Icon(Icons.clear),
+        icon: const Icon(
+          Icons.clear,
+          color: myBlack,
+        ),
         onPressed: () {
           query = "";
         },
@@ -333,7 +344,10 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.arrow_back),
+      icon: const Icon(
+        Icons.arrow_back,
+        color: myBlack,
+      ),
       onPressed: () {
         close(context, null);
       },

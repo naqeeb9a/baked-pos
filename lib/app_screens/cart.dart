@@ -4,6 +4,7 @@ import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/utils/dynamic_sizes.dart';
 import 'package:baked_pos/widgets/buttons.dart';
 import 'package:baked_pos/widgets/drawer.dart';
+import 'package:baked_pos/widgets/form_fields.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
+  final phone = TextEditingController();
   @override
   Widget build(BuildContext context) {
     getTotal() {
@@ -36,7 +38,7 @@ class _CartState extends State<Cart> {
     }
 
     return Scaffold(
-      backgroundColor: myBlack,
+      backgroundColor: myWhite,
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: dynamicWidth(context, 0.04),
@@ -47,12 +49,12 @@ class _CartState extends State<Cart> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                text(context, "Your Cart", 0.05, myWhite),
+                text(context, "Your Cart", 0.05, myBrown),
               ],
             ),
             Divider(
               thickness: 1,
-              color: myWhite.withOpacity(0.5),
+              color: myBlack.withOpacity(0.5),
             ),
             Expanded(
                 child: ListView.builder(
@@ -63,7 +65,7 @@ class _CartState extends State<Cart> {
                     vertical: dynamicHeight(context, 0.01),
                   ),
                   child: cartCards(context, index, () {
-                    // changeState(() {});
+                    setState(() {});
                   }),
                 );
               },
@@ -75,10 +77,13 @@ class _CartState extends State<Cart> {
                 "PKR " + ((getTotal() * 0.16) + getTotal()).toStringAsFixed(2),
                 check: true),
             heightBox(context, 0.02),
+            text(context, "Phone number: ", 0.04, myBrown),
+            inputTextField(context, "Phone", phone),
+            heightBox(context, 0.02),
             coloredButton(
               context,
               "Place Order",
-              myGreen,
+              myYellow,
               fontSize: 0.035,
               function: () async {
                 if (cartItems.isEmpty) {
@@ -86,60 +91,19 @@ class _CartState extends State<Cart> {
                     description: const Text("Cart is empty"),
                     dismissable: true,
                   ).show(context);
+                } else if (phone.text.isEmpty) {
+                  MotionToast.info(
+                    description: const Text("No Phone number provided"),
+                    dismissable: true,
+                  ).show(context);
                 } else {
                   CoolAlert.show(
                       context: context,
                       type: CoolAlertType.confirm,
-                      confirmBtnText: "Yes",
-                      backgroundColor: myYellow,
-                      confirmBtnColor: myYellow,
-                      confirmBtnTextStyle: TextStyle(
-                          fontSize: dynamicWidth(context, 0.04),
-                          color: myWhite),
-                      text: userResponse["full_name"]
-                                  .toString()
-                                  .toUpperCase() ==
-                              "FLOORMANAGER"
-                          ? "Order against Table no: $tableNameGlobal by ${userResponse["full_name"].toString().toUpperCase()}"
-                          : "Order against Table no: $tableNameGlobal with assigned waiter ${userResponse["full_name"].toString().toUpperCase()}",
-                      showCancelBtn: true,
-                      onConfirmBtnTap: () async {
-                        Navigator.of(context, rootNavigator: true).pop();
-                        CoolAlert.show(
-                            context: context,
-                            type: CoolAlertType.loading,
-                            barrierDismissible: false,
-                            lottieAsset: "assets/loader.json");
-                        var response = await punchOrder(getTotal(), getCost());
-                        if (response == false) {
-                          Navigator.of(context, rootNavigator: true).pop();
-                          MotionToast.error(
-                            description: const Text(
-                                "Server Error or check your internet"),
-                            dismissable: true,
-                          ).show(context);
-                        } else {
-                          Navigator.of(context, rootNavigator: true).pop();
-                          cartItems.clear();
-                          saleIdGlobal = "";
-                          tableNoGlobal = "";
-
-                          pop(context);
-                          popUntil(globalDineInContext);
-                          globalDineInRefresh();
-                          CoolAlert.show(
-                            title: "Order Placed",
-                            text: "Do you wish to proceed?",
-                            context: context,
-                            loopAnimation: true,
-                            backgroundColor: myYellow,
-                            confirmBtnColor: myYellow,
-                            confirmBtnText: "Continue",
-                            type: CoolAlertType.success,
-                            animType: CoolAlertAnimType.slideInRight,
-                          );
-                        }
-                      });
+                      confirmBtnColor: myBrown,
+                      confirmBtnText: "Via Card",
+                      cancelBtnText: "Via Cash",
+                      backgroundColor: myYellow);
                 }
               },
             ),

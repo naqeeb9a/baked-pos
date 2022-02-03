@@ -14,7 +14,7 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: myBlack,
+      backgroundColor: myWhite,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -28,11 +28,11 @@ class Profile extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: dynamicWidth(context, .12),
-                  backgroundColor: myBrown,
+                  backgroundColor: myGrey.withOpacity(0.3),
                   child: Center(
                     child: LineIcon(
                       LineIcons.user,
-                      color: myWhite,
+                      color: myBlack,
                       size: dynamicHeight(context, .08),
                     ),
                   ),
@@ -52,21 +52,21 @@ class Profile extends StatelessWidget {
                       context,
                       userResponse['designation'],
                       .04,
-                      myWhite,
+                      myBlack,
                     ),
                     heightBox(context, .01),
                     text(
                       context,
                       userResponse['phone'],
                       .04,
-                      myWhite,
+                      myBlack,
                     ),
                     heightBox(context, .01),
                     text(
                       context,
                       userResponse['email_address'],
                       .04,
-                      myWhite,
+                      myBlack,
                     ),
                   ],
                 )
@@ -74,7 +74,7 @@ class Profile extends StatelessWidget {
             ),
           ),
           const Divider(
-            color: myWhite,
+            color: myBlack,
           ),
           heightBox(context, .1),
           Padding(
@@ -109,7 +109,7 @@ class Profile extends StatelessWidget {
               context,
               "Version: $version",
               .034,
-              myWhite,
+              myBlack,
               alignText: TextAlign.center,
             ),
           ),
@@ -128,14 +128,14 @@ Widget profileRow(context, icon, title, {function = ""}) {
         vertical: dynamicWidth(context, 0.02),
         horizontal: dynamicWidth(context, 0.02),
       ),
-      color: myBrown,
+      color: myGrey.withOpacity(0.3),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(children: [
             LineIcon(
               icon,
-              color: myWhite,
+              color: myBlack,
               size: dynamicHeight(context, .04),
             ),
             widthBox(context, .04),
@@ -143,13 +143,13 @@ Widget profileRow(context, icon, title, {function = ""}) {
               context,
               title,
               .044,
-              myWhite,
+              myBlack,
               bold: true,
             ),
           ]),
           LineIcon(
             Icons.arrow_forward_ios,
-            color: myWhite,
+            color: myBlack,
           )
         ],
       ),

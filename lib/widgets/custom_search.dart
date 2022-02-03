@@ -26,7 +26,7 @@ class CustomDineInSearchDelegate extends SearchDelegate {
   @override
   ThemeData appBarTheme(BuildContext context) {
     return ThemeData(
-        textSelectionTheme: const TextSelectionThemeData(cursorColor: myWhite),
+        textSelectionTheme:  const TextSelectionThemeData(cursorColor: myWhite),
         inputDecorationTheme: const InputDecorationTheme(
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: myBrown),
@@ -38,7 +38,7 @@ class CustomDineInSearchDelegate extends SearchDelegate {
             borderSide: BorderSide(color: myBrown),
           ),
         ),
-        textTheme: const TextTheme(
+        textTheme:  const TextTheme(
             headline6: TextStyle(
                 // headline 6 affects the query text
                 color: myWhite,

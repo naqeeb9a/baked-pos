@@ -29,9 +29,7 @@ class _MenuPageState extends State<MenuPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    saleIdGlobal = widget.saleId;
-    tableNoGlobal = widget.tableNo;
-    tableNameGlobal = widget.tableName;
+ 
     return Scaffold(
       backgroundColor: myWhite,
       body: WillPopScope(

@@ -294,7 +294,7 @@ punchOrder(total, cost) async {
         "productname": item["name"],
         "productcode": item["code"],
         "productprice": item["sale_price"],
-        "itemUnitCost": item["cost"] ?? "0",
+        "itemUnitCost": item["cost"] == "" ? "0" : item["cost"],
         "productqty": item["qty"],
         "productimg": item["photo"]
       });
@@ -309,12 +309,12 @@ punchOrder(total, cost) async {
     "total_payable": "$total",
     "total_cost": "$cost",
     "cart": filterFunction(),
-    "table_no": "$tableNoGlobal",
-    "saleid": "$saleIdGlobal"
+    "table_no": "",
+    "saleid": ""
   };
   try {
     var response = await http.post(
-      Uri.parse(callBackUrl + "/api/booking-punch-order"),
+      Uri.parse(callBackUrl + "/api/punch-order"),
       body: json.encode(bodyJson),
       headers: {
         'Content-type': 'application/json',

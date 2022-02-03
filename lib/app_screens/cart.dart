@@ -1,5 +1,4 @@
 import 'package:baked_pos/app_functions/functions.dart';
-import 'package:baked_pos/utils/app_routes.dart';
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/utils/dynamic_sizes.dart';
 import 'package:baked_pos/widgets/buttons.dart';
@@ -32,7 +31,8 @@ class _CartState extends State<Cart> {
     getCost() {
       num cost = 0;
       for (var item in cartItems) {
-        cost += num.parse(item["cost"] ?? "0") * item["qty"];
+        cost +=
+            num.parse(item["cost"] == "" ? "0" : item["cost"]) * item["qty"];
       }
       return cost;
     }
@@ -91,11 +91,6 @@ class _CartState extends State<Cart> {
                     description: const Text("Cart is empty"),
                     dismissable: true,
                   ).show(context);
-                } else if (phone.text.isEmpty) {
-                  MotionToast.info(
-                    description: const Text("No Phone number provided"),
-                    dismissable: true,
-                  ).show(context);
                 } else {
                   CoolAlert.show(
                       context: context,
@@ -103,6 +98,29 @@ class _CartState extends State<Cart> {
                       confirmBtnColor: myBrown,
                       confirmBtnText: "Via Card",
                       cancelBtnText: "Via Cash",
+                      onConfirmBtnTap: () async {
+                        Navigator.of(context, rootNavigator: true).pop();
+                        CoolAlert.show(
+                            context: context,
+                            type: CoolAlertType.loading,
+                            barrierDismissible: false);
+                        var response = await punchOrder(
+                            getTotal().toString(), getCost().toString());
+                        if (response == false) {
+                          Navigator.of(context, rootNavigator: true).pop();
+                          MotionToast.error(
+                            description: const Text(
+                                "Check your internet or try again later"),
+                            dismissable: true,
+                          );
+                        } else {
+                          Navigator.of(context, rootNavigator: true).pop();
+                          MotionToast.success(
+                            description: const Text("Order placed"),
+                            dismissable: true,
+                          );
+                        }
+                      },
                       backgroundColor: myYellow);
                 }
               },

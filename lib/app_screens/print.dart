@@ -9,6 +9,7 @@ import 'package:flutter/material.dart' hide Image;
 import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_basic/flutter_bluetooth_basic.dart';
 import 'package:image/image.dart';
+import 'package:intl/intl.dart';
 
 class Print extends StatefulWidget {
   final List<Map<String, dynamic>> data;
@@ -112,6 +113,13 @@ class _PrintState extends State<Print> {
 
     ticket.text(
       'Lahore, Pakistan.',
+      styles: const PosStyles(align: PosAlign.center, bold: false),
+    );
+
+    ticket.feed(1);
+
+    ticket.text(
+      DateFormat.yMEd().add_jms().format(DateTime.now()),
       styles: const PosStyles(align: PosAlign.center, bold: false),
     );
 

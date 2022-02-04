@@ -50,8 +50,10 @@ dependencies:
   upgrader: ^3.12.1
   back_button_interceptor: ^5.0.2
   esc_pos_bluetooth: ^0.4.1
+#  esc_pos_utils: ^1.1.0
   flutter_bluetooth_basic: ^0.1.7
   image: ^3.1.1
+
 #  firebase_core: ^1.12.0
 #  firebase_messaging: ^11.2.6
 #  flutter_local_notifications: ^9.2.0

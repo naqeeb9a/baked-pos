@@ -99,15 +99,16 @@ class _PrintState extends State<Print> {
     );
   }
 
-  Future<Ticket> _ticket(PaperSize paper) async {
-    final ticket = Ticket(paper);
+  Future<Generator> _ticket(PaperSize paper) async {
+    final profile = await CapabilityProfile.load();
+    final ticket = Generator(paper, profile);
     int total = 0;
 
     // Image assets
     final ByteData data = await rootBundle.load('assets/store.png');
     final Uint8List bytes = data.buffer.asUint8List();
     final Image? image = decodeImage(bytes);
-    ticket.image(image);
+    ticket.image(image!);
 
     ticket.feed(1);
 
@@ -133,8 +134,8 @@ class _PrintState extends State<Print> {
     ticket.feed(1);
 
     ticket.hr(
-      '-',
-      32,
+      len: 32,
+      ch: '-',
     );
 
     for (var i = 0; i < widget.data.length; i++) {
@@ -154,8 +155,8 @@ class _PrintState extends State<Print> {
     ticket.feed(1);
 
     ticket.hr(
-      '-',
-      32,
+      len: 32,
+      ch: '-',
     );
 
     ticket.row([
@@ -185,8 +186,8 @@ class _PrintState extends State<Print> {
     ]);
 
     ticket.hr(
-      '-',
-      32,
+      len: 32,
+      ch: '-',
     );
     ticket.row([
       PosColumn(
@@ -221,8 +222,8 @@ class _PrintState extends State<Print> {
       ),
     ]);
     ticket.hr(
-      '-',
-      32,
+      len: 32,
+      ch: '-',
     );
     ticket.feed(1);
     ticket.text(

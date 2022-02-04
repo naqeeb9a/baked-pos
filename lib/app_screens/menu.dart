@@ -29,7 +29,7 @@ class _MenuPageState extends State<MenuPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
- 
+
     return Scaffold(
       backgroundColor: myWhite,
       body: WillPopScope(
@@ -247,23 +247,42 @@ menuCards(context, snapshot, index) {
 iconsRow(context, snapshot) {
   var quantity = 1;
   return StatefulBuilder(builder: (context, changeState) {
+    var customText = "Add to Cart";
+    var customColor = myWhite;
+    var customColor1 = myBrown;
+    for (var item in cartItems) {
+      if (item["id"] == snapshot["id"]) {
+        customColor = myBrown;
+        customColor1 = myYellow;
+        customText = "Added";
+      }
+    }
     return Row(
       children: [
         Expanded(
           child: GestureDetector(
               onTap: () {
-                if (!cartItems.contains(snapshot)) {
+                if (customColor == myWhite) {
                   snapshot["qty"] = quantity;
                   snapshot['setState'] = () {
                     changeState(() {});
                   };
-                  cartItems.add(snapshot);
 
-                  changeState(() {});
+                  changeState(() {
+                    cartItems.add(snapshot);
+                  });
                 } else {
-                  cartItems.remove(snapshot);
-
-                  changeState(() {});
+                  int count = 0;
+                  int removeIndex = 0;
+                  changeState(() {
+                    for (var item in cartItems) {
+                      if (item["id"] == snapshot["id"]) {
+                        removeIndex = count;
+                      }
+                      count++;
+                    }
+                    cartItems.removeAt(removeIndex);
+                  });
                 }
               },
               child: Container(
@@ -271,9 +290,9 @@ iconsRow(context, snapshot) {
                 child: Center(
                   child: text(
                     context,
-                    cartItems.contains(snapshot) ? "Added" : "Add to Cart",
+                    customText,
                     0.04,
-                    cartItems.contains(snapshot) ? myBrown : myWhite,
+                    customColor,
                     alignText: TextAlign.center,
                     bold: true,
                   ),
@@ -281,7 +300,7 @@ iconsRow(context, snapshot) {
                 decoration: BoxDecoration(
                   borderRadius:
                       BorderRadius.circular(dynamicWidth(context, 0.02)),
-                  color: cartItems.contains(snapshot) ? myYellow : myBrown,
+                  color: customColor1,
                 ),
               )),
         ),

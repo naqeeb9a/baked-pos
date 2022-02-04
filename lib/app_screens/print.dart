@@ -90,7 +90,9 @@ class _PrintState extends State<Print> {
   }
 
   void initPrinter() {
-    _printerManager.startScan(const Duration(seconds: 2));
+    _printerManager.startScan(
+      const Duration(seconds: 2),
+    );
     _printerManager.scanResults.listen((val) {
       if (!mounted) return;
       setState(() => _devices = val);
@@ -135,12 +137,12 @@ class _PrintState extends State<Print> {
       styles: const PosStyles(align: PosAlign.center, bold: false),
     );
 
-    dataBytes += ticket.feed(1);
-
-    dataBytes += ticket.text(
-      'Token Number : 001',
-      styles: const PosStyles(align: PosAlign.center, bold: true),
-    );
+    // dataBytes += ticket.feed(1);
+    //
+    // dataBytes += ticket.text(
+    //   'Token Number : 001',
+    //   styles: const PosStyles(align: PosAlign.center, bold: true),
+    // );
 
     dataBytes += ticket.feed(1);
 
@@ -185,12 +187,15 @@ class _PrintState extends State<Print> {
 
     dataBytes += ticket.row([
       PosColumn(
-        text: 'Sales tax, 16%',
+        text:
+            widget.paymentMethod == "Cash" ? 'Sales tax, 16%' : 'Sales tax, 5%',
         width: 6,
         styles: const PosStyles(bold: false),
       ),
       PosColumn(
-        text: '$total',
+        text: widget.paymentMethod == "Cash"
+            ? (total * 0.16).toStringAsFixed(2)
+            : (total * 0.05).toStringAsFixed(2),
         width: 6,
         styles: const PosStyles(bold: false),
       ),
@@ -211,7 +216,9 @@ class _PrintState extends State<Print> {
         ),
       ),
       PosColumn(
-        text: '$total',
+        text: widget.paymentMethod == "Cash"
+            ? ((total * 0.16) + total).toStringAsFixed(2)
+            : ((total * 0.05) + total).toStringAsFixed(2),
         width: 6,
         styles: const PosStyles(
           bold: true,
@@ -222,12 +229,14 @@ class _PrintState extends State<Print> {
     ]);
     dataBytes += ticket.row([
       PosColumn(
-        text: 'Card',
+        text: widget.paymentMethod,
         width: 6,
         styles: const PosStyles(bold: false),
       ),
       PosColumn(
-        text: '$total',
+        text: widget.paymentMethod == "Cash"
+            ? ((total * 0.16) + total).toStringAsFixed(2)
+            : ((total * 0.05) + total).toStringAsFixed(2),
         width: 6,
         styles: const PosStyles(bold: false),
       ),

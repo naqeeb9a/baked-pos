@@ -48,7 +48,7 @@ class _PrintState extends State<Print> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Print'),
+        productname: const Text('Print'),
       ),
       body: _devices.isEmpty
           ? Center(child: Text(_devicesMsg ?? ''))
@@ -57,13 +57,13 @@ class _PrintState extends State<Print> {
               itemBuilder: (c, i) {
                 return ListTile(
                   leading: const Icon(Icons.print),
-                  title: text(
+                  productname: text(
                     context,
                     _devices[i].name.toString(),
                     .04,
                     myBrown,
                   ),
-                  subtitle: text(
+                  subproductname: text(
                     context,
                     _devices[i].address.toString(),
                     .04,
@@ -138,15 +138,15 @@ class _PrintState extends State<Print> {
     );
 
     for (var i = 0; i < widget.data.length; i++) {
-      total += int.parse(widget.data[i]['total_price']);
+      total += int.parse(widget.data[i]['productprice']);
 
       ticket.row([
         PosColumn(
           text:
-              "${widget.data[i]['title']}\n${widget.data[i]['qty']} x ${widget.data[i]['price']}",
+              "${widget.data[i]['productname']}\n${widget.data[i]['productqty']} x ${widget.data[i]['productprice']}",
           width: 8,
         ),
-        PosColumn(text: '${widget.data[i]['total_price']}', width: 4),
+        PosColumn(text: '${widget.data[i]['productprice']}', width: 4),
       ]);
       ticket.feed(1);
     }

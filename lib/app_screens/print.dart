@@ -48,7 +48,7 @@ class _PrintState extends State<Print> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        productname: const Text('Print'),
+        title: const Text('Print'),
       ),
       body: _devices.isEmpty
           ? Center(child: Text(_devicesMsg ?? ''))
@@ -57,13 +57,13 @@ class _PrintState extends State<Print> {
               itemBuilder: (c, i) {
                 return ListTile(
                   leading: const Icon(Icons.print),
-                  productname: text(
+                  title: text(
                     context,
                     _devices[i].name.toString(),
                     .04,
                     myBrown,
                   ),
-                  subproductname: text(
+                  subtitle: text(
                     context,
                     _devices[i].address.toString(),
                     .04,
@@ -89,8 +89,7 @@ class _PrintState extends State<Print> {
 
   Future<void> _startPrint(PrinterBluetooth printer) async {
     _printerManager.selectPrinter(printer);
-    final result =
-        await _printerManager.printTicket(await _ticket(PaperSize.mm80));
+    final result = await _printerManager.printTicket(_ticket());
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -99,41 +98,42 @@ class _PrintState extends State<Print> {
     );
   }
 
-  Future<Generator> _ticket(PaperSize paper) async {
+  _ticket() async {
     final profile = await CapabilityProfile.load();
-    final ticket = Generator(paper, profile);
+    final ticket = Generator(PaperSize.mm80, profile);
+    List<int> dataBytes = [];
     int total = 0;
 
     // Image assets
     final ByteData data = await rootBundle.load('assets/store.png');
     final Uint8List bytes = data.buffer.asUint8List();
     final Image? image = decodeImage(bytes);
-    ticket.image(image!);
+    dataBytes += ticket.image(image!);
 
-    ticket.feed(1);
+    dataBytes += ticket.feed(1);
 
-    ticket.text(
+    dataBytes += ticket.text(
       'Lahore, Pakistan.',
       styles: const PosStyles(align: PosAlign.center, bold: false),
     );
 
-    ticket.feed(1);
+    dataBytes += ticket.feed(1);
 
-    ticket.text(
+    dataBytes += ticket.text(
       DateFormat.yMEd().add_jms().format(DateTime.now()),
       styles: const PosStyles(align: PosAlign.center, bold: false),
     );
 
-    ticket.feed(1);
+    dataBytes += ticket.feed(1);
 
-    ticket.text(
+    dataBytes += ticket.text(
       'Token Number : 001',
       styles: const PosStyles(align: PosAlign.center, bold: true),
     );
 
-    ticket.feed(1);
+    dataBytes += ticket.feed(1);
 
-    ticket.hr(
+    dataBytes += ticket.hr(
       len: 32,
       ch: '-',
     );
@@ -141,7 +141,7 @@ class _PrintState extends State<Print> {
     for (var i = 0; i < widget.data.length; i++) {
       total += int.parse(widget.data[i]['productprice']);
 
-      ticket.row([
+      dataBytes += ticket.row([
         PosColumn(
           text:
               "${widget.data[i]['productname']}\n${widget.data[i]['productqty']} x ${widget.data[i]['productprice']}",
@@ -149,17 +149,17 @@ class _PrintState extends State<Print> {
         ),
         PosColumn(text: '${widget.data[i]['productprice']}', width: 4),
       ]);
-      ticket.feed(1);
+      dataBytes += ticket.feed(1);
     }
 
-    ticket.feed(1);
+    dataBytes += ticket.feed(1);
 
-    ticket.hr(
+    dataBytes += ticket.hr(
       len: 32,
       ch: '-',
     );
 
-    ticket.row([
+    dataBytes += ticket.row([
       PosColumn(
         text: 'Subtotal',
         width: 6,
@@ -172,7 +172,7 @@ class _PrintState extends State<Print> {
       ),
     ]);
 
-    ticket.row([
+    dataBytes += ticket.row([
       PosColumn(
         text: 'Sales tax, 16%',
         width: 6,
@@ -185,11 +185,11 @@ class _PrintState extends State<Print> {
       ),
     ]);
 
-    ticket.hr(
+    dataBytes += ticket.hr(
       len: 32,
       ch: '-',
     );
-    ticket.row([
+    dataBytes += ticket.row([
       PosColumn(
         text: 'Total',
         width: 6,
@@ -209,7 +209,7 @@ class _PrintState extends State<Print> {
         ),
       ),
     ]);
-    ticket.row([
+    dataBytes += ticket.row([
       PosColumn(
         text: 'Card',
         width: 6,
@@ -221,23 +221,23 @@ class _PrintState extends State<Print> {
         styles: const PosStyles(bold: false),
       ),
     ]);
-    ticket.hr(
+    dataBytes += ticket.hr(
       len: 32,
       ch: '-',
     );
-    ticket.feed(1);
-    ticket.text(
+    dataBytes += ticket.feed(1);
+    dataBytes += ticket.text(
       'Shop # 4, Paf Market, Lahore.',
       styles: const PosStyles(align: PosAlign.center, bold: true),
     );
-    ticket.feed(1);
-    ticket.text(
+    dataBytes += ticket.feed(1);
+    dataBytes += ticket.text(
       'Thank You',
       styles: const PosStyles(align: PosAlign.center, bold: true),
     );
-    ticket.cut();
+    dataBytes += ticket.cut();
 
-    return ticket;
+    return dataBytes;
   }
 
   @override

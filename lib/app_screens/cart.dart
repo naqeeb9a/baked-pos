@@ -1,4 +1,5 @@
-import 'package:baked_pos/app_functions/functions.dart';
+import 'package:baked_pos/app_screens/print.dart';
+import 'package:baked_pos/utils/app_routes.dart';
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/utils/dynamic_sizes.dart';
 import 'package:baked_pos/widgets/buttons.dart';
@@ -92,34 +93,46 @@ class _CartState extends State<Cart> {
                     dismissable: true,
                   ).show(context);
                 } else {
+                  var filteredItems = [];
+                  filterFunction() {
+                    for (var item in cartItems) {
+                      filteredItems.add({
+                        "productid": item["id"],
+                        "productname": item["name"],
+                        "productcode": item["code"],
+                        "productprice": item["sale_price"],
+                        "itemUnitCost": item["cost"] == "" ? "0" : item["cost"],
+                        "productqty": item["qty"],
+                        "productimg": item["photo"]
+                      });
+                    }
+                    return filteredItems;
+                  }
+
+                  filterFunction();
+
                   CoolAlert.show(
                       context: context,
                       type: CoolAlertType.confirm,
                       confirmBtnColor: myBrown,
                       confirmBtnText: "Via Card",
                       cancelBtnText: "Via Cash",
-                      onConfirmBtnTap: () async {
+                      onConfirmBtnTap: () {
                         Navigator.of(context, rootNavigator: true).pop();
-                        CoolAlert.show(
-                            context: context,
-                            type: CoolAlertType.loading,
-                            barrierDismissible: false);
-                        var response = await punchOrder(
-                            getTotal().toString(), getCost().toString());
-                        if (response == false) {
-                          Navigator.of(context, rootNavigator: true).pop();
-                          MotionToast.error(
-                            description: const Text(
-                                "Check your internet or try again later"),
-                            dismissable: true,
-                          );
-                        } else {
-                          Navigator.of(context, rootNavigator: true).pop();
-                          MotionToast.success(
-                            description: const Text("Order placed"),
-                            dismissable: true,
-                          );
-                        }
+
+                        push(context, Print(filteredItems, "Card"));
+                      },
+                      onCancelBtnTap: () {
+                        Navigator.of(context, rootNavigator: true).pop();
+
+                        push(
+                            context,
+                            Print(
+                              filteredItems,
+                              "Cash",
+                              total: getTotal().toString(),
+                              cost: getCost().toString(),
+                            ));
                       },
                       backgroundColor: myYellow);
                 }

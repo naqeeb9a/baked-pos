@@ -1,6 +1,7 @@
 import 'dart:io' show Platform;
 import 'dart:typed_data';
 
+import 'package:baked_pos/app_functions/functions.dart';
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:esc_pos_bluetooth/esc_pos_bluetooth.dart';
@@ -10,11 +11,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_basic/flutter_bluetooth_basic.dart';
 import 'package:image/image.dart';
 import 'package:intl/intl.dart';
+import 'package:motion_toast/motion_toast.dart';
 
 class Print extends StatefulWidget {
-  final List<Map<String, dynamic>> data;
+  final dynamic data, paymentMethod, total, cost;
 
-  const Print(this.data, {Key? key}) : super(key: key);
+  const Print(this.data, this.paymentMethod, {Key? key, this.total, this.cost})
+      : super(key: key);
 
   @override
   _PrintState createState() => _PrintState();
@@ -69,8 +72,16 @@ class _PrintState extends State<Print> {
                     .04,
                     myBrown,
                   ),
-                  onTap: () {
-                    _startPrint(_devices[i]);
+                  onTap: () async {
+                    var response = await punchOrder(widget.total, widget.cost);
+                    if (response == false) {
+                      MotionToast.error(
+                              description: const Text(
+                                  "Check your internet or try again later"))
+                          .show(context);
+                    } else {
+                      _startPrint(_devices[i]);
+                    }
                   },
                 );
               },

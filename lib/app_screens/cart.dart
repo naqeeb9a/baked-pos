@@ -19,6 +19,7 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   final phone = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     getTotal() {
@@ -112,29 +113,31 @@ class _CartState extends State<Cart> {
                   filterFunction();
 
                   CoolAlert.show(
-                      context: context,
-                      type: CoolAlertType.confirm,
-                      confirmBtnColor: myBrown,
-                      confirmBtnText: "Via Card",
-                      cancelBtnText: "Via Cash",
-                      onConfirmBtnTap: () {
-                        Navigator.of(context, rootNavigator: true).pop();
+                    context: context,
+                    type: CoolAlertType.confirm,
+                    confirmBtnColor: myBrown,
+                    confirmBtnText: "Via Card",
+                    cancelBtnText: "Via Cash",
+                    onConfirmBtnTap: () {
+                      Navigator.of(context, rootNavigator: true).pop();
 
-                        push(context, Print(filteredItems, "Card"));
-                      },
-                      onCancelBtnTap: () {
-                        Navigator.of(context, rootNavigator: true).pop();
+                      push(context, Print(filteredItems, "Card"));
+                    },
+                    onCancelBtnTap: () {
+                      Navigator.of(context, rootNavigator: true).pop();
 
-                        push(
-                            context,
-                            Print(
-                              filteredItems,
-                              "Cash",
-                              total: getTotal().toString(),
-                              cost: getCost().toString(),
-                            ));
-                      },
-                      backgroundColor: myYellow);
+                      push(
+                        context,
+                        Print(
+                          filteredItems,
+                          "Cash",
+                          total: getTotal().toString(),
+                          cost: getCost().toString(),
+                        ),
+                      );
+                    },
+                    backgroundColor: myYellow,
+                  );
                 }
               },
             ),

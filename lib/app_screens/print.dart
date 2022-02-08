@@ -1,17 +1,14 @@
-import 'dart:io' show Platform;
-import 'dart:typed_data';
+import 'dart:io' show File;
 
-import 'package:baked_pos/app_functions/functions.dart';
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
-import 'package:esc_pos_bluetooth/esc_pos_bluetooth.dart';
-import 'package:esc_pos_utils/esc_pos_utils.dart';
+import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:flutter/services.dart';
-import 'package:flutter_bluetooth_basic/flutter_bluetooth_basic.dart';
-import 'package:image/image.dart';
 import 'package:intl/intl.dart';
-import 'package:motion_toast/motion_toast.dart';
+import 'package:path_provider/path_provider.dart';
+
+import '../utils/dynamic_sizes.dart';
 
 class Print extends StatefulWidget {
   final dynamic data, paymentMethod, total, cost;
@@ -24,245 +21,140 @@ class Print extends StatefulWidget {
 }
 
 class _PrintState extends State<Print> {
-  final PrinterBluetoothManager _printerManager = PrinterBluetoothManager();
-  List<PrinterBluetooth> _devices = [];
-  String? _devicesMsg;
-  BluetoothManager bluetoothManager = BluetoothManager.instance;
+  List<BluetoothDevice> devices = [];
+  BlueThermalPrinter printer = BlueThermalPrinter.instance;
+  String pathImage = "";
+  int total = 0;
 
   @override
   void initState() {
-    if (Platform.isAndroid) {
-      bluetoothManager.state.listen((val) {
-        if (!mounted) return;
-        if (val == 12) {
-          initPrinter();
-        } else if (val == 10) {
-          setState(() => _devicesMsg = 'Bluetooth Disconnect!');
-        }
-      });
-    } else {
-      initPrinter();
-    }
-
+    getDevices();
     super.initState();
+  }
+
+  initSaveToPath() async {
+    const filename = 'logo200.png';
+    var bytes = await rootBundle.load("assets/logo200.png");
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    writeToFile(bytes, '$dir/$filename');
+    setState(() {
+      pathImage = '$dir/$filename';
+    });
+  }
+
+  Future<void> writeToFile(ByteData data, String path) {
+    final buffer = data.buffer;
+    return File(path).writeAsBytes(
+      buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
+    );
+  }
+
+  getDevices() async {
+    devices = await printer.getBondedDevices();
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Print'),
-      ),
-      body: _devices.isEmpty
-          ? Center(child: Text(_devicesMsg ?? ''))
-          : ListView.builder(
-              itemCount: _devices.length,
-              itemBuilder: (c, i) {
-                return ListTile(
-                  leading: const Icon(Icons.print),
-                  title: text(
-                    context,
-                    _devices[i].name.toString(),
-                    .04,
-                    myBrown,
-                  ),
-                  subtitle: text(
-                    context,
-                    _devices[i].address.toString(),
-                    .04,
-                    myBrown,
-                  ),
-                  onTap: () async {
-                    var response = await punchOrder(widget.total, widget.cost);
-                    if (response == false) {
-                      MotionToast.error(
-                              description: const Text(
-                                  "Check your internet or try again later"))
-                          .show(context);
-                    } else {
-                      _startPrint(_devices[i]);
-                    }
-                  },
-                );
-              },
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: devices.length,
+                itemBuilder: (context, i) {
+                  return ListTile(
+                    leading: Icon(
+                      Icons.print,
+                      color: myBrown,
+                      size: dynamicHeight(context, .046),
+                    ),
+                    title: text(
+                      context,
+                      devices[i].name.toString(),
+                      .04,
+                      myBrown,
+                      bold: true,
+                    ),
+                    subtitle: text(
+                      context,
+                      devices[i].address.toString(),
+                      .034,
+                      myBlack,
+                    ),
+                    onTap: () {
+                      startPrintFunc(devices[i]);
+                    },
+                  );
+                },
+              ),
             ),
-    );
-  }
-
-  void initPrinter() {
-    _printerManager.startScan(
-      const Duration(seconds: 2),
-    );
-    _printerManager.scanResults.listen((val) {
-      if (!mounted) return;
-      setState(() => _devices = val);
-      if (_devices.isEmpty) setState(() => _devicesMsg = 'No Devices');
-    });
-  }
-
-  Future<void> _startPrint(PrinterBluetooth printer) async {
-    _printerManager.selectPrinter(printer);
-    final result = await _printerManager.printTicket(_ticket());
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        content: Text(result.msg),
-      ),
-    );
-  }
-
-  _ticket() async {
-    final profile = await CapabilityProfile.load();
-    final ticket = Generator(PaperSize.mm80, profile);
-    List<int> dataBytes = [];
-    int total = 0;
-
-    // Image assets
-    final ByteData data = await rootBundle.load('assets/store.png');
-    final Uint8List bytes = data.buffer.asUint8List();
-    final Image? image = decodeImage(bytes);
-    dataBytes += ticket.image(image!);
-
-    dataBytes += ticket.feed(1);
-
-    dataBytes += ticket.text(
-      'Lahore, Pakistan.',
-      styles: const PosStyles(align: PosAlign.center, bold: false),
-    );
-
-    dataBytes += ticket.feed(1);
-
-    dataBytes += ticket.text(
-      DateFormat.yMEd().add_jms().format(DateTime.now()),
-      styles: const PosStyles(align: PosAlign.center, bold: false),
-    );
-
-    // dataBytes += ticket.feed(1);
-    //
-    // dataBytes += ticket.text(
-    //   'Token Number : 001',
-    //   styles: const PosStyles(align: PosAlign.center, bold: true),
-    // );
-
-    dataBytes += ticket.feed(1);
-
-    dataBytes += ticket.hr(
-      len: 32,
-      ch: '-',
-    );
-
-    for (var i = 0; i < widget.data.length; i++) {
-      total += int.parse(widget.data[i]['productprice']);
-
-      dataBytes += ticket.row([
-        PosColumn(
-          text:
-              "${widget.data[i]['productname']}\n${widget.data[i]['productqty']} x ${widget.data[i]['productprice']}",
-          width: 8,
+          ],
         ),
-        PosColumn(text: '${widget.data[i]['productprice']}', width: 4),
-      ]);
-      dataBytes += ticket.feed(1);
-    }
-
-    dataBytes += ticket.feed(1);
-
-    dataBytes += ticket.hr(
-      len: 32,
-      ch: '-',
+      ),
     );
+  }
 
-    dataBytes += ticket.row([
-      PosColumn(
-        text: 'Subtotal',
-        width: 6,
-        styles: const PosStyles(bold: true),
-      ),
-      PosColumn(
-        text: '$total',
-        width: 6,
-        styles: const PosStyles(bold: true),
-      ),
-    ]);
+  startPrintFunc(BluetoothDevice selectedDevice) async {
+    await printer.connect(selectedDevice);
+    if ((await printer.isConnected)!) {
+      printer.printImage(pathImage);
+      printer.printCustom("Lahore,Pakistan", 0, 1);
+      printer.printNewLine();
+      printer.printCustom("PNTN #1234", 0, 1);
+      printer.printNewLine();
+      printer.printCustom("Cashier: Abc", 0, 0);
+      printer.printCustom("POS: Abc", 0, 0);
+      printer.printNewLine();
 
-    dataBytes += ticket.row([
-      PosColumn(
-        text:
-            widget.paymentMethod == "Cash" ? 'Sales tax, 16%' : 'Sales tax, 5%',
-        width: 6,
-        styles: const PosStyles(bold: false),
-      ),
-      PosColumn(
-        text: widget.paymentMethod == "Cash"
+      for (var i = 0; i < widget.data.length; i++) {
+        total += int.parse(widget.data[i]['productprice']);
+
+        printer.printLeftRight(
+          "${widget.data[i]['productname']}\n${widget.data[i]['productqty']} x ${widget.data[i]['productprice']}",
+          "${int.parse(widget.data[i]['productprice'].toString()) * int.parse(widget.data[i]['productqty'].toString())}",
+          0,
+        );
+        printer.printNewLine();
+      }
+
+      printer.printNewLine();
+
+      printer.printLeftRight("Subtotal", "$total", 0);
+      printer.printLeftRight(
+        widget.paymentMethod == "Card" ? "Sales tax 16%" : "Sales tax 5%",
+        widget.paymentMethod == "Cash"
             ? (total * 0.16).toStringAsFixed(2)
             : (total * 0.05).toStringAsFixed(2),
-        width: 6,
-        styles: const PosStyles(bold: false),
-      ),
-    ]);
-
-    dataBytes += ticket.hr(
-      len: 32,
-      ch: '-',
-    );
-    dataBytes += ticket.row([
-      PosColumn(
-        text: 'Total',
-        width: 6,
-        styles: const PosStyles(
-          bold: true,
-          height: PosTextSize.size2,
-          width: PosTextSize.size2,
-        ),
-      ),
-      PosColumn(
-        text: widget.paymentMethod == "Cash"
+        0,
+      );
+      printer.printNewLine();
+      printer.printLeftRight(
+        "Total",
+        widget.paymentMethod == "Cash"
             ? ((total * 0.16) + total).toStringAsFixed(2)
             : ((total * 0.05) + total).toStringAsFixed(2),
-        width: 6,
-        styles: const PosStyles(
-          bold: true,
-          height: PosTextSize.size2,
-          width: PosTextSize.size2,
-        ),
-      ),
-    ]);
-    dataBytes += ticket.row([
-      PosColumn(
-        text: widget.paymentMethod,
-        width: 6,
-        styles: const PosStyles(bold: false),
-      ),
-      PosColumn(
-        text: widget.paymentMethod == "Cash"
+        1,
+      );
+      printer.printLeftRight(
+        widget.paymentMethod,
+        widget.paymentMethod == "Cash"
             ? ((total * 0.16) + total).toStringAsFixed(2)
             : ((total * 0.05) + total).toStringAsFixed(2),
-        width: 6,
-        styles: const PosStyles(bold: false),
-      ),
-    ]);
-    dataBytes += ticket.hr(
-      len: 32,
-      ch: '-',
-    );
-    dataBytes += ticket.feed(1);
-    dataBytes += ticket.text(
-      'Shop # 4, Paf Market, Lahore.',
-      styles: const PosStyles(align: PosAlign.center, bold: true),
-    );
-    dataBytes += ticket.feed(1);
-    dataBytes += ticket.text(
-      'Thank You',
-      styles: const PosStyles(align: PosAlign.center, bold: true),
-    );
-    dataBytes += ticket.cut();
-
-    return dataBytes;
+        0,
+      );
+      printer.printNewLine();
+      printer.printCustom("Shop # 6 PAF Market Lahore.", 0, 1);
+      printer.printLeftRight(
+          DateFormat.yMEd().add_jms().format(DateTime.now()), "#1234", 0);
+    }
   }
 
   @override
   void dispose() {
-    _printerManager.stopScan();
+    printer.disconnect();
     super.dispose();
   }
 }

@@ -1,13 +1,17 @@
 import 'dart:io' show Platform;
 
+import 'package:badges/badges.dart';
 import 'package:baked_pos/app_screens/cart.dart';
 import 'package:baked_pos/app_screens/menu.dart';
 import 'package:baked_pos/app_screens/profile.dart';
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:upgrader/upgrader.dart';
+
+import '../utils/dynamic_sizes.dart';
 
 class BasicPage extends StatefulWidget {
   const BasicPage({Key? key}) : super(key: key);
@@ -111,7 +115,20 @@ class _BasicPageState extends State<BasicPage> with TickerProviderStateMixin {
           ),
           BottomNavigationBarItem(
             backgroundColor: Colors.brown.shade400,
-            icon: const Icon(LineIcons.shoppingCart),
+            icon: Obx(() {
+              return Badge(
+                badgeColor: myBlack,
+                badgeContent: Text(
+                  cartItems.length.toString(),
+                  style: TextStyle(
+                    color: myWhite,
+                    fontSize: dynamicWidth(context, 0.024),
+                  ),
+                ),
+                showBadge: cartItems.isEmpty ? false : true,
+                child: const Icon(LineIcons.shoppingCart),
+              );
+            }),
             label: "Cart",
           ),
           BottomNavigationBarItem(

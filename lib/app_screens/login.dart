@@ -9,11 +9,11 @@ import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:lottie/lottie.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
+import '../widgets/essential_widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -55,10 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: myWhite,
       body: (loading == true)
           ? Center(
-              child: LottieBuilder.asset(
-                "assets/loader.json",
-                width: dynamicWidth(context, 0.3),
-              ),
+              child: loader(context),
             )
           : Padding(
               padding:

@@ -6,7 +6,8 @@ import 'package:baked_pos/widgets/buttons.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
+
+import '../widgets/essential_widgets.dart';
 
 class MenuPage extends StatefulWidget {
   final String saleId, tableNo, tableName;
@@ -26,6 +27,7 @@ class _MenuPageState extends State<MenuPage>
     with AutomaticKeepAliveClientMixin<MenuPage> {
   @override
   bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -153,10 +155,7 @@ class _MenuPageState extends State<MenuPage>
                         }
                       }
                     } else {
-                      return LottieBuilder.asset(
-                        "assets/loader.json",
-                        width: dynamicWidth(context, 0.3),
-                      );
+                      return loader(context);
                     }
                   },
                 ),

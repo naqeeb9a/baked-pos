@@ -6,8 +6,10 @@ import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:motion_toast/motion_toast.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../app_functions/functions.dart';
 import '../utils/dynamic_sizes.dart';
 
 class Print extends StatefulWidget {
@@ -57,41 +59,47 @@ class _PrintState extends State<Print> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: devices.length,
-                itemBuilder: (context, i) {
-                  return ListTile(
-                    leading: Icon(
-                      Icons.print,
-                      color: myBrown,
-                      size: dynamicHeight(context, .046),
-                    ),
-                    title: text(
-                      context,
-                      devices[i].name.toString(),
-                      .04,
-                      myBrown,
-                      bold: true,
-                    ),
-                    subtitle: text(
-                      context,
-                      devices[i].address.toString(),
-                      .034,
-                      myBlack,
-                    ),
-                    onTap: () {
-                      startPrintFunc(devices[i]);
-                    },
-                  );
-                },
+      appBar: AppBar(
+        title: const Text('Print Token/Bill'),
+      ),
+      body: SizedBox(
+        width: dynamicWidth(context, 1),
+        height: dynamicHeight(context, 1),
+        child: ListView.builder(
+          itemCount: devices.length,
+          itemBuilder: (context, i) {
+            return ListTile(
+              leading: Icon(
+                Icons.print,
+                color: myBrown,
+                size: dynamicHeight(context, .046),
               ),
-            ),
-          ],
+              title: text(
+                context,
+                devices[i].name.toString(),
+                .04,
+                myBrown,
+                bold: true,
+              ),
+              subtitle: text(
+                context,
+                devices[i].address.toString(),
+                .034,
+                myBlack,
+              ),
+              onTap: () async {
+                var response = await punchOrder(widget.total, widget.cost);
+                if (response == false) {
+                  MotionToast.error(
+                    description:
+                        const Text("Check your internet or try again later"),
+                  ).show(context);
+                } else {
+                  startPrintFunc(devices[i]);
+                }
+              },
+            );
+          },
         ),
       ),
     );

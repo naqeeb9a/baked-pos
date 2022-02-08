@@ -6,7 +6,6 @@ import 'package:baked_pos/utils/dynamic_sizes.dart';
 import 'package:baked_pos/widgets/essential_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_screens/basic_page.dart';
@@ -116,8 +115,8 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
                 ? Scaffold(
                     backgroundColor: myWhite,
                     body: Center(
-                      child: LottieBuilder.asset(
-                        "assets/loader.json",
+                      child: Image.asset(
+                        "assets/loader.gif",
                         width: dynamicWidth(context, 0.3),
                       ),
                     ),

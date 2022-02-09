@@ -5,6 +5,7 @@ import 'package:baked_pos/utils/dynamic_sizes.dart';
 import 'package:baked_pos/widgets/buttons.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:cool_alert/cool_alert.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/essential_widgets.dart';
@@ -79,7 +80,7 @@ class _MenuPageState extends State<MenuPage>
               ),
               Expanded(
                 child: FutureBuilder(
-                  future: getMenu(),
+                  future: getMenuCategories(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (snapshot.data == false) {
@@ -93,65 +94,124 @@ class _MenuPageState extends State<MenuPage>
                                 context, "No Items in Menu", 0.04, myWhite),
                           );
                         } else {
-                          return StatefulBuilder(
-                              builder: (context, changeState) {
-                            return Column(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    showSearch(
-                                      context: context,
-                                      delegate:
-                                          CustomSearchDelegate(snapshot.data),
-                                    ).then((value) => changeState(() {}));
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.brown.shade400,
-                                        borderRadius: BorderRadius.circular(
-                                            dynamicWidth(context, 0.1))),
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                          border: const UnderlineInputBorder(
-                                              borderSide: BorderSide.none),
-                                          hintStyle:
-                                              const TextStyle(color: myWhite),
-                                          hintText: "Search",
-                                          enabled: false,
-                                          contentPadding: EdgeInsets.symmetric(
-                                              horizontal:
-                                                  dynamicWidth(context, 0.05))),
-                                    ),
+                          return ListView.builder(
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, i) {
+                              var category = snapshot.data[i];
+                              return ExpansionTile(
+                                title: Text(
+                                  category['category_name'],
+                                  style: TextStyle(
+                                    color: myBrown,
+                                    fontSize: dynamicWidth(context, .05),
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                heightBox(context, 0.02),
-                                StatefulBuilder(
-                                    builder: (context, changeState) {
-                                  menuRefresh = () {
-                                    changeState(() {});
-                                  };
-                                  return Expanded(
-                                    child: GridView.builder(
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 2,
-                                              crossAxisSpacing: 10,
-                                              mainAxisSpacing: 10,
-                                              childAspectRatio: dynamicWidth(
-                                                      context, 0.5) /
-                                                  dynamicWidth(context, 0.6)),
-                                      itemCount: snapshot.data.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return menuCards(
-                                            context, snapshot.data, index);
+                                iconColor: myYellow,
+                                collapsedIconColor: myBrown,
+                                tilePadding: EdgeInsets.zero,
+                                childrenPadding: EdgeInsets.symmetric(
+                                  horizontal: dynamicWidth(context, .02),
+                                ),
+                                children: [
+                                  SizedBox(
+                                    height: dynamicHeight(context, 1),
+                                    child: ListView.builder(
+                                      itemCount: category['child'].length,
+                                      itemBuilder: (context, j) {
+                                        var subCategory = category['child'][j];
+                                        return ExpansionTile(
+                                          title: Text(
+                                            subCategory['category_name'],
+                                            style: TextStyle(
+                                              color: myBrown,
+                                              fontSize:
+                                                  dynamicWidth(context, .046),
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          iconColor: myYellow,
+                                          collapsedIconColor: myBrown,
+                                          tilePadding: EdgeInsets.zero,
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                showSearch(
+                                                  context: context,
+                                                  delegate:
+                                                      CustomSearchDelegate(
+                                                          snapshot.data),
+                                                ).then(
+                                                  (value) => setState(() {}),
+                                                );
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color:
+                                                        Colors.brown.shade400,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            dynamicWidth(
+                                                                context, 0.1))),
+                                                child: TextFormField(
+                                                  decoration: InputDecoration(
+                                                      border:
+                                                          const UnderlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide
+                                                                      .none),
+                                                      hintStyle:
+                                                          const TextStyle(
+                                                              color: myWhite),
+                                                      hintText: "Search",
+                                                      enabled: false,
+                                                      contentPadding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal:
+                                                                  dynamicWidth(
+                                                                      context,
+                                                                      0.05))),
+                                                ),
+                                              ),
+                                            ),
+                                            heightBox(context, 0.02),
+                                            SizedBox(
+                                              height:
+                                                  dynamicHeight(context, .5),
+                                              child: GridView.builder(
+                                                gridDelegate:
+                                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisCount: 2,
+                                                  crossAxisSpacing: 10,
+                                                  mainAxisSpacing: 10,
+                                                  childAspectRatio:
+                                                      dynamicWidth(
+                                                              context, 0.5) /
+                                                          dynamicWidth(
+                                                              context, 0.6),
+                                                ),
+                                                itemCount:
+                                                    subCategory['item'].length,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return menuCards(
+                                                    context,
+                                                    subCategory['item'],
+                                                    index,
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        );
                                       },
                                     ),
-                                  );
-                                }),
-                              ],
-                            );
-                          });
+                                  )
+                                ],
+                              );
+                            },
+                          );
                         }
                       }
                     } else {
@@ -395,7 +455,9 @@ class CustomSearchDelegate extends SearchDelegate {
               ),
               itemCount: matchQuery.length,
               itemBuilder: (BuildContext context, int index) {
-                return menuCards(context, matchQuery, index);
+                return SizedBox();
+
+                // return menuCards(context, matchQuery, index);
               },
             ),
           );
@@ -425,7 +487,8 @@ class CustomSearchDelegate extends SearchDelegate {
               ),
               itemCount: matchQuery.length,
               itemBuilder: (BuildContext context, int index) {
-                return menuCards(context, matchQuery, index);
+                return SizedBox();
+                // return menuCards(context, matchQuery, index);
               },
             ),
           ); // ListTile

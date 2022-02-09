@@ -1,8 +1,6 @@
-
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/utils/dynamic_sizes.dart';
 import 'package:baked_pos/widgets/buttons.dart';
-import 'package:baked_pos/widgets/buttons_column.dart';
 import 'package:baked_pos/widgets/custom_search.dart';
 import 'package:baked_pos/widgets/essential_widgets.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
@@ -245,11 +243,11 @@ Widget tableCardsExtension(
                   text(
                       context,
                       "Time: ",
-                          // getConvertedTime(
-                          //     snapshotTable[indexTable]["opening_time"]) +
-                          // " - " +
-                          // getConvertedTime(
-                          //     snapshotTable[indexTable]["closing_time"]),
+                      // getConvertedTime(
+                      //     snapshotTable[indexTable]["opening_time"]) +
+                      // " - " +
+                      // getConvertedTime(
+                      //     snapshotTable[indexTable]["closing_time"]),
                       0.035,
                       myWhite),
                   text(
@@ -259,28 +257,19 @@ Widget tableCardsExtension(
                       0.035,
                       myWhite),
                   text(
-                      context,
-                      snapshotTable[indexTable]["usage_status"].toString() ==
-                              "dine_in"
-                          ? "Status: Dine In"
-                          : "Status: " +
-                              snapshotTable[indexTable]["usage_status"]
-                                  .toString(),
-                      0.035,
-                      myWhite),
+                    context,
+                    snapshotTable[indexTable]["usage_status"].toString() ==
+                            "dine_in"
+                        ? "Status: Dine In"
+                        : "Status: " +
+                            snapshotTable[indexTable]["usage_status"]
+                                .toString(),
+                    0.035,
+                    myWhite,
+                  ),
                 ],
               ),
             ),
-            buttonsColumn(
-                context,
-                buttonText1,
-                buttonText2,
-                snapshotTable,
-                indexTable,
-                assignTable,
-                function,
-                visibleButton,
-                searchDelegate)
           ],
         )
       ],

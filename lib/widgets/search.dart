@@ -3,6 +3,8 @@ import 'package:baked_pos/utils/dynamic_sizes.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 
+import 'menu_cards.dart';
+
 class CustomSearchDelegate extends SearchDelegate {
   dynamic menu;
 
@@ -86,13 +88,11 @@ class CustomSearchDelegate extends SearchDelegate {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 childAspectRatio:
-                    dynamicWidth(context, 0.5) / dynamicWidth(context, 0.5),
+                    dynamicWidth(context, 0.5) / dynamicWidth(context, 0.6),
               ),
               itemCount: matchQuery.length,
               itemBuilder: (BuildContext context, int index) {
-                return const SizedBox();
-
-                // return menuCards(context, matchQuery, index);
+                return menuCards(context, matchQuery, index);
               },
             ),
           );
@@ -118,12 +118,11 @@ class CustomSearchDelegate extends SearchDelegate {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 childAspectRatio:
-                    dynamicWidth(context, 0.5) / dynamicWidth(context, 0.5),
+                    dynamicWidth(context, 0.5) / dynamicWidth(context, 0.6),
               ),
               itemCount: matchQuery.length,
               itemBuilder: (BuildContext context, int index) {
-                return const SizedBox();
-                // return menuCards(context, matchQuery, index);
+                return menuCards(context, matchQuery, index);
               },
             ),
           ); // ListTile

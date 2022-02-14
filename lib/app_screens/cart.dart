@@ -33,8 +33,10 @@ class _CartState extends State<Cart> {
     getCost() {
       num cost = 0;
       for (var item in cartItems) {
-        cost +=
-            num.parse(item["cost"] == "" ? "0" : item["cost"]) * item["qty"];
+        cost += num.parse(item["cost"] == "" || item["cost"] == null
+                ? "0"
+                : item["cost"]) *
+            item["qty"];
       }
       return cost;
     }
@@ -121,7 +123,14 @@ class _CartState extends State<Cart> {
                     onConfirmBtnTap: () {
                       Navigator.of(context, rootNavigator: true).pop();
 
-                      push(context, Print(filteredItems, "Card"));
+                      push(
+                          context,
+                          Print(
+                            filteredItems,
+                            "Card",
+                            total: getTotal().toString(),
+                            cost: getCost().toString(),
+                          ));
                     },
                     onCancelBtnTap: () {
                       Navigator.of(context, rootNavigator: true).pop();

@@ -378,12 +378,11 @@ cartCards(context, index, function) {
                                 if (int.parse(
                                         cartItems[index]["qty"].toString()) >
                                     1) {
-                                  changeState(() {
-                                    var value = int.parse(
-                                        cartItems[index]["qty"].toString());
-                                    value--;
-                                    cartItems[index]["qty"] = value;
-                                  });
+                                  var value = int.parse(
+                                      cartItems[index]["qty"].toString());
+                                  value--;
+                                  cartItems[index]["qty"] = value;
+                                  function();
                                 }
                               },
                               child: SizedBox(
@@ -409,12 +408,11 @@ cartCards(context, index, function) {
                                 if (int.parse(
                                         cartItems[index]["qty"].toString()) <
                                     30) {
-                                  changeState(() {
-                                    var value = int.parse(
-                                        cartItems[index]["qty"].toString());
-                                    value++;
-                                    cartItems[index]["qty"] = value;
-                                  });
+                                  var value = int.parse(
+                                      cartItems[index]["qty"].toString());
+                                  value++;
+                                  cartItems[index]["qty"] = value;
+                                  function();
                                 }
                               },
                               child: SizedBox(

@@ -91,7 +91,7 @@ punchOrder(total, cost) async {
     var jsonData = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      return jsonData["data"];
+      return jsonData["data"]["sale_no"];
     } else {
       return false;
     }

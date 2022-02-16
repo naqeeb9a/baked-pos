@@ -74,10 +74,10 @@ class _CartState extends State<Cart> {
                 );
               },
             )),
-            dividerRowWidgets(context, "TOTAL 5% GST: ",
+            dividerRowWidgets(context, "TOTAL 5% GST: (Card)",
                 "PKR " + ((getTotal() * 0.05) + getTotal()).toStringAsFixed(2),
                 check: true),
-            dividerRowWidgets(context, "TOTAL 16% GST: ",
+            dividerRowWidgets(context, "TOTAL 16% GST: (Cash)",
                 "PKR " + ((getTotal() * 0.16) + getTotal()).toStringAsFixed(2),
                 check: true),
             heightBox(context, 0.02),

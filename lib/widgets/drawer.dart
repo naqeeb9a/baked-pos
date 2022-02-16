@@ -454,8 +454,11 @@ Widget dividerRowWidgets(context, text1, text2, {check = false}) {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SizedBox(
-            width: dynamicWidth(context, 0.2),
-            child: FittedBox(child: text(context, text1, 0.04, myBlack))),
+          width: dynamicWidth(context, 0.36),
+          child: FittedBox(
+            child: text(context, text1, 0.04, myBlack),
+          ),
+        ),
         check == true
             ? SizedBox(
                 width: dynamicWidth(context, 0.2),

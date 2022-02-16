@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/widgets/buttons.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart' hide Image;
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:motion_toast/motion_toast.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../app_functions/functions.dart';
@@ -29,6 +33,24 @@ class _PrintState extends State<Print> {
   bool loading = true;
 
   PermissionStatus? check;
+
+  // initSaveToPath() async {
+  //   const filename = 'logo200.png';
+  //   var bytes = await rootBundle.load("assets/logo200.png");
+  //   String dir = (await getApplicationDocumentsDirectory()).path;
+  //   writeToFile(bytes, '$dir/$filename');
+  //   setState(() {
+  //     pathImage = '$dir/$filename';
+  //   });
+  // }
+  //
+  // Future<void> writeToFile(ByteData data, String path) {
+  //   final buffer = data.buffer;
+  //   return File(path).writeAsBytes(
+  //     buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
+  //   );
+  // }
+
   getDevices() async {
     devices = await printer.getBondedDevices();
     setState(() {});
@@ -37,6 +59,7 @@ class _PrintState extends State<Print> {
   @override
   void initState() {
     getStatus();
+    // initSaveToPath();
     super.initState();
   }
 
@@ -119,9 +142,9 @@ class _PrintState extends State<Print> {
             coloredButton(context, "Give Bluetooth Permission", myBrown,
                 width: dynamicWidth(context, 0.8), function: () async {
               if (await Permission.bluetoothConnect.status.isDenied) {
-                await Permission.bluetoothConnect
-                    .request()
-                    .then((value) => getStatus());
+                await Permission.bluetoothConnect.request().then(
+                      (value) => getStatus(),
+                    );
               }
             })
           ],
@@ -140,8 +163,8 @@ class _PrintState extends State<Print> {
       if ((await printer.isConnected)!) {
         printer.printCustom("Baked", 2, 1);
         printer.printCustom("Lahore,Pakistan", 1, 1);
-
         printer.printCustom("PNTN #6270509-2", 1, 1);
+        printer.printCustom("#$saleNo", 1, 1);
         printer.printNewLine();
         printer.printCustom(
             "Cashier: " + userResponse["full_name"].toString(), 1, 0);
@@ -190,11 +213,14 @@ class _PrintState extends State<Print> {
         printer.printCustom("...............................", 1, 1);
 
         printer.printCustom("Shop # 6 PAF Market Lahore.", 1, 1);
+        printer.printCustom("+92 304 5222533", 1, 1);
+        printer.printCustom(
+            DateFormat.yMEd().add_jm().format(DateTime.now()), 1, 1);
 
-        printer.printLeftRight(
-            DateFormat.yMd().add_jms().format(DateTime.now()), "#$saleNo", 1);
-
+        printer.printNewLine();
+        printer.printNewLine();
         printer.printCustom(" ", 1, 1);
+
         printer.paperCut();
       } else {
         Navigator.of(context, rootNavigator: true).pop();

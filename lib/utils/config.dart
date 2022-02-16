@@ -27,5 +27,5 @@ dynamic drawerRefresh;
 var indexPage = 0;
 var cartItems = [].obs;
 var reservedTable = [];
-var callBackUrl = "http://bakedweb.cmcmtech.com";
+var callBackUrl = "https://baked.pk";
 var version = "1.0.0";

@@ -99,6 +99,7 @@ class _MenuPageState extends State<MenuPage>
                             itemBuilder: (context, i) {
                               var category = snapshot.data[i];
                               return ExpansionTile(
+                                initiallyExpanded: true,
                                 title: Text(
                                   category['category_name'],
                                   style: TextStyle(

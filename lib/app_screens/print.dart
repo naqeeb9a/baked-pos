@@ -1,15 +1,11 @@
-import 'dart:io';
-
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/widgets/buttons.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart' hide Image;
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:motion_toast/motion_toast.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../app_functions/functions.dart';
@@ -33,23 +29,6 @@ class _PrintState extends State<Print> {
   bool loading = true;
 
   PermissionStatus? check;
-
-  // initSaveToPath() async {
-  //   const filename = 'logo200.png';
-  //   var bytes = await rootBundle.load("assets/logo200.png");
-  //   String dir = (await getApplicationDocumentsDirectory()).path;
-  //   writeToFile(bytes, '$dir/$filename');
-  //   setState(() {
-  //     pathImage = '$dir/$filename';
-  //   });
-  // }
-  //
-  // Future<void> writeToFile(ByteData data, String path) {
-  //   final buffer = data.buffer;
-  //   return File(path).writeAsBytes(
-  //     buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
-  //   );
-  // }
 
   getDevices() async {
     devices = await printer.getBondedDevices();
@@ -76,14 +55,15 @@ class _PrintState extends State<Print> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Print Token/Bill'),
-        ),
-        body: loading == true
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : getPrintersList());
+      appBar: AppBar(
+        title: const Text('Print Token/Bill'),
+      ),
+      body: loading == true
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : getPrintersList(),
+    );
   }
 
   getPrintersList() {
@@ -230,14 +210,11 @@ class _PrintState extends State<Print> {
         );
         return;
       }
+      cartItems.clear();
       Navigator.of(context, rootNavigator: true).pop();
-      MotionToast.success(
-        description: const Text(
-          "Printed Sccuessfully",
-        ),
-        dismissable: true,
-      );
     });
+    cartItems.clear();
+    Navigator.pop(context);
   }
 
   @override

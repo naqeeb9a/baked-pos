@@ -1,5 +1,4 @@
 import 'package:baked_pos/app_screens/print.dart';
-import 'package:baked_pos/utils/app_routes.dart';
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/utils/dynamic_sizes.dart';
 import 'package:baked_pos/widgets/buttons.dart';
@@ -123,27 +122,36 @@ class _CartState extends State<Cart> {
                     onConfirmBtnTap: () {
                       Navigator.of(context, rootNavigator: true).pop();
 
-                      push(
-                          context,
-                          Print(
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Print(
                             filteredItems,
                             "Card",
                             total: getTotal().toString(),
                             cost: getCost().toString(),
-                          ));
+                          ),
+                        ),
+                      ).then((value) {
+                        setState(() {});
+                      });
                     },
                     onCancelBtnTap: () {
                       Navigator.of(context, rootNavigator: true).pop();
 
-                      push(
+                      Navigator.push(
                         context,
-                        Print(
-                          filteredItems,
-                          "Cash",
-                          total: getTotal().toString(),
-                          cost: getCost().toString(),
+                        MaterialPageRoute(
+                          builder: (context) => Print(
+                            filteredItems,
+                            "Card",
+                            total: getTotal().toString(),
+                            cost: getCost().toString(),
+                          ),
                         ),
-                      );
+                      ).then((value) {
+                        setState(() {});
+                      });
                     },
                     backgroundColor: myYellow,
                   );

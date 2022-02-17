@@ -28,4 +28,4 @@ var indexPage = 0;
 var cartItems = [].obs;
 var reservedTable = [];
 var callBackUrl = "https://baked.pk";
-var version = "1.0.0";
+var version = "0.0.1";

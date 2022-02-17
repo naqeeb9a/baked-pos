@@ -24,7 +24,7 @@ class _CartState extends State<Cart> {
     getTotal() {
       num total = 0;
       for (var item in cartItems) {
-        total += num.parse(item["sale_price"]) * item["qty"];
+        total += num.parse(item["discounted_price"].toString()) * item["qty"];
       }
       return total;
     }
@@ -67,17 +67,20 @@ class _CartState extends State<Cart> {
                   padding: EdgeInsets.symmetric(
                     vertical: dynamicHeight(context, 0.01),
                   ),
-                  child: cartCards(context, index, () {
-                    setState(() {});
-                  }),
+                  child: CartCards(
+                      context: context,
+                      index: index,
+                      function: () {
+                        setState(() {});
+                      }),
                 );
               },
             )),
             dividerRowWidgets(context, "TOTAL 5% GST: (Card)",
-                "PKR " + ((getTotal() * 0.05) + getTotal()).toStringAsFixed(2),
+                "PKR " + ((getTotal() * 0.05) + getTotal()).toStringAsFixed(0),
                 check: true),
             dividerRowWidgets(context, "TOTAL 16% GST: (Cash)",
-                "PKR " + ((getTotal() * 0.16) + getTotal()).toStringAsFixed(2),
+                "PKR " + ((getTotal() * 0.16) + getTotal()).toStringAsFixed(0),
                 check: true),
             heightBox(context, 0.02),
             text(context, "Phone number: ", 0.04, myBrown),

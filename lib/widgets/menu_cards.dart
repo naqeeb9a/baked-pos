@@ -98,6 +98,8 @@ iconsRow(context, snapshot) {
               onTap: () {
                 if (customColor == myWhite) {
                   snapshot["qty"] = quantity;
+                  snapshot["discounted_price"] = snapshot["sale_price"];
+                  snapshot["item_discount"] = "0%";
                   snapshot['setState'] = () {
                     changeState(() {});
                   };

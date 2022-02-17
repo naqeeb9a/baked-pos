@@ -58,7 +58,8 @@ punchOrder(total, cost) async {
         "productid": item["id"],
         "productname": item["name"],
         "productcode": item["code"],
-        "productprice": item["sale_price"],
+        "productprice": item["discounted_price"],
+        "item_discount": item["item_discount"],
         "itemUnitCost": item["cost"] == "" ? "0" : item["cost"],
         "productqty": item["qty"],
         "productimg": item["photo"]

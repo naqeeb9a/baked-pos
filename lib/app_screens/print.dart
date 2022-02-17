@@ -38,7 +38,6 @@ class _PrintState extends State<Print> {
   @override
   void initState() {
     getStatus();
-    // initSaveToPath();
     super.initState();
   }
 
@@ -54,6 +53,7 @@ class _PrintState extends State<Print> {
 
   @override
   Widget build(BuildContext context) {
+    print("\n\nobject ${widget.data}");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Print Token/Bill'),
@@ -154,12 +154,20 @@ class _PrintState extends State<Print> {
         for (var i = 0; i < widget.data.length; i++) {
           total += int.parse(widget.data[i]['productprice']);
 
-          printer.printLeftRight(
-            "${widget.data[i]['productname']}\n${widget.data[i]['productqty']} x ${widget.data[i]['productprice']}",
-            "${int.parse(widget.data[i]['productprice'].toString()) * int.parse(widget.data[i]['productqty'].toString())}",
-            1,
-          );
-          printer.printCustom("-----------", 1, 1);
+          printer.printCustom("${widget.data[i]['productname']}", 1, 0);
+
+          widget.data[i]['item_discount'] == "0%"
+              ? printer.printLeftRight(
+                  "${widget.data[i]['productqty']} x ${widget.data[i]['productprice']}",
+                  "${int.parse(widget.data[i]['productprice'].toString()) * int.parse(widget.data[i]['productqty'].toString())}",
+                  1,
+                )
+              : printer.printLeftRight(
+                  "${widget.data[i]['productqty']} x ${widget.data[i]['productprice']} - ${widget.data[i]['item_discount']}",
+                  "${int.parse(widget.data[i]['productprice'].toString()) * int.parse(widget.data[i]['productqty'].toString())}",
+                  1,
+                );
+          printer.printCustom("-------------", 1, 1);
         }
 
         printer.printCustom("...............................", 1, 1);

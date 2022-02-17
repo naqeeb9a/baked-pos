@@ -85,9 +85,7 @@ class _MenuPageState extends State<MenuPage>
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.data == false) {
-                      return retry(
-                        context,
-                      );
+                      return const SizedBox();
                     } else {
                       if (snapshot.data.length == 0) {
                         return Center(
@@ -174,7 +172,7 @@ class _MenuPageState extends State<MenuPage>
                       }
                     }
                   } else {
-                    return loader(context);
+                    return const SizedBox();
                   }
                 },
               ),

@@ -144,7 +144,7 @@ class _MenuPageState extends State<MenuPage>
                               ),
                               heightBox(context, 0.02),
                               SizedBox(
-                                height: dynamicHeight(context, .5),
+                                height: dynamicHeight(context, .4),
                                 child: GridView.builder(
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
@@ -160,7 +160,7 @@ class _MenuPageState extends State<MenuPage>
                                       (BuildContext context, int index) {
                                     return menuCards(
                                       context,
-                                      snapshot.data.length,
+                                      snapshot.data,
                                       index,
                                     );
                                   },

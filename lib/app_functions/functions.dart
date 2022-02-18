@@ -30,13 +30,11 @@ getMenu() async {
     SharedPreferences loginUser = await SharedPreferences.getInstance();
     dynamic temp = loginUser.getString("userResponse");
     userResponse = temp == null ? "" : await json.decode(temp);
-    var response = await http.post(Uri.parse(callBackUrl + "/api/searchmenu"),
-        body:
-            json.encode({"outletid": userResponse["outlet_id"], "term": "all"}),
-        headers: {
-          'Content-type': 'application/json',
-          'Accept': 'application/json',
-        }).timeout(const Duration(seconds: 10), onTimeout: () {
+    var response = await http
+        .get(
+      Uri.parse(callBackUrl + "/api/menu/all"),
+    )
+        .timeout(const Duration(seconds: 10), onTimeout: () {
       return http.Response('Error', 408);
     });
     var jsonData = json.decode(response.body);

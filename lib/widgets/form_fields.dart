@@ -22,12 +22,20 @@ Widget inputTextField(context, label, myController,
       textInputAction: TextInputAction.next,
       keyboardType: keyboard,
       inputFormatters: [
-        FilteringTextInputFormatter.allow(
-          RegExp("[0-9]"),
-        ),
-        FilteringTextInputFormatter.deny(
-          RegExp('[\\.|\\,]'),
-        )
+        keyboard == TextInputType.number
+            ? FilteringTextInputFormatter.allow(
+                RegExp("[0-9]"),
+              )
+            : FilteringTextInputFormatter.allow(
+                RegExp("[a-zA-Z /:? 0-9 \\- @ _ .]"),
+              ),
+        keyboard == TextInputType.number
+            ? FilteringTextInputFormatter.deny(
+                RegExp('[\\.|\\,]'),
+              )
+            : FilteringTextInputFormatter.deny(
+                RegExp('[\\#]'),
+              ),
       ],
       obscureText: password == true ? obscureText : false,
       cursorColor: myBrown,

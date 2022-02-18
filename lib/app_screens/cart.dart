@@ -98,7 +98,6 @@ class _CartState extends State<Cart> {
                     dismissable: true,
                   ).show(context);
                 } else {
-
                   var filteredItems = [];
                   filterFunction() {
                     for (var item in cartItems) {
@@ -112,7 +111,6 @@ class _CartState extends State<Cart> {
                         "productqty": item["qty"],
                         "productimg": item["photo"]
                       });
-                      print(filteredItems);
                     }
                     return filteredItems;
                   }

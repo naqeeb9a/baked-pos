@@ -330,6 +330,7 @@ Widget drawerItems2(context) {
 
 class CartCards extends StatefulWidget {
   final dynamic context, index, function;
+
   const CartCards(
       {Key? key,
       required this.context,
@@ -343,6 +344,7 @@ class CartCards extends StatefulWidget {
 
 class _CartCardsState extends State<CartCards> {
   final _text = TextEditingController();
+
   @override
   void dispose() {
     _text.dispose();
@@ -391,20 +393,25 @@ class _CartCardsState extends State<CartCards> {
                             alignText: TextAlign.center, bold: true),
                         content: Container(
                           color: myWhite,
-                          height: dynamicHeight(context, 0.4),
+                          height: dynamicHeight(context, 0.5),
                           width: dynamicWidth(context, 0.7),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              getRow("Hassan", "10"),
+                              getRow("Discount 1", "10"),
                               const Divider(),
-                              getRow("Gujjar", "20"),
+                              getRow("Discount 2", "20"),
                               const Divider(),
-                              getRow("Saleem", "30"),
+                              getRow("Discount 3", "30"),
                               const Divider(),
-                              getRow("Oppo", "40"),
+                              getRow("Discount 4", "40"),
                               const Divider(),
-                              text(context, "Custom Discount: ", 0.04, myBrown),
+                              getRow("Discount 5", "50"),
+                              const Divider(),
+                              getRow("Discount 6", "100"),
+                              const Divider(),
+                              text(context, "Custom Discount in %: ", 0.04,
+                                  myBrown),
                               inputTextField(context, "Custom Discount", _text,
                                   keyboard: TextInputType.number),
                               const Divider(),

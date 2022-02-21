@@ -221,7 +221,7 @@ class _MenuPageState extends State<MenuPage>
                                 collapsedIconColor: myBrown,
                                 tilePadding: EdgeInsets.zero,
                                 childrenPadding: EdgeInsets.symmetric(
-                                  horizontal: dynamicWidth(context, .02),
+                                  horizontal: dynamicWidth(context, .06),
                                 ),
                                 children: [
                                   SizedBox(

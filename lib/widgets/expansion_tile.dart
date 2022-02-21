@@ -66,7 +66,7 @@ customExpansionTile(context, subCategory, snapshot, setState) {
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
                       childAspectRatio: dynamicWidth(context, 0.5) /
-                          dynamicWidth(context, 0.6),
+                          dynamicWidth(context, 0.7),
                     ),
                     itemCount: subCategory['item'].length,
                     itemBuilder: (BuildContext context, int index) {

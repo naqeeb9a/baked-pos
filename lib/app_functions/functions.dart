@@ -50,14 +50,17 @@ getMenu() async {
 
 punchOrder(total, cost) async {
   var filteredItems = [];
+  dynamic discount = 0;
+
   filterFunction() {
     for (var item in cartItems) {
       filteredItems.add({
         "productid": item["id"],
         "productname": item["name"],
         "productcode": item["code"],
-        "productprice": item["discounted_price"],
-        "item_discount": item["item_discount"],
+        "productprice": item["sale_price"],
+        "item_discount": (int.parse(item["item_discount"].toString().substring(0, 2)) / 100) *
+            int.parse(item["sale_price"].toString()),
         "itemUnitCost": item["cost"] == "" ? "0" : item["cost"],
         "productqty": item["qty"],
         "productimg": item["photo"]
@@ -66,16 +69,26 @@ punchOrder(total, cost) async {
     return filteredItems;
   }
 
+  discountFunction() {
+    for (var item in cartItems) {
+      discount += (int.parse(item['sale_price'].toString()) -
+          int.parse(item['discounted_price'].toString()));
+    }
+    return discount;
+  }
+
   dynamic bodyJson = {
     "outlet_id": "${userResponse["outlet_id"]}",
     "total_items": "${cartItems.length}",
     "sub_total": "$total",
     "total_payable": "$total",
     "total_cost": "$cost",
+    "total_discount": "${discountFunction()}",
     "cart": filterFunction(),
     "table_no": "",
     "saleid": ""
   };
+
   try {
     var response = await http.post(
       Uri.parse(callBackUrl + "/api/punch-order"),
@@ -90,6 +103,12 @@ punchOrder(total, cost) async {
     var jsonData = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
+      // print("\n\n\n obj12 $discount \n\n");
+      //
+      // print("\n\n\n obj $bodyJson \n\n");
+      //
+      // print("\n\n\n obj $cartItems \n\n");
+
       return jsonData["data"]["sale_no"];
     } else {
       return false;

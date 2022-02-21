@@ -97,7 +97,7 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
         ),
       ),
       home: MaterialApp(
-        title: 'baked_pos Team',
+        title: 'Baked POS',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: primaryColor,

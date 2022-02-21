@@ -99,11 +99,9 @@ class _CartState extends State<Cart> {
                   ).show(context);
                 } else {
                   var filteredItems = [];
-                  dynamic discount = 0;
+
                   filterFunction() {
                     for (var item in cartItems) {
-                      discount += (int.parse(item['sale_price'].toString()) -
-                          int.parse(item['discounted_price'].toString()));
                       filteredItems.add({
                         "productid": item["id"],
                         "productname": item["name"],

@@ -20,7 +20,16 @@ class BasicPage extends StatefulWidget {
   _BasicPageState createState() => _BasicPageState();
 }
 
-class _BasicPageState extends State<BasicPage> with TickerProviderStateMixin {
+class _BasicPageState extends State<BasicPage>
+    with SingleTickerProviderStateMixin {
+  TabController? _tabController;
+  double iconSize = 0.05;
+
+  @override
+  void initState() {
+    _tabController = TabController(length: 3, vsync: this);
+    super.initState();
+  }
   // fcmListen() async {
   //   FirebaseMessaging.onMessage.listen((RemoteMessage event) {
   //     if (event.data['id'] == userResponse['id']) {
@@ -63,17 +72,10 @@ class _BasicPageState extends State<BasicPage> with TickerProviderStateMixin {
   // }
 
   @override
-  void initState() {
-    super.initState();
-    // FCMServices.fcmGetTokenAndSubscribe();
-    // fcmListen();
-  }
-
-  @override
   Widget build(BuildContext context) {
     customContext = context;
     return Scaffold(
-      backgroundColor: myBlack,
+      backgroundColor: myBrown,
       body: UpgradeAlert(
         showIgnore: false,
         showLater: false,
@@ -83,60 +85,66 @@ class _BasicPageState extends State<BasicPage> with TickerProviderStateMixin {
         dialogStyle: Platform.isAndroid
             ? UpgradeDialogStyle.material
             : UpgradeDialogStyle.cupertino,
-        child: bodyPage(pageDecider),
+        child: DefaultTabController(
+          length: 3,
+          child: TabBarView(
+            controller: _tabController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: const [
+              MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  home: MenuPage(
+                      saleId: "1", tableNo: "1", tableName: "tableName")),
+              Cart(),
+              Profile(),
+            ],
+          ),
+        ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.shifting,
-        currentIndex: indexPage,
-        onTap: (value) {
-          if (value == 0) {
-            pageDecider = "home";
-          } else if (value == 1) {
-            pageDecider = "cart";
-          } else if (value == 2) {
-            pageDecider = "profile";
-          } else {
-            pageDecider = "home";
-          }
-          setState(() {
-            indexPage = value;
-          });
-        },
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w900),
-        unselectedItemColor: myWhite,
-        unselectedIconTheme: const IconThemeData(color: myWhite),
-        selectedItemColor: myYellow,
-        showUnselectedLabels: true,
-        items: [
-          BottomNavigationBarItem(
-            backgroundColor: Colors.brown.shade400,
-            icon: const Icon(LineIcons.home),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Colors.brown.shade400,
-            icon: Obx(() {
-              return Badge(
-                badgeColor: myBlack,
-                badgeContent: Text(
-                  cartItems.length.toString(),
-                  style: TextStyle(
-                    color: myWhite,
-                    fontSize: dynamicWidth(context, 0.024),
+      bottomNavigationBar: SizedBox(
+        height: dynamicHeight(context, 0.07),
+        child: TabBar(
+          labelStyle: const TextStyle(color: myGrey),
+          unselectedLabelColor: myWhite,
+          unselectedLabelStyle: const TextStyle(color: myWhite),
+          controller: _tabController,
+          labelColor: Colors.amber,
+          indicatorColor: Colors.amber,
+          tabs: [
+            const Tab(
+                text: "home",
+                icon: Icon(
+                  Icons.home,
+                  color: myYellow,
+                )),
+            Tab(
+              text: "cart",
+              icon: Obx(() {
+                return Badge(
+                  badgeColor: myBlack,
+                  badgeContent: Text(
+                    cartItems.length.toString(),
+                    style: TextStyle(
+                      color: myWhite,
+                      fontSize: dynamicWidth(context, 0.024),
+                    ),
                   ),
-                ),
-                showBadge: cartItems.isEmpty ? false : true,
-                child: const Icon(LineIcons.shoppingCart),
-              );
-            }),
-            label: "Cart",
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Colors.brown.shade400,
-            icon: const Icon(LineIcons.user),
-            label: "Profile",
-          ),
-        ],
+                  showBadge: cartItems.isEmpty ? false : true,
+                  child: const Icon(
+                    LineIcons.shoppingCart,
+                    color: myYellow,
+                  ),
+                );
+              }),
+            ),
+            const Tab(
+                text: "Profile",
+                icon: Icon(
+                  Icons.person,
+                  color: myYellow,
+                )),
+          ],
+        ),
       ),
     );
   }

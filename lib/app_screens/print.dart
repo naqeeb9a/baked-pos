@@ -53,7 +53,7 @@ class _PrintState extends State<Print> {
 
   @override
   Widget build(BuildContext context) {
-    print("\n\nobject ${widget.data}");
+ 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Print Token/Bill'),

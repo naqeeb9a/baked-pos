@@ -33,7 +33,8 @@ menuCards(context, snapshot, index) {
               ),
             ),
             child: Image.network(
-              snapshot[index]["photo"] ?? "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHx8&w=1000&q=80",
+              snapshot[index]["photo"] ??
+                  "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHx8&w=1000&q=80",
               height: dynamicWidth(context, 0.3),
               width: dynamicWidth(context, 0.5),
               fit: BoxFit.cover,
@@ -58,14 +59,14 @@ menuCards(context, snapshot, index) {
         ),
         Padding(
           padding:
-          EdgeInsets.symmetric(horizontal: dynamicWidth(context, 0.02)),
+              EdgeInsets.symmetric(horizontal: dynamicWidth(context, 0.02)),
           child: text(
               context, "Rs ." + snapshot[index]["sale_price"], 0.04, myYellow,
               bold: true),
         ),
         Padding(
           padding:
-          EdgeInsets.symmetric(horizontal: dynamicWidth(context, 0.02)),
+              EdgeInsets.symmetric(horizontal: dynamicWidth(context, 0.02)),
           child: iconsRow(
             context,
             snapshot[index],
@@ -98,7 +99,7 @@ iconsRow(context, snapshot) {
                 if (customColor == myWhite) {
                   snapshot["qty"] = quantity;
                   snapshot["discounted_price"] = snapshot["sale_price"];
-                  snapshot["item_discount"] = "0%";
+                  snapshot["item_discount"] = "0";
                   snapshot['setState'] = () {
                     changeState(() {});
                   };
@@ -134,7 +135,7 @@ iconsRow(context, snapshot) {
                 ),
                 decoration: BoxDecoration(
                   borderRadius:
-                  BorderRadius.circular(dynamicWidth(context, 0.02)),
+                      BorderRadius.circular(dynamicWidth(context, 0.02)),
                   color: customColor1,
                 ),
               )),

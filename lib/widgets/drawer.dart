@@ -369,7 +369,7 @@ class _CartCardsState extends State<CartCards> {
                           (actualPrice -
                                   (actualPrice * (int.parse(text2) / 100)))
                               .toStringAsFixed(0);
-                      cartItems[widget.index]["item_discount"] = text2 + "%";
+                      cartItems[widget.index]["item_discount"] = text2;
                       Navigator.of(context, rootNavigator: true).pop();
 
                       widget.function();
@@ -428,7 +428,7 @@ class _CartCardsState extends State<CartCards> {
                                               (int.parse(_text.text) / 100)))
                                       .toStringAsFixed(0);
                                   cartItems[widget.index]["item_discount"] =
-                                      _text.text + "%";
+                                      _text.text;
                                   pop(context);
                                   widget.function();
                                 } else {
@@ -466,17 +466,32 @@ class _CartCardsState extends State<CartCards> {
             widthBox(context, 0.05),
             FittedBox(
               child: SizedBox(
-                width: dynamicWidth(context, 0.3),
+                width: dynamicWidth(context, 0.4),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    text(context, cartItems[widget.index]["name"].toString(),
+                        0.04, myBlack,
+                        bold: true),
                     text(
-                      context,
-                      cartItems[widget.index]["name"].toString(),
-                      0.04,
-                      myBlack,
-                    ),
+                        context,
+                        "Price : " + cartItems[widget.index]["sale_price"],
+                        0.04,
+                        myBlack),
+                    text(
+                        context,
+                        "Discounted Price : " +
+                            cartItems[widget.index]["discounted_price"],
+                        0.04,
+                        myBlack),
+                    text(
+                        context,
+                        "Discount : " +
+                            cartItems[widget.index]["item_discount"] +
+                            "%",
+                        0.04,
+                        myBlack),
                     heightBox(context, 0.01),
                     Container(
                         width: dynamicWidth(context, 0.25),

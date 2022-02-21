@@ -59,7 +59,7 @@ punchOrder(total, cost) async {
         "productname": item["name"],
         "productcode": item["code"],
         "productprice": item["sale_price"],
-        "item_discount": (int.parse(item["item_discount"].toString().substring(0, 2)) / 100) *
+        "item_discount": (int.parse(item["item_discount"].toString()) / 100) *
             int.parse(item["sale_price"].toString()),
         "itemUnitCost": item["cost"] == "" ? "0" : item["cost"],
         "productqty": item["qty"],

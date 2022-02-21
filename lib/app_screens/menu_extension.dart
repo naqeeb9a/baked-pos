@@ -1,4 +1,6 @@
+
 import 'package:baked_pos/app_functions/functions.dart';
+import 'package:baked_pos/utils/app_routes.dart';
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/utils/dynamic_sizes.dart';
 import 'package:baked_pos/widgets/buttons.dart';
@@ -16,6 +18,7 @@ class MenuExtension extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List choiceChipValues = [];
     var customIndex = 0;
     return Scaffold(
         body: Padding(
@@ -30,54 +33,80 @@ class MenuExtension extends StatelessWidget {
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: customSnapshot.length,
-                        itemBuilder: (context, index) => Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: dynamicWidth(context, 0.02)),
-                              child: ChoiceChip(
-                                  onSelected: (value) {
+                        itemBuilder: (context, index) {
+                          if (choiceChipValues.isEmpty) {
+                            choiceChipValues.add(true);
+                          } else {
+                            choiceChipValues.add(false);
+                          }
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: dynamicWidth(context, 0.02)),
+                            child: ChoiceChip(
+                                onSelected: (bool value) {
+                                  if (customIndex != index) {
                                     changeState(() {
+                                      for (var i = 0;
+                                          i < choiceChipValues.length;
+                                          i++) {
+                                        choiceChipValues[i] = false;
+                                      }
+                                      choiceChipValues[index] = value;
                                       customIndex = index;
                                     });
-                                  },
-                                  selectedColor: myYellow,
-                                  label: text(
-                                      context,
-                                      customSnapshot[index]["category_name"],
-                                      0.04,
-                                      myBlack),
-                                  selected: true),
-                            )),
+                                  }
+                                },
+                                selectedColor: myYellow,
+                                label: text(
+                                    context,
+                                    customSnapshot[index]["category_name"],
+                                    0.04,
+                                    myBlack),
+                                selected: choiceChipValues[index]),
+                          );
+                        }),
                   ),
-                  InkWell(
-                    onTap: () {
-                      showSearch(
-                        context: context,
-                        delegate:
-                            CustomSearchDelegate(customSnapshot[0]["item"]),
-                      ).then(
-                        (value) => changeState(() {}),
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.brown.shade400,
-                        borderRadius: BorderRadius.circular(
-                          dynamicWidth(context, 0.1),
-                        ),
-                      ),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          border: const UnderlineInputBorder(
-                              borderSide: BorderSide.none),
-                          hintStyle: const TextStyle(color: myWhite),
-                          hintText: "Search",
-                          enabled: false,
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: dynamicWidth(context, 0.05),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      InkWell(
+                          onTap: () {
+                            pop(context);
+                          },
+                          child: const Icon(Icons.arrow_back_ios)),
+                      InkWell(
+                        onTap: () {
+                          showSearch(
+                            context: context,
+                            delegate: CustomSearchDelegate(
+                                customSnapshot[customIndex]["item"]),
+                          ).then(
+                            (value) => changeState(() {}),
+                          );
+                        },
+                        child: Container(
+                          width: dynamicWidth(context, 0.8),
+                          decoration: BoxDecoration(
+                            color: Colors.brown.shade400,
+                            borderRadius: BorderRadius.circular(
+                              dynamicWidth(context, 0.1),
+                            ),
+                          ),
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              border: const UnderlineInputBorder(
+                                  borderSide: BorderSide.none),
+                              hintStyle: const TextStyle(color: myWhite),
+                              hintText: "Search",
+                              enabled: false,
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: dynamicWidth(context, 0.05),
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                   Expanded(
                     child: customSnapshot[customIndex]["item"].length == 0
@@ -119,35 +148,46 @@ class MenuExtension extends StatelessWidget {
                 return Column(
                   children: [
                     heightBox(context, 0.02),
-                    InkWell(
-                      onTap: () {
-                        showSearch(
-                          context: context,
-                          delegate: CustomSearchDelegate(snapshot.data),
-                        ).then(
-                          (value) => changeState(() {}),
-                        );
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.brown.shade400,
-                          borderRadius: BorderRadius.circular(
-                            dynamicWidth(context, 0.1),
-                          ),
-                        ),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            border: const UnderlineInputBorder(
-                                borderSide: BorderSide.none),
-                            hintStyle: const TextStyle(color: myWhite),
-                            hintText: "Search",
-                            enabled: false,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: dynamicWidth(context, 0.05),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                            onTap: () {
+                              pop(context);
+                            },
+                            child: const Icon(Icons.arrow_back_ios)),
+                        InkWell(
+                          onTap: () {
+                            showSearch(
+                              context: context,
+                              delegate: CustomSearchDelegate(snapshot.data),
+                            ).then(
+                              (value) => changeState(() {}),
+                            );
+                          },
+                          child: Container(
+                            width: dynamicWidth(context, 0.8),
+                            decoration: BoxDecoration(
+                              color: Colors.brown.shade400,
+                              borderRadius: BorderRadius.circular(
+                                dynamicWidth(context, 0.1),
+                              ),
+                            ),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                border: const UnderlineInputBorder(
+                                    borderSide: BorderSide.none),
+                                hintStyle: const TextStyle(color: myWhite),
+                                hintText: "Search",
+                                enabled: false,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: dynamicWidth(context, 0.05),
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
                     Expanded(
                       child: GridView.builder(

@@ -32,13 +32,15 @@ class _MenuPageState extends State<MenuPage>
     super.build(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: myWhite,
       body: Padding(
           padding:
               EdgeInsets.symmetric(horizontal: dynamicWidth(context, 0.05)),
-          child: FutureBuilder(
-            future: getMenuCategories(),
-            builder: ((context, snapshot) => errorHandlingWidget(snapshot)),
+          child: FutureBuilder<List>(
+            future: Future.wait([getMenu(), getMenuCategories()]),
+            builder: ((context, AsyncSnapshot<List> snapshot) =>
+                errorHandlingWidget(snapshot)),
           )),
     );
   }
@@ -58,7 +60,7 @@ class _MenuPageState extends State<MenuPage>
   }
 
   selectionCards(snapshot) {
-    snapshot.insert(0, {"category_name": "All Items"});
+    snapshot[1].insert(0, {"category_name": "All Items"});
     return Center(
       child: Wrap(
           alignment: WrapAlignment.center,
@@ -66,15 +68,16 @@ class _MenuPageState extends State<MenuPage>
           crossAxisAlignment: WrapCrossAlignment.center,
           spacing: dynamicWidth(context, 0.02),
           runSpacing: dynamicWidth(context, 0.02),
-          children: snapshot
+          children: snapshot[1]
               .map<Widget>(
                 (item) => GestureDetector(
                   onTap: () {
                     if (item["category_name"] == "All Items") {
                       push(
                           context,
-                          const MenuExtension(
-                            customSnapshot: "menu",
+                          MenuExtension(
+                            customSnapshot: snapshot[0],
+                            check: true,
                           ));
                     } else {
                       push(context,

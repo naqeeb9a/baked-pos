@@ -74,10 +74,11 @@ class _MenuPageState extends State<MenuPage>
                       push(
                           context,
                           const MenuExtension(
-                            snapshot: "menu",
+                            customSnapshot: "menu",
                           ));
                     } else {
-                      push(context, MenuExtension(snapshot: item["child"]));
+                      push(context,
+                          MenuExtension(customSnapshot: item["child"]));
                     }
                   },
                   child: CircleAvatar(

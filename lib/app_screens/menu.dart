@@ -96,3 +96,21 @@ class _MenuPageState extends State<MenuPage>
     );
   }
 }
+
+Widget choiceTag(context, title) {
+  return Expanded(
+    child: Container(
+      height: dynamicHeight(context, .06),
+      decoration: BoxDecoration(
+        color: myYellow,
+        borderRadius: BorderRadius.circular(100),
+      ),
+      padding: EdgeInsets.all(
+        dynamicWidth(context, .016),
+      ),
+      child: Center(
+        child: text(context, title, .04, myWhite),
+      ),
+    ),
+  );
+}

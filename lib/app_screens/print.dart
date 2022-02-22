@@ -176,7 +176,7 @@ printContent(BluetoothDevice selectedDevice, context, printer, data, total,
           )
         : printer.printLeftRight(
             "${data[i]['productqty']} x ${data[i]['productprice']} - ${data[i]['item_discount']}%",
-            "$total",
+            ((int.parse(data[i]['productqty'].toString()) * int.parse(data[i]['productprice'].toString())) * (int.parse(data[i]['item_discount'].toString()) / 100)).toStringAsFixed(0),
             1,
           );
     printer.printCustom("-------------", 1, 1);

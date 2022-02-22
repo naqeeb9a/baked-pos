@@ -109,13 +109,13 @@ class _BasicPageState extends State<BasicPage>
           indicatorColor: Colors.amber,
           tabs: [
             const Tab(
-                text: "home",
+                text: "Home",
                 icon: Icon(
-                  Icons.home,
+                  Icons.home_outlined,
                   color: myYellow,
                 )),
             Tab(
-              text: "cart",
+              text: "Cart",
               icon: Obx(() {
                 return Badge(
                   badgeColor: myBlack,
@@ -137,7 +137,7 @@ class _BasicPageState extends State<BasicPage>
             const Tab(
                 text: "Profile",
                 icon: Icon(
-                  Icons.person,
+                  Icons.person_outline,
                   color: myYellow,
                 )),
           ],

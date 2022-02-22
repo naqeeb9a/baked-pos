@@ -26,8 +26,8 @@ class _MenuPageState extends State<MenuPage> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(
-              "assets/menu_bg",
+            image: AssetImage(
+              "assets/menu_bg.jpg",
             ),
             fit: BoxFit.cover,
           ),

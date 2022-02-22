@@ -48,7 +48,7 @@ getMenu() async {
   }
 }
 
-punchOrder(total, cost) async {
+punchOrder(total, cost, paymentType) async {
   var filteredItems = [];
   dynamic discount = 0;
 
@@ -77,17 +77,33 @@ punchOrder(total, cost) async {
     return discount;
   }
 
+  totalPriceFunction() {
+    int total = 0;
+    for (var item in cartItems) {
+      total += (int.parse(item['sale_price'].toString()) * int.parse(item['qty'].toString()));
+    }
+    return total;
+  }
+
   dynamic bodyJson = {
     "outlet_id": "${userResponse["outlet_id"]}",
     "total_items": "${cartItems.length}",
-    "sub_total": "$total",
-    "total_payable": "$total",
+    "sub_total": "${totalPriceFunction()}",
+    "total_payable": paymentType == "Cash"
+        ? "${(int.parse(totalPriceFunction().toString()) - int.parse(discountFunction().toString())) + ((int.parse(total.toString())) * .16)}"
+        : "${(int.parse(totalPriceFunction().toString()) - int.parse(discountFunction().toString())) + ((int.parse(total.toString())) * .05)}",
+    "payment_method_id": paymentType == "Cash" ? "7" : "4",
     "total_cost": "$cost",
+    "tax_amount": paymentType == "Cash"
+        ? "${((int.parse(total.toString())) * .16)}"
+        : "${((int.parse(total.toString())) * .05)}",
     "total_discount": "${discountFunction()}",
     "cart": filterFunction(),
     "table_no": "",
     "saleid": ""
   };
+
+  print("\n\n body $bodyJson");
 
   try {
     var response = await http.post(
@@ -103,12 +119,6 @@ punchOrder(total, cost) async {
     var jsonData = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      // print("\n\n\n obj12 $discount \n\n");
-      //
-      // print("\n\n\n obj $bodyJson \n\n");
-      //
-      // print("\n\n\n obj $cartItems \n\n");
-
       return jsonData["data"]["sale_no"];
     } else {
       return false;

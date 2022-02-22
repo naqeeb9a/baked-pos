@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/widgets/buttons.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/material.dart' hide Image;
 import 'package:intl/intl.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../app_functions/functions.dart';
 import '../utils/dynamic_sizes.dart';
@@ -24,11 +27,14 @@ class Print extends StatefulWidget {
 class _PrintState extends State<Print> {
   List<BluetoothDevice> devices = [];
   BlueThermalPrinter printer = BlueThermalPrinter.instance;
+  BluetoothDevice? bluetoothDevice;
   String pathImage = "";
   int total = 0;
   bool loading = true;
+  bool? availablePrinter;
 
   PermissionStatus? check;
+  SharedPreferences? loginUser;
 
   getDevices() async {
     devices = await printer.getBondedDevices();
@@ -37,11 +43,52 @@ class _PrintState extends State<Print> {
 
   @override
   void initState() {
+    getSavedDevice();
     getStatus();
+
     super.initState();
   }
 
+  Future<BluetoothDevice?> getSavedDevice() async {
+    setState(() {
+      loading = true;
+    });
+    loginUser = await SharedPreferences.getInstance();
+    print("object123");
+    String? device = loginUser?.getString("selectedPrinter");
+
+    print("object153 $device");
+
+    if (device != null && device.isNotEmpty) {
+
+
+      var map = jsonDecode(device);
+
+      print("object1987 $map");
+      setState(() {
+        bluetoothDevice = BluetoothDevice.fromMap(map);
+        loading == false;
+      });
+
+      print("objec987 $bluetoothDevice");
+      setState(() {
+        availablePrinter == true;
+      });
+      return bluetoothDevice;
+    }
+    else {
+      setState(() {
+        availablePrinter == false;
+        loading == false;
+      });
+      return null;
+    }
+
+  }
+
+
   getStatus() async {
+
     setState(() {
       loading = true;
     });
@@ -51,9 +98,9 @@ class _PrintState extends State<Print> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
- 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Print Token/Bill'),
@@ -62,7 +109,9 @@ class _PrintState extends State<Print> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : getPrintersList(),
+          : availablePrinter == false
+              ? getPrintersList()
+              : startPrintFunc(bluetoothDevice!),
     );
   }
 
@@ -93,22 +142,18 @@ class _PrintState extends State<Print> {
               myBlack,
             ),
             onTap: () async {
-              CoolAlert.show(
-                  context: context,
-                  type: CoolAlertType.loading,
-                  barrierDismissible: false,
-                  text: "Punching Order");
-              var response = await punchOrder(widget.total, widget.cost);
-              if (response == false) {
-                Navigator.of(context, rootNavigator: true).pop();
-                MotionToast.error(
-                  description:
-                      const Text("Check your internet or try again later"),
-                ).show(context);
-              } else {
-                Navigator.of(context, rootNavigator: true).pop();
-                startPrintFunc(devices[i], response.toString());
-              }
+              SharedPreferences loginUser =
+                  await SharedPreferences.getInstance();
+
+              print("we3 ${jsonEncode(devices[i].toMap())}");
+              print("we3de ${devices[i]}");
+
+              await loginUser.setString(
+                "selectedPrinter",
+                jsonEncode(devices[i].toMap()),
+              );
+
+              startPrintFunc(devices[i]);
             },
           );
         },
@@ -133,94 +178,119 @@ class _PrintState extends State<Print> {
     }
   }
 
-  startPrintFunc(BluetoothDevice selectedDevice, saleNo) async {
+  startPrintFunc(BluetoothDevice selectedDevice) async {
     CoolAlert.show(
+      context: context,
+      type: CoolAlertType.loading,
+      barrierDismissible: false,
+      text: "Punching Order",
+    );
+    var response =
+        await punchOrder(widget.total, widget.cost, widget.paymentMethod);
+    if (response == false) {
+      Navigator.of(context, rootNavigator: true).pop();
+      MotionToast.error(
+        description: const Text("Check your internet or try again later"),
+      ).show(context);
+    } else {
+      Navigator.of(context, rootNavigator: true).pop();
+
+      CoolAlert.show(
         context: context,
         type: CoolAlertType.loading,
         barrierDismissible: false,
-        text: "Printing");
-    await printer.connect(selectedDevice).then((value) async {
-      if ((await printer.isConnected)!) {
-        printer.printCustom("Baked", 2, 1);
-        printer.printCustom("Lahore,Pakistan", 1, 1);
-        printer.printCustom("PNTN #6270509-2", 1, 1);
-        printer.printCustom("#$saleNo", 1, 1);
-        printer.printNewLine();
-        printer.printCustom(
-            "Cashier: " + userResponse["full_name"].toString(), 1, 0);
+        text: "Printing",
+      );
+      await printer.connect(selectedDevice).then((value) async {
+        if ((await printer.isConnected)!) {
+          printer.printCustom("Baked", 2, 1);
+          // printer.printCustom("Lahore,Pakistan", 1, 1);
+          // printer.printCustom("PNTN #6270509-2", 1, 1);
+          // printer.printCustom("#${response.toString()}", 1, 1);
+          // printer.printNewLine();
+          // printer.printCustom(
+          //     "Cashier: " + userResponse["full_name"].toString(), 1, 0);
+          //
+          // printer.printCustom("...............................", 1, 1);
+          //
+          // for (var i = 0; i < widget.data.length; i++) {
+          //   printer.printCustom("${widget.data[i]['productname']}", 1, 0);
+          //
+          //   widget.data[i]['item_discount'] == "0"
+          //       ? printer.printLeftRight(
+          //           "${widget.data[i]['productqty']} x ${widget.data[i]['productprice']}",
+          //           "${int.parse(widget.data[i]['productprice'].toString()) * int.parse(widget.data[i]['productqty'].toString())}",
+          //           1,
+          //         )
+          //       : printer.printLeftRight(
+          //           "${widget.data[i]['productqty']} x ${widget.data[i]['productprice']} - ${widget.data[i]['item_discount']}%",
+          //           "${widget.total}",
+          //           1,
+          //         );
+          //   printer.printCustom("-------------", 1, 1);
+          // }
+          //
+          // printer.printCustom("...............................", 1, 1);
+          //
+          // printer.printLeftRight("Subtotal", "${widget.total}", 1);
+          // printer.printLeftRight(
+          //   widget.paymentMethod == "Card" ? "Sales tax 5%" : "Sales tax 16%",
+          //   widget.paymentMethod == "Cash"
+          //       ? (int.parse(widget.total.toString()) * 0.16).toStringAsFixed(0)
+          //       : (int.parse(widget.total.toString()) * 0.05)
+          //           .toStringAsFixed(0),
+          //   1,
+          // );
+          //
+          // printer.printCustom("...............................", 1, 1);
+          //
+          // printer.printLeftRight(
+          //   "Total",
+          //   widget.paymentMethod == "Cash"
+          //       ? ((int.parse(widget.total.toString()) * 0.16) +
+          //               int.parse(widget.total.toString()))
+          //           .toStringAsFixed(0)
+          //       : ((int.parse(widget.total.toString()) * 0.05) +
+          //               int.parse(widget.total.toString()))
+          //           .toStringAsFixed(0),
+          //   1,
+          // );
+          // printer.printLeftRight(
+          //   widget.paymentMethod,
+          //   widget.paymentMethod == "Cash"
+          //       ? ((int.parse(widget.total.toString()) * 0.16) +
+          //               int.parse(widget.total.toString()))
+          //           .toStringAsFixed(0)
+          //       : ((int.parse(widget.total.toString()) * 0.05) +
+          //               int.parse(widget.total.toString()))
+          //           .toStringAsFixed(0),
+          //   1,
+          // );
+          //
+          // printer.printCustom("...............................", 1, 1);
+          //
+          // printer.printCustom("Shop # 6 PAF Market Lahore.", 1, 1);
+          // printer.printCustom("+92 304 5222533", 1, 1);
+          // printer.printCustom(
+          //     DateFormat.yMEd().add_jm().format(DateTime.now()), 1, 1);
+          //
+          // printer.printNewLine();
+          // printer.printNewLine();
+          // printer.printCustom(" ", 1, 1);
 
-        printer.printCustom("...............................", 1, 1);
-
-        for (var i = 0; i < widget.data.length; i++) {
-          total += int.parse(widget.data[i]['productprice']);
-
-          printer.printCustom("${widget.data[i]['productname']}", 1, 0);
-
-          widget.data[i]['item_discount'] == "0%"
-              ? printer.printLeftRight(
-                  "${widget.data[i]['productqty']} x ${widget.data[i]['productprice']}",
-                  "${int.parse(widget.data[i]['productprice'].toString()) * int.parse(widget.data[i]['productqty'].toString())}",
-                  1,
-                )
-              : printer.printLeftRight(
-                  "${widget.data[i]['productqty']} x ${widget.data[i]['productprice']} - ${widget.data[i]['item_discount']}",
-                  "${int.parse(widget.data[i]['productprice'].toString()) * int.parse(widget.data[i]['productqty'].toString())}",
-                  1,
-                );
-          printer.printCustom("-------------", 1, 1);
+          printer.paperCut();
+        } else {
+          Navigator.of(context, rootNavigator: true).pop();
+          MotionToast.error(
+            description: const Text("Try again check if device is connected"),
+            dismissable: true,
+          );
+          return;
         }
-
-        printer.printCustom("...............................", 1, 1);
-
-        printer.printLeftRight("Subtotal", "$total", 1);
-        printer.printLeftRight(
-          widget.paymentMethod == "Card" ? "Sales tax 5%" : "Sales tax 16%",
-          widget.paymentMethod == "Cash"
-              ? (total * 0.16).toStringAsFixed(0)
-              : (total * 0.05).toStringAsFixed(0),
-          1,
-        );
-
-        printer.printCustom("...............................", 1, 1);
-
-        printer.printLeftRight(
-          "Total",
-          widget.paymentMethod == "Cash"
-              ? ((total * 0.16) + total).toStringAsFixed(0)
-              : ((total * 0.05) + total).toStringAsFixed(0),
-          1,
-        );
-        printer.printLeftRight(
-          widget.paymentMethod,
-          widget.paymentMethod == "Cash"
-              ? ((total * 0.16) + total).toStringAsFixed(0)
-              : ((total * 0.05) + total).toStringAsFixed(0),
-          1,
-        );
-
-        printer.printCustom("...............................", 1, 1);
-
-        printer.printCustom("Shop # 6 PAF Market Lahore.", 1, 1);
-        printer.printCustom("+92 304 5222533", 1, 1);
-        printer.printCustom(
-            DateFormat.yMEd().add_jm().format(DateTime.now()), 1, 1);
-
-        printer.printNewLine();
-        printer.printNewLine();
-        printer.printCustom(" ", 1, 1);
-
-        printer.paperCut();
-      } else {
+        cartItems.clear();
         Navigator.of(context, rootNavigator: true).pop();
-        MotionToast.error(
-          description: const Text("Try again check if device is connected"),
-          dismissable: true,
-        );
-        return;
-      }
-      cartItems.clear();
-      Navigator.of(context, rootNavigator: true).pop();
-    });
+      });
+    }
     cartItems.clear();
     Navigator.pop(context);
   }

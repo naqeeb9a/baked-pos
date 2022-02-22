@@ -87,15 +87,19 @@ class Profile extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  profileRow(context, Icons.logout_rounded, "Log Out",
-                      function: () async {
-                    SharedPreferences loginUser =
-                        await SharedPreferences.getInstance();
-                    loginUser.clear();
-                    userResponse = "";
-                    indexPage = 0;
-                    checkLoginStatus(context);
-                  }),
+                  profileRow(
+                    context,
+                    Icons.logout_rounded,
+                    "Log Out",
+                    function: () async {
+                      SharedPreferences loginUser =
+                          await SharedPreferences.getInstance();
+                      loginUser.clear();
+                      userResponse = "";
+                      indexPage = 0;
+                      checkLoginStatus(context);
+                    },
+                  ),
                 ],
               ),
             ),

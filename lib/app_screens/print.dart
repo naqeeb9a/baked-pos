@@ -266,12 +266,11 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
       text: "Printing",
     );
     if (await printer.isConnected) {
-      printContent(selectedDevice, context, printer, data, total, cost,
+      await printContent(selectedDevice, context, printer, data, total, cost,
           paymentMethod, response);
 
-      // cartItems.clear();
       Navigator.of(context, rootNavigator: true).pop();
-      // Navigator.of(context, rootNavigator: true).pop();
+
       CoolAlert.show(
         context: context,
         title: "Want another print",
@@ -279,6 +278,7 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
         confirmBtnColor: myBrown,
         confirmBtnText: "Yes",
         cancelBtnText: "No",
+        barrierDismissible: false,
         onConfirmBtnTap: () {
           printContent(selectedDevice, context, printer, data, total, cost,
               paymentMethod, response);
@@ -302,8 +302,34 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
     } else {
       await printer.connect(selectedDevice).then((value) async {
         if ((await printer.isConnected)!) {
-          printContent(selectedDevice, context, printer, data, total, cost,
-              paymentMethod, response);
+          await printContent(selectedDevice, context, printer, data, total,
+              cost, paymentMethod, response);
+          Navigator.of(context, rootNavigator: true).pop();
+          CoolAlert.show(
+            context: context,
+            title: "Want another print",
+            type: CoolAlertType.confirm,
+            confirmBtnColor: myBrown,
+            confirmBtnText: "Yes",
+            cancelBtnText: "No",
+            barrierDismissible: false,
+            onConfirmBtnTap: () {
+              printContent(selectedDevice, context, printer, data, total, cost,
+                  paymentMethod, response);
+              cartItems.clear();
+              Navigator.of(context, rootNavigator: true).pop();
+              if (checkAlreadyDevice == false) {
+                Navigator.pop(context);
+              }
+            },
+            onCancelBtnTap: () {
+              cartItems.clear();
+              Navigator.of(context, rootNavigator: true).pop();
+              if (checkAlreadyDevice == false) {
+                Navigator.pop(context);
+              }
+            },
+          );
         } else {
           Navigator.of(context, rootNavigator: true).pop();
           MotionToast.error(
@@ -321,6 +347,7 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
   if (checkAlreadyDevice == false) {
     Navigator.pop(context);
   } else {
+    cartItems.clear();
     changeState();
   }
 }

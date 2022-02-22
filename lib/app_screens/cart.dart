@@ -9,7 +9,7 @@ import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
-import 'package:motion_toast/motion_toast.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Cart extends StatefulWidget {
@@ -115,10 +115,11 @@ class _CartState extends State<Cart> {
                   fontSize: 0.035,
                   function: () async {
                     if (cartItems.isEmpty) {
-                      MotionToast.info(
-                        description: const Text("Cart is empty"),
-                        dismissable: true,
-                      ).show(context);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          backgroundColor: myRed,
+                          duration: const Duration(seconds: 2),
+                          content:
+                              text(context, "Cart is empty", 0.04, myWhite)));
                     } else {
                       var filteredItems = [];
 

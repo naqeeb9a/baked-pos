@@ -4,7 +4,7 @@ import 'package:baked_pos/utils/dynamic_sizes.dart';
 import 'package:baked_pos/widgets/form_fields.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:motion_toast/motion_toast.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
@@ -298,11 +298,16 @@ class _CartCardsState extends State<CartCards> {
                                     pop(context);
                                     widget.function();
                                   } else {
-                                    MotionToast.info(
-                                      description: const Text(
-                                          "Discount can't be greater than 100"),
-                                      dismissable: true,
-                                    ).show(context);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            backgroundColor: myRed,
+                                            duration:
+                                                const Duration(seconds: 2),
+                                            content: text(
+                                                context,
+                                                "Discount can't be greater than 100",
+                                                0.04,
+                                                myWhite)));
                                   }
                                 })
                               ],

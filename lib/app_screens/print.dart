@@ -7,7 +7,6 @@ import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:intl/intl.dart';
-import 'package:motion_toast/motion_toast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -253,9 +252,10 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
   var response = await punchOrder(total, cost, paymentMethod);
   if (response == false) {
     Navigator.of(context, rootNavigator: true).pop();
-    MotionToast.error(
-      description: const Text("Check your internet or try again later"),
-    ).show(context);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: myRed,
+        duration: const Duration(seconds: 2),
+        content: text(context, "Check your Internet", 0.04, myWhite)));
   } else {
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -269,10 +269,9 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
       if (await printer.isConnected) {
         await printContent(selectedDevice, context, printer, data, total, cost,
             paymentMethod, response);
-
         Navigator.of(context, rootNavigator: true).pop();
-
-        CoolAlert.show(
+        print("object");
+        await CoolAlert.show(
           context: context,
           title: "Want another print",
           type: CoolAlertType.confirm,
@@ -297,6 +296,7 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
             }
           },
         );
+        print("object");
         if (checkAlreadyDevice == false) {
           Navigator.pop(context);
         }
@@ -306,7 +306,8 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
             await printContent(selectedDevice, context, printer, data, total,
                 cost, paymentMethod, response);
             Navigator.of(context, rootNavigator: true).pop();
-            CoolAlert.show(
+            print("whatever");
+            await CoolAlert.show(
               context: context,
               title: "Want another print",
               type: CoolAlertType.confirm,
@@ -331,12 +332,14 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
                 }
               },
             );
+            print("whatever");
           } else {
             Navigator.of(context, rootNavigator: true).pop();
-            MotionToast.error(
-              description: const Text("Try again check if device is connected"),
-              dismissable: true,
-            );
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: myRed,
+                duration: const Duration(seconds: 2),
+                content: text(context, "Check your Printer and try again", 0.04,
+                    myWhite)));
             return;
           }
           cartItems.clear();
@@ -344,8 +347,12 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
         });
       }
     } catch (e) {
-      MotionToast.error(description: const Text("Check your printer device"))
-          .show(context);
+      Navigator.of(context, rootNavigator: true).pop();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: myRed,
+          duration: const Duration(seconds: 2),
+          content: text(
+              context, "Check your Printer and try again", 0.04, myWhite)));
     }
   }
 

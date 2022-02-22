@@ -9,7 +9,7 @@ import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:motion_toast/motion_toast.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
@@ -107,29 +107,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       coloredButton(context, "SIGN IN", myYellow,
                           function: () async {
                         if (!EmailValidator.validate(email.text)) {
-                          MotionToast.error(
-                            title: const Text(
-                              "Error",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            dismissable: true,
-                            description:
-                                const Text("Please enter valid email!"),
-                          ).show(context);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                               backgroundColor: myRed,
+                              duration: const Duration(seconds: 2),
+                              content: text(context, "Enter a valid Email",
+                                  0.04, myWhite)));
                         } else if (password.text.isEmpty) {
-                          MotionToast.error(
-                            title: const Text(
-                              "Error",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            dismissable: true,
-                            description:
-                                const Text("Please enter valid password!"),
-                          ).show(context);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                               backgroundColor: myRed,
+                              duration: const Duration(seconds: 2),
+                              content: text(context, "Enter a Valid password",
+                                  0.04, myWhite)));
                         } else {
                           var response = await loginFunction();
 
@@ -137,31 +125,20 @@ class _LoginScreenState extends State<LoginScreen> {
                             setState(() {
                               loading = false;
                             });
-                            MotionToast.error(
-                              title: const Text(
-                                "Error",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              dismissable: true,
-                              description: const Text("Invalid Credentials"),
-                            ).show(context);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                 backgroundColor: myRed,
+                                duration: const Duration(seconds: 2),
+                                content: text(context, "Invalid credientials",
+                                    0.04, myWhite)));
                           } else if (response == false) {
                             setState(() {
                               loading = false;
                             });
-                            MotionToast.error(
-                              title: const Text(
-                                "Error",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              dismissable: true,
-                              description: const Text(
-                                  "Check your Internet or try again later"),
-                            ).show(context);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                 backgroundColor: myRed,
+                                duration: const Duration(seconds: 2),
+                                content: text(context, "Check Your Internet",
+                                    0.04, myWhite)));
                           } else {
                             SharedPreferences loginUser =
                                 await SharedPreferences.getInstance();

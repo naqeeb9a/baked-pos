@@ -170,16 +170,11 @@ class _CartState extends State<Cart> {
                               BlueThermalPrinter.instance;
                           var selectedDevice = getDevice();
                           if (selectedDevice != null) {
-                            startPrintFunc(
-                              selectedDevice,
-                              context,
-                              printer,
-                              filteredItems,
-                              getTotal(),
-                              getCost(),
-                              "Card",
-                              checkAlreadyDevice: true,
-                            );
+                            startPrintFunc(selectedDevice, context, printer,
+                                filteredItems, getTotal(), getCost(), "Card",
+                                checkAlreadyDevice: true, changeState: () {
+                              setState(() {});
+                            });
                           } else {
                             Navigator.push(
                               context,
@@ -227,7 +222,6 @@ class _CartState extends State<Cart> {
                               getCost(),
                               "Cash",
                               checkAlreadyDevice: true,
-
                             );
                           } else {
                             Navigator.push(

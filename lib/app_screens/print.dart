@@ -153,9 +153,18 @@ class _PrintState extends State<Print> {
   }
 }
 
-printContent(BluetoothDevice selectedDevice, context, printer, data, total,
-    cost, paymentMethod, response,
-    {checkAlreadyDevice = false, customState = "",}) {
+printContent(
+  BluetoothDevice selectedDevice,
+  context,
+  printer,
+  data,
+  total,
+  cost,
+  paymentMethod,
+  response, {
+  checkAlreadyDevice = false,
+  customState = "",
+}) {
   printer.printCustom("Baked", 2, 1);
   printer.printCustom("Lahore,Pakistan", 1, 1);
   printer.printCustom("PNTN #6270509-2", 1, 1);
@@ -234,7 +243,7 @@ printContent(BluetoothDevice selectedDevice, context, printer, data, total,
 
 startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
     cost, paymentMethod,
-    {checkAlreadyDevice = false}) async {
+    {checkAlreadyDevice = false, changeState = ""}) async {
   CoolAlert.show(
     context: context,
     type: CoolAlertType.loading,
@@ -311,8 +320,7 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
 
   if (checkAlreadyDevice == false) {
     Navigator.pop(context);
-  }
-  else{
-
+  } else {
+    changeState();
   }
 }

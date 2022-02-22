@@ -9,11 +9,8 @@ import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 
 class MenuPage extends StatefulWidget {
-
-
   const MenuPage({
     Key? key,
-  
   }) : super(key: key);
 
   @override
@@ -85,11 +82,13 @@ class _MenuPageState extends State<MenuPage> {
                   child: CircleAvatar(
                     radius: dynamicWidth(context, 0.16),
                     backgroundColor: myYellow,
+                    backgroundImage: NetworkImage(item["image"] ??
+                        "https://dailycontributors.com/wp-content/uploads/2021/08/bakery-food.jpg"),
                     child: CircleAvatar(
-                      backgroundColor: myBrown,
+                      backgroundColor: myBlack.withOpacity(0.4),
                       radius: dynamicWidth(context, 0.15),
-                      child:
-                          text(context, item["category_name"], 0.04, myWhite),
+                      child: text(context, item["category_name"], 0.05, myWhite,
+                          bold: true),
                     ),
                   ),
                 ),
@@ -97,22 +96,4 @@ class _MenuPageState extends State<MenuPage> {
               .toList()),
     );
   }
-}
-
-Widget choiceTag(context, title) {
-  return Expanded(
-    child: Container(
-      height: dynamicHeight(context, .06),
-      decoration: BoxDecoration(
-        color: myYellow,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      padding: EdgeInsets.all(
-        dynamicWidth(context, .016),
-      ),
-      child: Center(
-        child: text(context, title, .04, myWhite),
-      ),
-    ),
-  );
 }

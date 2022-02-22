@@ -25,23 +25,28 @@ class _MenuPageState extends State<MenuPage> {
       backgroundColor: myWhite,
       body: Container(
         decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: NetworkImage(
-                    "https://media.istockphoto.com/vectors/vector-pastry-seamless-pattern-with-cakes-pies-muffins-and-eclairs-vector-id1126080328?b=1&k=20&m=1126080328&s=612x612&w=0&h=N6naHiF-9ZN016_UO072jxSga7GONxPg_HISQES2pQQ="),
-                fit: BoxFit.cover)),
+          image: DecorationImage(
+            image: NetworkImage(
+              "assets/menu_bg",
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             text(context, "Choose Category", 0.07, myBlack, bold: true),
             heightBox(context, 0.02),
             Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: dynamicWidth(context, 0.05)),
-                child: FutureBuilder(
-                  future: getMenuCategories(),
-                  builder: ((context, AsyncSnapshot snapshot) =>
-                      errorHandlingWidget(snapshot)),
-                )),
+              padding: EdgeInsets.symmetric(
+                horizontal: dynamicWidth(context, 0.05),
+              ),
+              child: FutureBuilder(
+                future: getMenuCategories(),
+                builder: ((context, AsyncSnapshot snapshot) =>
+                    errorHandlingWidget(snapshot)),
+              ),
+            ),
           ],
         ),
       ),
@@ -77,27 +82,30 @@ class _MenuPageState extends State<MenuPage> {
                   onTap: () {
                     if (item["category_name"] == "All Items") {
                       push(
-                          context,
-                          const MenuExtension(
-                            customSnapshot: "menu",
-                            check: true,
-                          ));
+                        context,
+                        const MenuExtension(
+                          customSnapshot: "menu",
+                          check: true,
+                        ),
+                      );
                     } else {
                       Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MenuExtension(
-                                      customSnapshot: item["child"])))
-                          .then((value) => () {
-                                setState(() {});
-                              });
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              MenuExtension(customSnapshot: item["child"]),
+                        ),
+                      ).then((value) => () {
+                            setState(() {});
+                          });
                     }
                   },
                   child: CircleAvatar(
                     radius: dynamicWidth(context, 0.16),
                     backgroundColor: myYellow,
-                    backgroundImage: NetworkImage(item["image"] ??
-                        "https://www.elegantthemes.com/blog/wp-content/uploads/2016/04/category-plugins-header.png"),
+                    backgroundImage: AssetImage(
+                      item["image"] ?? "assets/cat_image.png",
+                    ),
                     child: CircleAvatar(
                       backgroundColor: myBlack.withOpacity(0.6),
                       radius: dynamicWidth(context, 0.15),

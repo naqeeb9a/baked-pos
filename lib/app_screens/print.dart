@@ -6,7 +6,6 @@ import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart' hide Image;
-import 'package:intl/intl.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,9 +14,10 @@ import '../app_functions/functions.dart';
 import '../utils/dynamic_sizes.dart';
 
 class Print extends StatefulWidget {
-  final dynamic data, paymentMethod, total, cost;
+  final dynamic data, paymentMethod, total, cost, printerCheck;
 
-  const Print(this.data, this.paymentMethod, {Key? key, this.total, this.cost})
+  const Print(this.data, this.paymentMethod,
+      {Key? key, this.total, this.cost, this.printerCheck})
       : super(key: key);
 
   @override
@@ -34,7 +34,8 @@ class _PrintState extends State<Print> {
   bool? availablePrinter;
 
   PermissionStatus? check;
-  SharedPreferences? loginUser;
+
+  // SharedPreferences? loginUser;
 
   getDevices() async {
     devices = await printer.getBondedDevices();
@@ -43,64 +44,85 @@ class _PrintState extends State<Print> {
 
   @override
   void initState() {
-    getSavedDevice();
+    // getSavedDevice();
     getStatus();
 
     super.initState();
   }
 
-  Future<BluetoothDevice?> getSavedDevice() async {
-    setState(() {
-      loading = true;
-    });
-    loginUser = await SharedPreferences.getInstance();
-    print("object123");
-    String? device = loginUser?.getString("selectedPrinter");
-
-    print("object153 $device");
-
-    if (device != null && device.isNotEmpty) {
-
-
-      var map = jsonDecode(device);
-
-      print("object1987 $map");
-      setState(() {
-        bluetoothDevice = BluetoothDevice.fromMap(map);
-        loading == false;
-      });
-
-      print("objec987 $bluetoothDevice");
-      setState(() {
-        availablePrinter == true;
-      });
-      return bluetoothDevice;
-    }
-    else {
-      setState(() {
-        availablePrinter == false;
-        loading == false;
-      });
-      return null;
-    }
-
-  }
-
+  // Future<BluetoothDevice?> getSavedDevice() async {
+  //   setState(() {
+  //     loading = true;
+  //   });
+  //   SharedPreferences loginUser = await SharedPreferences.getInstance();
+  //   print("object123");
+  //   String? device = loginUser.getString("selectedPrinter");
+  //
+  //   print("object153 $device");
+  //
+  //   if (device != null && device.isNotEmpty) {
+  //
+  //
+  //     var map = jsonDecode(device);
+  //
+  //     print("object1987 $map");
+  //     setState(() {
+  //       bluetoothDevice = BluetoothDevice.fromMap(map);
+  //       loading == false;
+  //     });
+  //
+  //     print("objec987 $bluetoothDevice");
+  //     setState(() {
+  //       availablePrinter == true;
+  //     });
+  //     return bluetoothDevice;
+  //   }
+  //   else {
+  //     setState(() {
+  //       availablePrinter == false;
+  //       loading == false;
+  //     });
+  //     return null;
+  //   }
+  //
+  // }
 
   getStatus() async {
-
     setState(() {
       loading = true;
     });
     check = await Permission.bluetoothConnect.status;
+    // SharedPreferences loginUser = await SharedPreferences.getInstance();
+    // print("object123");
+    // String? device = loginUser.getString("selectedPrinter");
+    //
+    // print("object153 $device");
+    //
+    // if (device != null && device.isNotEmpty) {
+    //   var map = jsonDecode(device);
+    //
+    //   print("object1987 $map");
+    //   setState(() {
+    //     bluetoothDevice = BluetoothDevice.fromMap(map);
+    //     availablePrinter == true;
+    //     loading == false;
+    //   });
+    //
+    //   print("objec987 $bluetoothDevice");
+    //   setState(() {
+    //     availablePrinter == true;
+    //   });
+    // }
     setState(() {
       loading = false;
+      // availablePrinter == false;
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
+    print("jfkhfd ${widget.printerCheck}");
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Print Token/Bill'),
@@ -109,9 +131,9 @@ class _PrintState extends State<Print> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : availablePrinter == false
+          : widget.printerCheck == null
               ? getPrintersList()
-              : startPrintFunc(bluetoothDevice!),
+              : startPrintFunc(widget.printerCheck),
     );
   }
 

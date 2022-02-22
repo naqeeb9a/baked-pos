@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:baked_pos/app_screens/print.dart';
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/utils/dynamic_sizes.dart';
@@ -5,9 +7,11 @@ import 'package:baked_pos/widgets/buttons.dart';
 import 'package:baked_pos/widgets/drawer.dart';
 import 'package:baked_pos/widgets/form_fields.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
+import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:motion_toast/motion_toast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Cart extends StatefulWidget {
   const Cart({Key? key}) : super(key: key);
@@ -125,8 +129,22 @@ class _CartState extends State<Cart> {
                     confirmBtnColor: myBrown,
                     confirmBtnText: "Via Card",
                     cancelBtnText: "Via Cash",
-                    onConfirmBtnTap: () {
+                    onConfirmBtnTap: () async {
                       Navigator.of(context, rootNavigator: true).pop();
+
+                      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+
+                      BluetoothDevice? getDevice() {
+                        String? device = prefs.getString("selectedPrinter");
+                        if (device != null && device.isNotEmpty) {
+                          var map = jsonDecode(device);
+                          BluetoothDevice bluetoothDevice = BluetoothDevice.fromMap(map);
+                          return bluetoothDevice;
+                        } else {
+                          return null;
+                        }
+                      }
 
                       Navigator.push(
                         context,
@@ -136,14 +154,29 @@ class _CartState extends State<Cart> {
                             "Card",
                             total: getTotal().toString(),
                             cost: getCost().toString(),
+                            printerCheck: getDevice(),
                           ),
                         ),
                       ).then((value) {
                         setState(() {});
                       });
                     },
-                    onCancelBtnTap: () {
+                    onCancelBtnTap: () async {
                       Navigator.of(context, rootNavigator: true).pop();
+
+                      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+
+                      BluetoothDevice? getDevice() {
+                        String? device = prefs.getString("selectedPrinter");
+                        if (device != null && device.isNotEmpty) {
+                          var map = jsonDecode(device);
+                          BluetoothDevice bluetoothDevice = BluetoothDevice.fromMap(map);
+                          return bluetoothDevice;
+                        } else {
+                          return null;
+                        }
+                      }
 
                       Navigator.push(
                         context,
@@ -153,6 +186,7 @@ class _CartState extends State<Cart> {
                             "Card",
                             total: getTotal().toString(),
                             cost: getCost().toString(),
+                            printerCheck: getDevice(),
                           ),
                         ),
                       ).then((value) {

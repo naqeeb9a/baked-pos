@@ -91,10 +91,7 @@ class _BasicPageState extends State<BasicPage>
             controller: _tabController,
             physics: const NeverScrollableScrollPhysics(),
             children: const [
-              MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  home: MenuPage(
-                      saleId: "1", tableNo: "1", tableName: "tableName")),
+              MaterialApp(debugShowCheckedModeBanner: false, home: MenuPage()),
               Cart(),
               Profile(),
             ],
@@ -152,8 +149,7 @@ class _BasicPageState extends State<BasicPage>
   bodyPage(String page) {
     switch (page) {
       case "home":
-        return const MenuPage(
-            saleId: "1", tableNo: "1", tableName: "tableName");
+        return const MenuPage();
       case "cart":
         return const Cart();
       case "profile":

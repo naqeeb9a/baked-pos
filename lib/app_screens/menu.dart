@@ -9,37 +9,29 @@ import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 
 class MenuPage extends StatefulWidget {
-  final String saleId, tableNo, tableName;
+
 
   const MenuPage({
     Key? key,
-    required this.saleId,
-    required this.tableNo,
-    required this.tableName,
+  
   }) : super(key: key);
 
   @override
   State<MenuPage> createState() => _MenuPageState();
 }
 
-class _MenuPageState extends State<MenuPage>
-    with AutomaticKeepAliveClientMixin<MenuPage> {
-  @override
-  bool get wantKeepAlive => true;
-
+class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: myWhite,
       body: Padding(
           padding:
               EdgeInsets.symmetric(horizontal: dynamicWidth(context, 0.05)),
-          child: FutureBuilder<List>(
-            future: Future.wait([getMenu(), getMenuCategories()]),
-            builder: ((context, AsyncSnapshot<List> snapshot) =>
+          child: FutureBuilder(
+            future: getMenuCategories(),
+            builder: ((context, AsyncSnapshot snapshot) =>
                 errorHandlingWidget(snapshot)),
           )),
     );
@@ -60,7 +52,7 @@ class _MenuPageState extends State<MenuPage>
   }
 
   selectionCards(snapshot) {
-    snapshot[1].insert(0, {"category_name": "All Items"});
+    snapshot.insert(0, {"category_name": "All Items"});
     return Center(
       child: Wrap(
           alignment: WrapAlignment.center,
@@ -68,20 +60,26 @@ class _MenuPageState extends State<MenuPage>
           crossAxisAlignment: WrapCrossAlignment.center,
           spacing: dynamicWidth(context, 0.02),
           runSpacing: dynamicWidth(context, 0.02),
-          children: snapshot[1]
+          children: snapshot
               .map<Widget>(
                 (item) => GestureDetector(
                   onTap: () {
                     if (item["category_name"] == "All Items") {
                       push(
                           context,
-                          MenuExtension(
-                            customSnapshot: snapshot[0],
+                          const MenuExtension(
+                            customSnapshot: "menu",
                             check: true,
                           ));
                     } else {
-                      push(context,
-                          MenuExtension(customSnapshot: item["child"]));
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MenuExtension(
+                                      customSnapshot: item["child"])))
+                          .then((value) => () {
+                                setState(() {});
+                              });
                     }
                   },
                   child: CircleAvatar(

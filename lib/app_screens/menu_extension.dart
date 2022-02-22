@@ -1,17 +1,45 @@
+import 'package:baked_pos/app_functions/functions.dart';
 import 'package:baked_pos/utils/app_routes.dart';
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/utils/dynamic_sizes.dart';
+import 'package:baked_pos/widgets/essential_widgets.dart';
 import 'package:baked_pos/widgets/menu_cards.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/Search.dart';
 
-class MenuExtension extends StatelessWidget {
-  final dynamic customSnapshot, check;
+class MenuExtension extends StatefulWidget {
+  final dynamic customSnapshot, check, setstate1;
   const MenuExtension(
-      {Key? key, required this.customSnapshot, this.check = false})
+      {Key? key,
+      required this.customSnapshot,
+      this.check = false,
+      this.setstate1})
       : super(key: key);
+
+  @override
+  State<MenuExtension> createState() => _MenuExtensionState();
+}
+
+class _MenuExtensionState extends State<MenuExtension> {
+  bool loading = false;
+  dynamic data;
+  @override
+  void initState() {
+    widget.check == true ? getMenuGridNow() : null;
+    super.initState();
+  }
+
+  getMenuGridNow() async {
+    setState(() {
+      loading = true;
+    });
+    data = await getMenu();
+    setState(() {
+      loading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +50,8 @@ class MenuExtension extends StatelessWidget {
         body: Padding(
           padding:
               EdgeInsets.symmetric(horizontal: dynamicWidth(context, 0.02)),
-          child: check == true
-              ? allMenu(customSnapshot)
+          child: widget.check == true
+              ? allMenu(data)
               : StatefulBuilder(builder: (context, changeState) {
                   return Column(
                     children: [
@@ -31,7 +59,7 @@ class MenuExtension extends StatelessWidget {
                         height: dynamicHeight(context, 0.1),
                         child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: customSnapshot.length,
+                            itemCount: widget.customSnapshot.length,
                             itemBuilder: (context, index) {
                               if (choiceChipValues.isEmpty) {
                                 choiceChipValues.add(true);
@@ -58,7 +86,8 @@ class MenuExtension extends StatelessWidget {
                                     selectedColor: myYellow,
                                     label: text(
                                         context,
-                                        customSnapshot[index]["category_name"],
+                                        widget.customSnapshot[index]
+                                            ["category_name"],
                                         0.04,
                                         myBlack),
                                     selected: choiceChipValues[index]),
@@ -79,10 +108,8 @@ class MenuExtension extends StatelessWidget {
                                 useRootNavigator: true,
                                 context: context,
                                 delegate: CustomSearchDelegate(
-                                    customSnapshot[customIndex]["item"]),
-                              ).then(
-                                (value) => changeState(() {}),
-                              );
+                                    widget.customSnapshot[customIndex]["item"]),
+                              ).then((value) => changeState(() {}));
                             },
                             child: Container(
                               width: dynamicWidth(context, 0.8),
@@ -109,12 +136,14 @@ class MenuExtension extends StatelessWidget {
                         ],
                       ),
                       Expanded(
-                        child: customSnapshot[customIndex]["item"].length == 0
+                        child: widget.customSnapshot[customIndex]["item"]
+                                    .length ==
+                                0
                             ? Center(
                                 child: text(context, "No items", 0.04, myBlack))
                             : GridView.builder(
-                                itemCount: customSnapshot[customIndex]["item"]
-                                    .length,
+                                itemCount: widget
+                                    .customSnapshot[customIndex]["item"].length,
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 2,
@@ -127,7 +156,7 @@ class MenuExtension extends StatelessWidget {
                                             dynamicWidth(context, 0.02)),
                                 itemBuilder: (context, index) => menuCards(
                                     context,
-                                    customSnapshot[customIndex]["item"],
+                                    widget.customSnapshot[customIndex]["item"],
                                     index)),
                       ),
                     ],
@@ -137,64 +166,66 @@ class MenuExtension extends StatelessWidget {
   }
 
   allMenu(snapshot) {
-    return StatefulBuilder(builder: (context, changeState) {
-      return Column(
-        children: [
-          heightBox(context, 0.02),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              InkWell(
-                  onTap: () {
-                    pop(context);
-                  },
-                  child: const Icon(Icons.arrow_back_ios)),
-              InkWell(
-                onTap: () {
-                  showSearch(
-                    useRootNavigator: true,
-                    context: context,
-                    delegate: CustomSearchDelegate(snapshot),
-                  );
-                },
-                child: Container(
-                  width: dynamicWidth(context, 0.8),
-                  decoration: BoxDecoration(
-                    color: Colors.brown.shade400,
-                    borderRadius: BorderRadius.circular(
-                      dynamicWidth(context, 0.1),
-                    ),
-                  ),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      border: const UnderlineInputBorder(
-                          borderSide: BorderSide.none),
-                      hintStyle: const TextStyle(color: myWhite),
-                      hintText: "Search",
-                      enabled: false,
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: dynamicWidth(context, 0.05),
+    return (loading == true)
+        ? loader(context)
+        : StatefulBuilder(builder: (context, changeState) {
+            return Column(
+              children: [
+                heightBox(context, 0.02),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          pop(context);
+                        },
+                        child: const Icon(Icons.arrow_back_ios)),
+                    InkWell(
+                      onTap: () {
+                        showSearch(
+                          useRootNavigator: true,
+                          context: context,
+                          delegate: CustomSearchDelegate(snapshot),
+                        ).then((value) => changeState(() {}));
+                      },
+                      child: Container(
+                        width: dynamicWidth(context, 0.8),
+                        decoration: BoxDecoration(
+                          color: Colors.brown.shade400,
+                          borderRadius: BorderRadius.circular(
+                            dynamicWidth(context, 0.1),
+                          ),
+                        ),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            border: const UnderlineInputBorder(
+                                borderSide: BorderSide.none),
+                            hintStyle: const TextStyle(color: myWhite),
+                            hintText: "Search",
+                            enabled: false,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: dynamicWidth(context, 0.05),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: GridView.builder(
-                itemCount: snapshot.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio:
-                        dynamicWidth(context, 0.4) / dynamicWidth(context, 0.5),
-                    mainAxisSpacing: dynamicWidth(context, 0.02),
-                    crossAxisSpacing: dynamicWidth(context, 0.02)),
-                itemBuilder: (context, index) =>
-                    menuCards(context, snapshot, index)),
-          ),
-        ],
-      );
-    });
+                Expanded(
+                  child: GridView.builder(
+                      itemCount: snapshot.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: dynamicWidth(context, 0.4) /
+                              dynamicWidth(context, 0.5),
+                          mainAxisSpacing: dynamicWidth(context, 0.02),
+                          crossAxisSpacing: dynamicWidth(context, 0.02)),
+                      itemBuilder: (context, index) =>
+                          menuCards(context, snapshot, index)),
+                ),
+              ],
+            );
+          });
   }
 }

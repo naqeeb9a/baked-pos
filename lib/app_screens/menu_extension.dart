@@ -2,6 +2,7 @@ import 'package:baked_pos/app_functions/functions.dart';
 import 'package:baked_pos/utils/app_routes.dart';
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/utils/dynamic_sizes.dart';
+import 'package:baked_pos/widgets/buttons.dart';
 import 'package:baked_pos/widgets/essential_widgets.dart';
 import 'package:baked_pos/widgets/menu_cards.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
@@ -178,75 +179,85 @@ class _MenuExtensionState extends State<MenuExtension> {
   allMenu(snapshot) {
     return (loading == true)
         ? loader(context)
-        : StatefulBuilder(builder: (context, changeState) {
-            return Column(
-              children: [
-                heightBox(context, 0.02),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        : (snapshot == false)
+            ? retry(context)
+            : StatefulBuilder(builder: (context, changeState) {
+                return Column(
                   children: [
-                    InkWell(
-                        onTap: () {
-                          pop(context);
-                        },
-                        child: const Icon(Icons.arrow_back_ios)),
-                    InkWell(
-                      onTap: () {
-                        showSearch(
-                          useRootNavigator: true,
-                          context: context,
-                          delegate: CustomSearchDelegate(snapshot),
-                        ).then((value) => changeState(() {}));
-                      },
-                      child: Container(
-                        width: dynamicWidth(context, 0.8),
-                        decoration: BoxDecoration(
-                          color: Colors.brown.shade400,
-                          borderRadius: BorderRadius.circular(
-                            dynamicWidth(context, 0.1),
-                          ),
-                        ),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            border: const UnderlineInputBorder(
-                                borderSide: BorderSide.none),
-                            hintStyle: const TextStyle(color: myWhite),
-                            hintText: "Search",
-                            enabled: false,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: dynamicWidth(context, 0.05),
+                    heightBox(context, 0.02),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                            onTap: () {
+                              pop(context);
+                            },
+                            child: const Icon(Icons.arrow_back_ios)),
+                        InkWell(
+                          onTap: () {
+                            showSearch(
+                              useRootNavigator: true,
+                              context: context,
+                              delegate: CustomSearchDelegate(snapshot),
+                            ).then((value) => changeState(() {}));
+                          },
+                          child: Container(
+                            width: dynamicWidth(context, 0.8),
+                            decoration: BoxDecoration(
+                              color: Colors.brown.shade400,
+                              borderRadius: BorderRadius.circular(
+                                dynamicWidth(context, 0.1),
+                              ),
+                            ),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                border: const UnderlineInputBorder(
+                                    borderSide: BorderSide.none),
+                                hintStyle: const TextStyle(color: myWhite),
+                                hintText: "Search",
+                                enabled: false,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: dynamicWidth(context, 0.05),
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
+                    ),
+                    heightBox(context, 0.02),
+                    Expanded(
+                      child: snapshot.length == 0
+                          ? Center(
+                              child: text(context, "No items", 0.04, myBlack))
+                          : Scrollbar(
+                              interactive: true,
+                              showTrackOnHover: true,
+                              trackVisibility: true,
+                              isAlwaysShown: true,
+                              thickness: dynamicWidth(context, 0.01),
+                              radius:
+                                  Radius.circular(dynamicWidth(context, 0.1)),
+                              child: GridView.builder(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: dynamicWidth(context, 0.03)),
+                                  itemCount: snapshot.length,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          childAspectRatio:
+                                              dynamicWidth(context, 0.4) /
+                                                  dynamicWidth(context, 0.5),
+                                          mainAxisSpacing:
+                                              dynamicWidth(context, 0.02),
+                                          crossAxisSpacing:
+                                              dynamicWidth(context, 0.02)),
+                                  itemBuilder: (context, index) =>
+                                      menuCards(context, snapshot, index)),
+                            ),
                     ),
                   ],
-                ),
-                heightBox(context, 0.02),
-                Expanded(
-                  child: Scrollbar(
-                    interactive: true,
-                    showTrackOnHover: true,
-                    trackVisibility: true,
-                    isAlwaysShown: true,
-                    thickness: dynamicWidth(context, 0.01),
-                    radius: Radius.circular(dynamicWidth(context, 0.1)),
-                    child: GridView.builder(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: dynamicWidth(context, 0.03)),
-                        itemCount: snapshot.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: dynamicWidth(context, 0.4) /
-                                dynamicWidth(context, 0.5),
-                            mainAxisSpacing: dynamicWidth(context, 0.02),
-                            crossAxisSpacing: dynamicWidth(context, 0.02)),
-                        itemBuilder: (context, index) =>
-                            menuCards(context, snapshot, index)),
-                  ),
-                ),
-              ],
-            );
-          });
+                );
+              });
   }
 }

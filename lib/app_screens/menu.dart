@@ -24,6 +24,7 @@ class _MenuPageState extends State<MenuPage> {
       resizeToAvoidBottomInset: false,
       backgroundColor: myWhite,
       body: Container(
+        height: double.maxFinite,
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
@@ -32,22 +33,28 @@ class _MenuPageState extends State<MenuPage> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            text(context, "Choose Category", 0.07, myBlack, bold: true),
-            heightBox(context, 0.02),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: dynamicWidth(context, 0.05),
-              ),
-              child: FutureBuilder(
-                future: getMenuCategories(),
-                builder: ((context, AsyncSnapshot snapshot) =>
-                    errorHandlingWidget(snapshot)),
-              ),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                heightBox(context, 0.02),
+                text(context, "Choose Category", 0.07, myBlack, bold: true),
+                heightBox(context, 0.02),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: dynamicWidth(context, 0.05),
+                  ),
+                  child: FutureBuilder(
+                    future: getMenuCategories(),
+                    builder: ((context, AsyncSnapshot snapshot) =>
+                        errorHandlingWidget(snapshot)),
+                  ),
+                ),
+                heightBox(context, 0.02),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -69,6 +76,7 @@ class _MenuPageState extends State<MenuPage> {
 
   selectionCards(snapshot) {
     snapshot.insert(0, {"category_name": "All Items"});
+
     return Center(
       child: Wrap(
           alignment: WrapAlignment.center,

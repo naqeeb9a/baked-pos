@@ -80,7 +80,8 @@ punchOrder(total, cost, paymentType) async {
   totalPriceFunction() {
     int total = 0;
     for (var item in cartItems) {
-      total += (int.parse(item['sale_price'].toString()) * int.parse(item['qty'].toString()));
+      total += (int.parse(item['sale_price'].toString()) *
+          int.parse(item['qty'].toString()));
     }
     return total;
   }
@@ -102,8 +103,6 @@ punchOrder(total, cost, paymentType) async {
     "table_no": "",
     "saleid": ""
   };
-
-  print("\n\n body $bodyJson");
 
   try {
     var response = await http.post(

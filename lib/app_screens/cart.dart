@@ -147,20 +147,34 @@ class _CartState extends State<Cart> {
                         }
                       }
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Print(
-                            filteredItems,
-                            "Card",
-                            total: getTotal().toString(),
-                            cost: getCost().toString(),
-                            printerCheck: getDevice(),
+                      BlueThermalPrinter printer = BlueThermalPrinter.instance;
+                      var selectedDevice = getDevice();
+                      if (selectedDevice != null) {
+                        startPrintFunc(
+                          selectedDevice,
+                          context,
+                          printer,
+                          filteredItems,
+                          getTotal(),
+                          getCost(),
+                          "Card",
+                          checkAlreadyDevice: true,
+                        );
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Print(
+                              filteredItems,
+                              "Card",
+                              total: getTotal().toString(),
+                              cost: getCost().toString(),
+                            ),
                           ),
-                        ),
-                      ).then((value) {
-                        setState(() {});
-                      });
+                        ).then((value) {
+                          setState(() {});
+                        });
+                      }
                     },
                     onCancelBtnTap: () async {
                       Navigator.of(context, rootNavigator: true).pop();
@@ -182,21 +196,26 @@ class _CartState extends State<Cart> {
 
                       BlueThermalPrinter printer = BlueThermalPrinter.instance;
                       var selectedDevice = getDevice();
-                      print(selectedDevice);
                       if (selectedDevice != null) {
-                        startPrintFunc(selectedDevice, context, printer,
-                            getTotal(), getCost(), "Cash",
-                            checkAlreadyDevice: true);
+                        startPrintFunc(
+                          selectedDevice,
+                          context,
+                          printer,
+                          filteredItems,
+                          getTotal(),
+                          getCost(),
+                          "Cash",
+                          checkAlreadyDevice: true,
+                        );
                       } else {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => Print(
                               filteredItems,
-                              "Card",
+                              "Cash",
                               total: getTotal().toString(),
                               cost: getCost().toString(),
-                              printerCheck: getDevice(),
                             ),
                           ),
                         ).then((value) {

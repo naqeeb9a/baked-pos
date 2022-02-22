@@ -211,231 +211,262 @@ class _CartCardsState extends State<CartCards> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            InkWell(
-              onTap: () {
-                getRow(text1, text2) {
-                  return InkWell(
-                    onTap: () {
-                      dynamic actualPrice = int.parse(
-                          cartItems[widget.index]["sale_price"].toString());
-                      cartItems[widget.index]["discounted_price"] =
-                          (actualPrice -
-                                  (actualPrice * (int.parse(text2) / 100)))
-                              .toStringAsFixed(0);
-                      cartItems[widget.index]["item_discount"] = text2;
-                      Navigator.of(context, rootNavigator: true).pop();
+    return Container(
+      padding: EdgeInsets.all(dynamicWidth(context, 0.02)),
+      decoration: BoxDecoration(
+          color: int.parse(cartItems[widget.index]["item_discount"]) != 0
+              ? myGreen.withOpacity(0.2)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(dynamicWidth(context, 0.02))),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  getRow(text1, text2) {
+                    return InkWell(
+                      onTap: () {
+                        dynamic actualPrice = int.parse(
+                            cartItems[widget.index]["sale_price"].toString());
+                        cartItems[widget.index]["discounted_price"] =
+                            (actualPrice -
+                                    (actualPrice * (int.parse(text2) / 100)))
+                                .toStringAsFixed(0);
+                        cartItems[widget.index]["item_discount"] = text2;
+                        Navigator.of(context, rootNavigator: true).pop();
 
-                      widget.function();
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        text(context, text1, 0.04, myBlack),
-                        text(context, text2 + "%", 0.04, myBlack),
-                      ],
-                    ),
-                  );
-                }
-
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        backgroundColor: myWhite,
-                        title: text(context, "Discount", 0.04, myBrown,
-                            alignText: TextAlign.center, bold: true),
-                        content: Container(
-                          color: myWhite,
-                          height: dynamicHeight(context, 0.5),
-                          width: dynamicWidth(context, 0.7),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              getRow("Discount 1", "10"),
-                              const Divider(),
-                              getRow("Discount 2", "20"),
-                              const Divider(),
-                              getRow("Discount 3", "30"),
-                              const Divider(),
-                              getRow("Discount 4", "40"),
-                              const Divider(),
-                              getRow("Discount 5", "50"),
-                              const Divider(),
-                              getRow("Discount 6", "100"),
-                              const Divider(),
-                              text(context, "Custom Discount in %: ", 0.04,
-                                  myBrown),
-                              inputTextField(context, "Custom Discount", _text,
-                                  keyboard: TextInputType.number),
-                              const Divider(),
-                              coloredButton(context, "Submit", myYellow,
-                                  width: dynamicWidth(context, 0.5),
-                                  function: () {
-                                if (int.parse(_text.text) <= 100) {
-                                  dynamic actualPrice = int.parse(
-                                      cartItems[widget.index]["sale_price"]
-                                          .toString());
-                                  cartItems[widget.index]
-                                      ["discounted_price"] = (actualPrice -
-                                          (actualPrice *
-                                              (int.parse(_text.text) / 100)))
-                                      .toStringAsFixed(0);
-                                  cartItems[widget.index]["item_discount"] =
-                                      _text.text;
-                                  pop(context);
-                                  widget.function();
-                                } else {
-                                  MotionToast.info(
-                                    description: const Text(
-                                        "Discount can't be greater than 100"),
-                                    dismissable: true,
-                                  ).show(context);
-                                }
-                              })
-                            ],
-                          ),
-                        ),
-                      );
-                    });
-              },
-              child: ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(dynamicWidth(context, 0.02)),
-                child: Image.network(
-                  cartItems[widget.index]["photo"] ??
-                      "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHx8&w=1000&q=80",
-                  height: dynamicWidth(context, 0.3),
-                  width: dynamicWidth(context, 0.3),
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, yrl, error) {
-                    return const Icon(
-                      Icons.error,
-                      color: myBlack,
+                        widget.function();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          text(context, text1, 0.04, myBlack),
+                          text(context, text2 + "%", 0.04, myBlack),
+                        ],
+                      ),
                     );
-                  },
-                ),
-              ),
-            ),
-            widthBox(context, 0.05),
-            FittedBox(
-              child: SizedBox(
-                width: dynamicWidth(context, 0.4),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  }
+
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          backgroundColor: myWhite,
+                          title: text(context, "Discount", 0.04, myBrown,
+                              alignText: TextAlign.center, bold: true),
+                          content: Container(
+                            color: myWhite,
+                            height: dynamicHeight(context, 0.5),
+                            width: dynamicWidth(context, 0.7),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                getRow("Discount 1", "10"),
+                                const Divider(),
+                                getRow("Discount 2", "20"),
+                                const Divider(),
+                                getRow("Discount 3", "30"),
+                                const Divider(),
+                                getRow("Discount 4", "40"),
+                                const Divider(),
+                                getRow("Discount 5", "50"),
+                                const Divider(),
+                                getRow("Discount 6", "100"),
+                                const Divider(),
+                                text(context, "Custom Discount in %: ", 0.04,
+                                    myBrown),
+                                inputTextField(
+                                    context, "Custom Discount", _text,
+                                    keyboard: TextInputType.number),
+                                const Divider(),
+                                coloredButton(context, "Submit", myYellow,
+                                    width: dynamicWidth(context, 0.5),
+                                    function: () {
+                                  if (int.parse(_text.text) <= 100) {
+                                    dynamic actualPrice = int.parse(
+                                        cartItems[widget.index]["sale_price"]
+                                            .toString());
+                                    cartItems[widget.index]
+                                        ["discounted_price"] = (actualPrice -
+                                            (actualPrice *
+                                                (int.parse(_text.text) / 100)))
+                                        .toStringAsFixed(0);
+                                    cartItems[widget.index]["item_discount"] =
+                                        _text.text;
+                                    pop(context);
+                                    widget.function();
+                                  } else {
+                                    MotionToast.info(
+                                      description: const Text(
+                                          "Discount can't be greater than 100"),
+                                      dismissable: true,
+                                    ).show(context);
+                                  }
+                                })
+                              ],
+                            ),
+                          ),
+                        );
+                      });
+                },
+                child: Stack(
                   children: [
-                    text(context, cartItems[widget.index]["name"].toString(),
-                        0.04, myBlack,
-                        bold: true),
-                    text(
-                        context,
-                        "Price : " + cartItems[widget.index]["sale_price"],
-                        0.04,
-                        myBlack),
-                    text(
-                        context,
-                        "Discounted Price : " +
-                            cartItems[widget.index]["discounted_price"],
-                        0.04,
-                        myBlack),
-                    text(
-                        context,
-                        "Discount : " +
-                            cartItems[widget.index]["item_discount"] +
-                            "%",
-                        0.04,
-                        myBlack),
-                    heightBox(context, 0.01),
-                    Container(
-                        width: dynamicWidth(context, 0.25),
-                        decoration: BoxDecoration(
-                            color: myGrey.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(
-                                dynamicWidth(context, 0.02)),
-                            border: Border.all(color: myWhite, width: 1)),
-                        child: StatefulBuilder(builder: (context, changeState) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              InkWell(
-                                splashColor: noColor,
-                                onTap: () {
-                                  if (int.parse(cartItems[widget.index]["qty"]
-                                          .toString()) >
-                                      1) {
-                                    var value = int.parse(
-                                        cartItems[widget.index]["qty"]
-                                            .toString());
-                                    value--;
-                                    cartItems[widget.index]["qty"] = value;
-                                    widget.function();
-                                  }
-                                },
-                                child: SizedBox(
-                                    width: dynamicWidth(context, .1),
-                                    height: dynamicWidth(context, .07),
-                                    child: Center(
-                                      child: text(context, "-", 0.04, myBlack,
-                                          bold: true,
-                                          alignText: TextAlign.center),
-                                    )),
-                              ),
-                              Text(
-                                cartItems[widget.index]["qty"].toString(),
-                                style: TextStyle(
-                                  color: myBlack,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: dynamicWidth(context, .03),
-                                ),
-                              ),
-                              InkWell(
-                                splashColor: noColor,
-                                onTap: () {
-                                  if (int.parse(cartItems[widget.index]["qty"]
-                                          .toString()) <
-                                      30) {
-                                    var value = int.parse(
-                                        cartItems[widget.index]["qty"]
-                                            .toString());
-                                    value++;
-                                    cartItems[widget.index]["qty"] = value;
-                                    widget.function();
-                                  }
-                                },
-                                child: SizedBox(
-                                    width: dynamicWidth(context, .1),
-                                    height: dynamicWidth(context, .07),
-                                    child: Center(
-                                      child: text(context, "+", 0.04, myBlack,
-                                          bold: true,
-                                          alignText: TextAlign.center),
-                                    )),
-                              ),
-                            ],
+                    ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(dynamicWidth(context, 0.02)),
+                      child: Image.network(
+                        cartItems[widget.index]["photo"] ??
+                            "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHx8&w=1000&q=80",
+                        color: myBlack.withOpacity(0.3),
+                        colorBlendMode: BlendMode.darken,
+                        height: dynamicWidth(context, 0.3),
+                        width: dynamicWidth(context, 0.3),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, yrl, error) {
+                          return const Icon(
+                            Icons.error,
+                            color: myBlack,
                           );
-                        })),
+                        },
+                      ),
+                    ),
+                    Positioned(
+                        top: 10,
+                        right: 10,
+                        child: Container(
+                            padding:
+                                EdgeInsets.all(dynamicWidth(context, 0.01)),
+                            decoration: BoxDecoration(
+                                color: myYellow,
+                                borderRadius: BorderRadius.circular(
+                                    dynamicWidth(context, 0.02))),
+                            child: Icon(
+                              Icons.edit,
+                              size: dynamicWidth(context, 0.04),
+                              color: myWhite,
+                            ))),
                   ],
                 ),
               ),
-            ),
-          ],
-        ),
-        InkWell(
-          onTap: () {
-            cartItems.remove(cartItems[widget.index]);
-            widget.function();
-          },
-          child: const Icon(
-            Icons.close,
-            color: myBlack,
+              widthBox(context, 0.05),
+              FittedBox(
+                child: SizedBox(
+                  width: dynamicWidth(context, 0.4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      text(context, cartItems[widget.index]["name"].toString(),
+                          0.04, myBlack,
+                          bold: true),
+                      text(
+                          context,
+                          "Price : " + cartItems[widget.index]["sale_price"],
+                          0.04,
+                          myBlack),
+                      text(
+                          context,
+                          "Discounted Price : " +
+                              cartItems[widget.index]["discounted_price"],
+                          0.04,
+                          myBlack),
+                      text(
+                          context,
+                          "Discount : " +
+                              cartItems[widget.index]["item_discount"] +
+                              "%",
+                          0.04,
+                          myBlack),
+                      heightBox(context, 0.01),
+                      Container(
+                          width: dynamicWidth(context, 0.25),
+                          decoration: BoxDecoration(
+                              color: myGrey.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(
+                                  dynamicWidth(context, 0.02)),
+                              border: Border.all(color: myWhite, width: 1)),
+                          child:
+                              StatefulBuilder(builder: (context, changeState) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                InkWell(
+                                  splashColor: noColor,
+                                  onTap: () {
+                                    if (int.parse(cartItems[widget.index]["qty"]
+                                            .toString()) >
+                                        1) {
+                                      var value = int.parse(
+                                          cartItems[widget.index]["qty"]
+                                              .toString());
+                                      value--;
+                                      cartItems[widget.index]["qty"] = value;
+                                      widget.function();
+                                    }
+                                  },
+                                  child: SizedBox(
+                                      width: dynamicWidth(context, .1),
+                                      height: dynamicWidth(context, .07),
+                                      child: Center(
+                                        child: text(context, "-", 0.04, myBlack,
+                                            bold: true,
+                                            alignText: TextAlign.center),
+                                      )),
+                                ),
+                                Text(
+                                  cartItems[widget.index]["qty"].toString(),
+                                  style: TextStyle(
+                                    color: myBlack,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: dynamicWidth(context, .03),
+                                  ),
+                                ),
+                                InkWell(
+                                  splashColor: noColor,
+                                  onTap: () {
+                                    if (int.parse(cartItems[widget.index]["qty"]
+                                            .toString()) <
+                                        30) {
+                                      var value = int.parse(
+                                          cartItems[widget.index]["qty"]
+                                              .toString());
+                                      value++;
+                                      cartItems[widget.index]["qty"] = value;
+                                      widget.function();
+                                    }
+                                  },
+                                  child: SizedBox(
+                                      width: dynamicWidth(context, .1),
+                                      height: dynamicWidth(context, .07),
+                                      child: Center(
+                                        child: text(context, "+", 0.04, myBlack,
+                                            bold: true,
+                                            alignText: TextAlign.center),
+                                      )),
+                                ),
+                              ],
+                            );
+                          })),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        )
-      ],
+          InkWell(
+            onTap: () {
+              cartItems.remove(cartItems[widget.index]);
+              widget.function();
+            },
+            child: const Icon(
+              Icons.close,
+              color: myBlack,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

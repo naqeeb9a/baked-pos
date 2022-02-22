@@ -80,20 +80,28 @@ class CustomSearchDelegate extends SearchDelegate {
         ? Center(
             child: text(context, "No Items found", 0.04, myWhite,
                 alignText: TextAlign.center))
-        : Padding(
-            padding: EdgeInsets.all(dynamicWidth(context, 0.05)),
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                childAspectRatio:
-                    dynamicWidth(context, 0.5) / dynamicWidth(context, 0.6),
+        : Scrollbar(
+            interactive: true,
+            showTrackOnHover: true,
+            trackVisibility: true,
+            isAlwaysShown: true,
+            thickness: dynamicWidth(context, 0.01),
+            radius: Radius.circular(dynamicWidth(context, 0.1)),
+            child: Padding(
+              padding: EdgeInsets.all(dynamicWidth(context, 0.05)),
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio:
+                      dynamicWidth(context, 0.5) / dynamicWidth(context, 0.6),
+                ),
+                itemCount: matchQuery.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return menuCards(context, matchQuery, index);
+                },
               ),
-              itemCount: matchQuery.length,
-              itemBuilder: (BuildContext context, int index) {
-                return menuCards(context, matchQuery, index);
-              },
             ),
           );
   }
@@ -110,20 +118,28 @@ class CustomSearchDelegate extends SearchDelegate {
         ? Center(
             child: text(context, "No Items found", 0.04, myWhite,
                 alignText: TextAlign.center))
-        : Padding(
-            padding: EdgeInsets.all(dynamicWidth(context, 0.05)),
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                childAspectRatio:
-                    dynamicWidth(context, 0.5) / dynamicWidth(context, 0.6),
+        : Scrollbar(
+            interactive: true,
+            showTrackOnHover: true,
+            trackVisibility: true,
+            isAlwaysShown: true,
+            thickness: dynamicWidth(context, 0.01),
+            radius: Radius.circular(dynamicWidth(context, 0.1)),
+            child: Padding(
+              padding: EdgeInsets.all(dynamicWidth(context, 0.05)),
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio:
+                      dynamicWidth(context, 0.5) / dynamicWidth(context, 0.6),
+                ),
+                itemCount: matchQuery.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return menuCards(context, matchQuery, index);
+                },
               ),
-              itemCount: matchQuery.length,
-              itemBuilder: (BuildContext context, int index) {
-                return menuCards(context, matchQuery, index);
-              },
             ),
           ); // ListTile
   }

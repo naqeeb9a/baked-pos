@@ -31,9 +31,12 @@ bar(
 
 loader(context) {
   return Center(
-    child: Image.asset(
-      "assets/loader.gif",
-      width: dynamicWidth(context, 0.3),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(dynamicWidth(context, 0.5)),
+      child: Image.asset(
+        "assets/loader.gif",
+        width: dynamicWidth(context, 0.3),
+      ),
     ),
   );
 }

@@ -47,122 +47,132 @@ class _MenuExtensionState extends State<MenuExtension> {
     var customIndex = 0;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: dynamicWidth(context, 0.02)),
-          child: widget.check == true
-              ? allMenu(data)
-              : StatefulBuilder(builder: (context, changeState) {
-                  return Column(
-                    children: [
-                      SizedBox(
-                        height: dynamicHeight(context, 0.1),
-                        child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: widget.customSnapshot.length,
-                            itemBuilder: (context, index) {
-                              if (choiceChipValues.isEmpty) {
-                                choiceChipValues.add(true);
-                              } else {
-                                choiceChipValues.add(false);
-                              }
-                              return Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: dynamicWidth(context, 0.02)),
-                                child: ChoiceChip(
-                                    onSelected: (bool value) {
-                                      if (customIndex != index) {
-                                        changeState(() {
-                                          for (var i = 0;
-                                              i < choiceChipValues.length;
-                                              i++) {
-                                            choiceChipValues[i] = false;
-                                          }
-                                          choiceChipValues[index] = value;
-                                          customIndex = index;
-                                        });
-                                      }
-                                    },
-                                    selectedColor: myYellow,
-                                    label: text(
-                                        context,
-                                        widget.customSnapshot[index]
-                                            ["category_name"],
-                                        0.04,
-                                        myBlack),
-                                    selected: choiceChipValues[index]),
-                              );
-                            }),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          InkWell(
-                              onTap: () {
-                                pop(context);
-                              },
-                              child: const Icon(Icons.arrow_back_ios)),
-                          InkWell(
+        body: widget.check == true
+            ? allMenu(data)
+            : StatefulBuilder(builder: (context, changeState) {
+                return Column(
+                  children: [
+                    SizedBox(
+                      height: dynamicHeight(context, 0.1),
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: widget.customSnapshot.length,
+                          itemBuilder: (context, index) {
+                            if (choiceChipValues.isEmpty) {
+                              choiceChipValues.add(true);
+                            } else {
+                              choiceChipValues.add(false);
+                            }
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: dynamicWidth(context, 0.02)),
+                              child: ChoiceChip(
+                                  onSelected: (bool value) {
+                                    if (customIndex != index) {
+                                      changeState(() {
+                                        for (var i = 0;
+                                            i < choiceChipValues.length;
+                                            i++) {
+                                          choiceChipValues[i] = false;
+                                        }
+                                        choiceChipValues[index] = value;
+                                        customIndex = index;
+                                      });
+                                    }
+                                  },
+                                  selectedColor: myYellow,
+                                  label: text(
+                                      context,
+                                      widget.customSnapshot[index]
+                                          ["category_name"],
+                                      0.04,
+                                      myBlack),
+                                  selected: choiceChipValues[index]),
+                            );
+                          }),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
                             onTap: () {
-                              showSearch(
-                                useRootNavigator: true,
-                                context: context,
-                                delegate: CustomSearchDelegate(
-                                    widget.customSnapshot[customIndex]["item"]),
-                              ).then((value) => changeState(() {}));
+                              pop(context);
                             },
-                            child: Container(
-                              width: dynamicWidth(context, 0.8),
-                              decoration: BoxDecoration(
-                                color: Colors.brown.shade400,
-                                borderRadius: BorderRadius.circular(
-                                  dynamicWidth(context, 0.1),
-                                ),
+                            child: const Icon(Icons.arrow_back_ios)),
+                        InkWell(
+                          onTap: () {
+                            showSearch(
+                              useRootNavigator: true,
+                              context: context,
+                              delegate: CustomSearchDelegate(
+                                  widget.customSnapshot[customIndex]["item"]),
+                            ).then((value) => changeState(() {}));
+                          },
+                          child: Container(
+                            width: dynamicWidth(context, 0.8),
+                            decoration: BoxDecoration(
+                              color: Colors.brown.shade400,
+                              borderRadius: BorderRadius.circular(
+                                dynamicWidth(context, 0.1),
                               ),
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  border: const UnderlineInputBorder(
-                                      borderSide: BorderSide.none),
-                                  hintStyle: const TextStyle(color: myWhite),
-                                  hintText: "Search",
-                                  enabled: false,
-                                  contentPadding: EdgeInsets.symmetric(
-                                    horizontal: dynamicWidth(context, 0.05),
-                                  ),
+                            ),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                border: const UnderlineInputBorder(
+                                    borderSide: BorderSide.none),
+                                hintStyle: const TextStyle(color: myWhite),
+                                hintText: "Search",
+                                enabled: false,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: dynamicWidth(context, 0.05),
                                 ),
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                      Expanded(
-                        child: widget.customSnapshot[customIndex]["item"]
-                                    .length ==
-                                0
-                            ? Center(
-                                child: text(context, "No items", 0.04, myBlack))
-                            : GridView.builder(
-                                itemCount: widget
-                                    .customSnapshot[customIndex]["item"].length,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        childAspectRatio:
-                                            dynamicWidth(context, 0.4) /
-                                                dynamicWidth(context, 0.5),
-                                        mainAxisSpacing:
-                                            dynamicWidth(context, 0.02),
-                                        crossAxisSpacing:
-                                            dynamicWidth(context, 0.02)),
-                                itemBuilder: (context, index) => menuCards(
-                                    context,
-                                    widget.customSnapshot[customIndex]["item"],
-                                    index)),
-                      ),
-                    ],
-                  );
-                }),
-        ));
+                        ),
+                      ],
+                    ),
+                    heightBox(context, 0.02),
+                    Expanded(
+                      child: widget
+                                  .customSnapshot[customIndex]["item"].length ==
+                              0
+                          ? Center(
+                              child: text(context, "No items", 0.04, myBlack))
+                          : Scrollbar(
+                              interactive: true,
+                              showTrackOnHover: true,
+                              trackVisibility: true,
+                              isAlwaysShown: true,
+                              thickness: dynamicWidth(context, 0.01),
+                              radius:
+                                  Radius.circular(dynamicWidth(context, 0.1)),
+                              child: GridView.builder(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: dynamicWidth(context, 0.03)),
+                                  itemCount: widget
+                                      .customSnapshot[customIndex]["item"]
+                                      .length,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          childAspectRatio:
+                                              dynamicWidth(context, 0.4) /
+                                                  dynamicWidth(context, 0.5),
+                                          mainAxisSpacing:
+                                              dynamicWidth(context, 0.02),
+                                          crossAxisSpacing:
+                                              dynamicWidth(context, 0.02)),
+                                  itemBuilder: (context, index) => menuCards(
+                                      context,
+                                      widget.customSnapshot[customIndex]
+                                          ["item"],
+                                      index)),
+                            ),
+                    ),
+                  ],
+                );
+              }));
   }
 
   allMenu(snapshot) {
@@ -212,17 +222,28 @@ class _MenuExtensionState extends State<MenuExtension> {
                     ),
                   ],
                 ),
+                heightBox(context, 0.02),
                 Expanded(
-                  child: GridView.builder(
-                      itemCount: snapshot.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: dynamicWidth(context, 0.4) /
-                              dynamicWidth(context, 0.5),
-                          mainAxisSpacing: dynamicWidth(context, 0.02),
-                          crossAxisSpacing: dynamicWidth(context, 0.02)),
-                      itemBuilder: (context, index) =>
-                          menuCards(context, snapshot, index)),
+                  child: Scrollbar(
+                    interactive: true,
+                    showTrackOnHover: true,
+                    trackVisibility: true,
+                    isAlwaysShown: true,
+                    thickness: dynamicWidth(context, 0.01),
+                    radius: Radius.circular(dynamicWidth(context, 0.1)),
+                    child: GridView.builder(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: dynamicWidth(context, 0.03)),
+                        itemCount: snapshot.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: dynamicWidth(context, 0.4) /
+                                dynamicWidth(context, 0.5),
+                            mainAxisSpacing: dynamicWidth(context, 0.02),
+                            crossAxisSpacing: dynamicWidth(context, 0.02)),
+                        itemBuilder: (context, index) =>
+                            menuCards(context, snapshot, index)),
+                  ),
                 ),
               ],
             );

@@ -23,14 +23,28 @@ class _MenuPageState extends State<MenuPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: myWhite,
-      body: Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: dynamicWidth(context, 0.05)),
-          child: FutureBuilder(
-            future: getMenuCategories(),
-            builder: ((context, AsyncSnapshot snapshot) =>
-                errorHandlingWidget(snapshot)),
-          )),
+      body: Container(
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: NetworkImage(
+                    "https://media.istockphoto.com/vectors/vector-pastry-seamless-pattern-with-cakes-pies-muffins-and-eclairs-vector-id1126080328?b=1&k=20&m=1126080328&s=612x612&w=0&h=N6naHiF-9ZN016_UO072jxSga7GONxPg_HISQES2pQQ="),
+                fit: BoxFit.cover)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            text(context, "Choose Category", 0.07, myBlack, bold: true),
+            heightBox(context, 0.02),
+            Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: dynamicWidth(context, 0.05)),
+                child: FutureBuilder(
+                  future: getMenuCategories(),
+                  builder: ((context, AsyncSnapshot snapshot) =>
+                      errorHandlingWidget(snapshot)),
+                )),
+          ],
+        ),
+      ),
     );
   }
 
@@ -83,9 +97,9 @@ class _MenuPageState extends State<MenuPage> {
                     radius: dynamicWidth(context, 0.16),
                     backgroundColor: myYellow,
                     backgroundImage: NetworkImage(item["image"] ??
-                        "https://dailycontributors.com/wp-content/uploads/2021/08/bakery-food.jpg"),
+                        "https://www.elegantthemes.com/blog/wp-content/uploads/2016/04/category-plugins-header.png"),
                     child: CircleAvatar(
-                      backgroundColor: myBlack.withOpacity(0.4),
+                      backgroundColor: myBlack.withOpacity(0.6),
                       radius: dynamicWidth(context, 0.15),
                       child: text(context, item["category_name"], 0.05, myWhite,
                           bold: true),

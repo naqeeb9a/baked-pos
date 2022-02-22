@@ -227,6 +227,7 @@ class _CartState extends State<Cart> {
                               getCost(),
                               "Cash",
                               checkAlreadyDevice: true,
+
                             );
                           } else {
                             Navigator.push(

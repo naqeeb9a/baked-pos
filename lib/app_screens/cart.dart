@@ -132,14 +132,15 @@ class _CartState extends State<Cart> {
                     onConfirmBtnTap: () async {
                       Navigator.of(context, rootNavigator: true).pop();
 
-                      final SharedPreferences prefs = await SharedPreferences.getInstance();
-
+                      final SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
 
                       BluetoothDevice? getDevice() {
                         String? device = prefs.getString("selectedPrinter");
                         if (device != null && device.isNotEmpty) {
                           var map = jsonDecode(device);
-                          BluetoothDevice bluetoothDevice = BluetoothDevice.fromMap(map);
+                          BluetoothDevice bluetoothDevice =
+                              BluetoothDevice.fromMap(map);
                           return bluetoothDevice;
                         } else {
                           return null;
@@ -164,34 +165,44 @@ class _CartState extends State<Cart> {
                     onCancelBtnTap: () async {
                       Navigator.of(context, rootNavigator: true).pop();
 
-                      final SharedPreferences prefs = await SharedPreferences.getInstance();
-
+                      final SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
 
                       BluetoothDevice? getDevice() {
                         String? device = prefs.getString("selectedPrinter");
                         if (device != null && device.isNotEmpty) {
                           var map = jsonDecode(device);
-                          BluetoothDevice bluetoothDevice = BluetoothDevice.fromMap(map);
+                          BluetoothDevice bluetoothDevice =
+                              BluetoothDevice.fromMap(map);
                           return bluetoothDevice;
                         } else {
                           return null;
                         }
                       }
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Print(
-                            filteredItems,
-                            "Card",
-                            total: getTotal().toString(),
-                            cost: getCost().toString(),
-                            printerCheck: getDevice(),
+                      BlueThermalPrinter printer = BlueThermalPrinter.instance;
+                      var selectedDevice = getDevice();
+                      print(selectedDevice);
+                      if (selectedDevice != null) {
+                        startPrintFunc(selectedDevice, context, printer,
+                            getTotal(), getCost(), "Cash",
+                            checkAlreadyDevice: true);
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Print(
+                              filteredItems,
+                              "Card",
+                              total: getTotal().toString(),
+                              cost: getCost().toString(),
+                              printerCheck: getDevice(),
+                            ),
                           ),
-                        ),
-                      ).then((value) {
-                        setState(() {});
-                      });
+                        ).then((value) {
+                          setState(() {});
+                        });
+                      }
                     },
                     backgroundColor: myYellow,
                   );

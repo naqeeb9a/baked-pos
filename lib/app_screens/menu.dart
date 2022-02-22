@@ -101,8 +101,14 @@ class _MenuPageState extends State<MenuPage> {
                     child: CircleAvatar(
                       backgroundColor: myBlack.withOpacity(0.6),
                       radius: dynamicWidth(context, 0.15),
-                      child: text(context, item["category_name"], 0.05, myWhite,
-                          bold: true),
+                      child: FittedBox(
+                        child: SizedBox(
+                          width: dynamicWidth(context, 0.3),
+                          child: text(
+                              context, item["category_name"], 0.05, myWhite,
+                              bold: true, alignText: TextAlign.center),
+                        ),
+                      ),
                     ),
                   ),
                 ),

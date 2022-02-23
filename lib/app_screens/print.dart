@@ -267,72 +267,13 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
     );
     try {
       if (await printer.isConnected) {
-        await printContent(selectedDevice, context, printer, data, total, cost,
-            paymentMethod, response);
-        Navigator.of(context, rootNavigator: true).pop();
-        print("object");
-        await CoolAlert.show(
-          context: context,
-          title: "Want another print",
-          type: CoolAlertType.confirm,
-          confirmBtnColor: myBrown,
-          confirmBtnText: "Yes",
-          cancelBtnText: "No",
-          barrierDismissible: false,
-          onConfirmBtnTap: () {
-            printContent(selectedDevice, context, printer, data, total, cost,
-                paymentMethod, response);
-            cartItems.clear();
-            Navigator.of(context, rootNavigator: true).pop();
-            if (checkAlreadyDevice == false) {
-              Navigator.pop(context);
-            }
-          },
-          onCancelBtnTap: () {
-            cartItems.clear();
-            Navigator.of(context, rootNavigator: true).pop();
-            if (checkAlreadyDevice == false) {
-              Navigator.pop(context);
-            }
-          },
-        );
-        print("object");
-        if (checkAlreadyDevice == false) {
-          Navigator.pop(context);
-        }
+        conditionalStatements(selectedDevice, context, printer, data, total,
+            cost, paymentMethod, response, checkAlreadyDevice,changeState);
       } else {
         await printer.connect(selectedDevice).then((value) async {
           if ((await printer.isConnected)!) {
-            await printContent(selectedDevice, context, printer, data, total,
-                cost, paymentMethod, response);
-            Navigator.of(context, rootNavigator: true).pop();
-            print("whatever");
-            await CoolAlert.show(
-              context: context,
-              title: "Want another print",
-              type: CoolAlertType.confirm,
-              confirmBtnColor: myBrown,
-              confirmBtnText: "Yes",
-              cancelBtnText: "No",
-              barrierDismissible: false,
-              onConfirmBtnTap: () {
-                printContent(selectedDevice, context, printer, data, total,
-                    cost, paymentMethod, response);
-                cartItems.clear();
-                Navigator.of(context, rootNavigator: true).pop();
-                if (checkAlreadyDevice == false) {
-                  Navigator.pop(context);
-                }
-              },
-              onCancelBtnTap: () {
-                cartItems.clear();
-                Navigator.of(context, rootNavigator: true).pop();
-                if (checkAlreadyDevice == false) {
-                  Navigator.pop(context);
-                }
-              },
-            );
-            print("whatever");
+            conditionalStatements(selectedDevice, context, printer, data, total,
+                cost, paymentMethod, response, checkAlreadyDevice,changeState);
           } else {
             Navigator.of(context, rootNavigator: true).pop();
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -340,10 +281,7 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
                 duration: const Duration(seconds: 2),
                 content: text(context, "Check your Printer and try again", 0.04,
                     myWhite)));
-            return;
           }
-          cartItems.clear();
-          Navigator.of(context, rootNavigator: true).pop();
         });
       }
     } catch (e) {
@@ -355,11 +293,45 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
               context, "Check your Printer and try again", 0.04, myWhite)));
     }
   }
+}
 
-  if (checkAlreadyDevice == false) {
-    Navigator.pop(context);
-  } else {
-    cartItems.clear();
-    changeState();
-  }
+conditionalStatements(selectedDevice, context, printer, data, total, cost,
+    paymentMethod, response, checkAlreadyDevice,refresh) async {
+  await printContent(selectedDevice, context, printer, data, total, cost,
+      paymentMethod, response);
+  Navigator.of(context, rootNavigator: true).pop();
+
+  await CoolAlert.show(
+    context: context,
+    title: "Want another print",
+    type: CoolAlertType.confirm,
+    confirmBtnColor: myBrown,
+    confirmBtnText: "Yes",
+    cancelBtnText: "No",
+    barrierDismissible: false,
+    onConfirmBtnTap: () {
+      printContent(selectedDevice, context, printer, data, total, cost,
+          paymentMethod, response);
+      cartItems.clear();
+      Navigator.of(context, rootNavigator: true).pop();
+      if (checkAlreadyDevice == false) {
+        Navigator.pop(context);
+      }
+      else
+      {
+        refresh();
+      }
+    },
+    onCancelBtnTap: () {
+      cartItems.clear();
+      Navigator.of(context, rootNavigator: true).pop();
+      if (checkAlreadyDevice == false) {
+        Navigator.pop(context);
+      }
+      else
+        {
+          refresh();
+        }
+    },
+  );
 }

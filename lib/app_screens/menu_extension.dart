@@ -107,7 +107,9 @@ class _MenuExtensionState extends State<MenuExtension> {
                               context: context,
                               delegate: CustomSearchDelegateMenu(
                                   widget.customSnapshot[customIndex]["item"],
-                                  changeState),
+                                  () {
+                                changeState(() {});
+                              }),
                             ).then((value) => changeState(() {}));
                           },
                           child: Container(
@@ -207,7 +209,9 @@ class _MenuExtensionState extends State<MenuExtension> {
                   showSearch(
                     useRootNavigator: true,
                     context: context,
-                    delegate: CustomSearchDelegateMenu(snapshot, changeState),
+                    delegate: CustomSearchDelegateMenu(snapshot, () {
+                      changeState(() {});
+                    }),
                   ).then((value) => changeState(() {}));
                 },
                 child: Container(

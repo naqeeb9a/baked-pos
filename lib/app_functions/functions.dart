@@ -48,7 +48,8 @@ getMenu() async {
   }
 }
 
-punchOrder(total, cost, paymentType) async {
+punchOrder(total, cost, paymentType,
+    {customerName = "", customerPhone = ""}) async {
   var filteredItems = [];
   dynamic discount = 0;
 
@@ -63,7 +64,7 @@ punchOrder(total, cost, paymentType) async {
             int.parse(item["sale_price"].toString()),
         "itemUnitCost": item["cost"] == "" ? "0" : item["cost"],
         "productqty": item["qty"],
-        "productimg": item["photo"]
+        "productimg": item["photo"],
       });
     }
     return filteredItems;
@@ -101,7 +102,9 @@ punchOrder(total, cost, paymentType) async {
     "total_discount": "${discountFunction()}",
     "cart": filterFunction(),
     "table_no": "",
-    "saleid": ""
+    "saleid": "",
+    "billing_name": "$customerName",
+    "billing_phone": "$customerPhone"
   };
 
   try {

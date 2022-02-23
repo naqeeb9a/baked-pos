@@ -235,6 +235,8 @@ class _CartCardsState extends State<CartCards> {
                                     (actualPrice * (int.parse(text2) / 100)))
                                 .toStringAsFixed(0);
                         cartItems[widget.index]["item_discount"] = text2;
+                        cartItems[widget.index]["discount_person"] = text1;
+
                         Navigator.of(context, rootNavigator: true).pop();
 
                         widget.function();

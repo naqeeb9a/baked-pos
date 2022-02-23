@@ -29,26 +29,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final email = TextEditingController();
   final password = TextEditingController();
 
-  loginFunction() async {
-    try {
-      setState(() {
-        loading = true;
-      });
-      var response = await http.post(
-          Uri.parse(callBackUrl + "/api/signin-waiter"),
-          body: {"email": email.text, "password": password.text});
-      if (response.statusCode == 200) {
-        var jsonData = jsonDecode(response.body);
-
-        return jsonData["data"];
-      } else {
-        return "Error";
-      }
-    } catch (e) {
-      return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,57 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ],
                       ),
-                      coloredButton(context, "SIGN IN", myYellow,
-                          function: () async {
-                        if (!EmailValidator.validate(email.text)) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                               backgroundColor: myRed,
-                              duration: const Duration(seconds: 2),
-                              content: text(context, "Enter a valid Email",
-                                  0.04, myWhite)));
-                        } else if (password.text.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                               backgroundColor: myRed,
-                              duration: const Duration(seconds: 2),
-                              content: text(context, "Enter a Valid password",
-                                  0.04, myWhite)));
-                        } else {
-                          var response = await loginFunction();
-
-                          if (response == "Error") {
-                            setState(() {
-                              loading = false;
-                            });
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                 backgroundColor: myRed,
-                                duration: const Duration(seconds: 2),
-                                content: text(context, "Invalid credientials",
-                                    0.04, myWhite)));
-                          } else if (response == false) {
-                            setState(() {
-                              loading = false;
-                            });
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                 backgroundColor: myRed,
-                                duration: const Duration(seconds: 2),
-                                content: text(context, "Check Your Internet",
-                                    0.04, myWhite)));
-                          } else {
-                            SharedPreferences loginUser =
-                                await SharedPreferences.getInstance();
-                            loginUser.setString(
-                              "userResponse",
-                              json.encode(response),
-                            );
-                            setState(() {
-                              pageDecider = "home";
-                            });
-                            pushAndRemoveUntil(
-                              context,
-                              const MyApp(),
-                            );
-                          }
-                        }
+                      coloredButton(context, "SIGN IN", myYellow, function: () {
+                        signInLogic();
                       }),
                       heightBox(context, .04),
                     ],
@@ -163,6 +94,73 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
     );
+  }
+
+  signInLogic() async {
+    if (!EmailValidator.validate(email.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: myRed,
+          duration: const Duration(seconds: 2),
+          content: text(context, "Enter a valid Email", 0.04, myWhite)));
+    } else if (password.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: myRed,
+          duration: const Duration(seconds: 2),
+          content: text(context, "Enter a Valid password", 0.04, myWhite)));
+    } else {
+      var response = await loginFunction();
+
+      if (response == "Error") {
+        setState(() {
+          loading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: myRed,
+            duration: const Duration(seconds: 2),
+            content: text(context, "Invalid credientials", 0.04, myWhite)));
+      } else if (response == false) {
+        setState(() {
+          loading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: myRed,
+            duration: const Duration(seconds: 2),
+            content: text(context, "Check Your Internet", 0.04, myWhite)));
+      } else {
+        SharedPreferences loginUser = await SharedPreferences.getInstance();
+        loginUser.setString(
+          "userResponse",
+          json.encode(response),
+        );
+        setState(() {
+          pageDecider = "home";
+        });
+        pushAndRemoveUntil(
+          context,
+          const MyApp(),
+        );
+      }
+    }
+  }
+
+  loginFunction() async {
+    try {
+      setState(() {
+        loading = true;
+      });
+      var response = await http.post(
+          Uri.parse(callBackUrl + "/api/signin-waiter"),
+          body: {"email": email.text, "password": password.text});
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+
+        return jsonData["data"];
+      } else {
+        return "Error";
+      }
+    } catch (e) {
+      return false;
+    }
   }
 
   @override

@@ -14,9 +14,14 @@ import '../app_functions/functions.dart';
 import '../utils/dynamic_sizes.dart';
 
 class Print extends StatefulWidget {
-  final dynamic data, paymentMethod, total, cost;
+  final dynamic data, paymentMethod, total, cost, customer, phone;
 
-  const Print(this.data, this.paymentMethod, {Key? key, this.total, this.cost})
+  const Print(this.data, this.paymentMethod,
+      {Key? key,
+      this.total,
+      this.cost,
+      required this.customer,
+      required this.phone})
       : super(key: key);
 
   @override
@@ -32,7 +37,7 @@ class _PrintState extends State<Print> {
   bool loading = true;
   bool? availablePrinter;
 
-  PermissionStatus? check;
+  PermissionStatus check = PermissionStatus.denied;
 
   getDevices() async {
     devices = await printer.getBondedDevices();
@@ -67,53 +72,62 @@ class _PrintState extends State<Print> {
   }
 
   getPrintersList() {
-    if (check!.isGranted) {
+    if (check.isGranted) {
       getDevices();
 
-      return ListView.builder(
-        itemCount: devices.length,
-        itemBuilder: (context, i) {
-          return ListTile(
-            leading: Icon(
-              Icons.print,
-              color: myBrown,
-              size: dynamicHeight(context, .046),
-            ),
-            title: text(
-              context,
-              devices[i].name.toString(),
-              .04,
-              myBrown,
-              bold: true,
-            ),
-            subtitle: text(
-              context,
-              devices[i].address.toString(),
-              .034,
-              myBlack,
-            ),
-            onTap: () async {
-              SharedPreferences loginUser =
-                  await SharedPreferences.getInstance();
+      return devices.isEmpty
+          ? Center(
+              child: text(
+                  context,
+                  "Turn on Bluetooth Or check Your paired devices",
+                  0.04,
+                  myBlack),
+            )
+          : ListView.builder(
+              itemCount: devices.length,
+              itemBuilder: (context, i) {
+                return ListTile(
+                  leading: Icon(
+                    Icons.print,
+                    color: myBrown,
+                    size: dynamicHeight(context, .046),
+                  ),
+                  title: text(
+                    context,
+                    devices[i].name.toString(),
+                    .04,
+                    myBrown,
+                    bold: true,
+                  ),
+                  subtitle: text(
+                    context,
+                    devices[i].address.toString(),
+                    .034,
+                    myBlack,
+                  ),
+                  onTap: () async {
+                    SharedPreferences loginUser =
+                        await SharedPreferences.getInstance();
 
-              await loginUser.setString(
-                "selectedPrinter",
-                jsonEncode(devices[i].toMap()),
-              );
+                    await loginUser.setString(
+                      "selectedPrinter",
+                      jsonEncode(devices[i].toMap()),
+                    );
 
-              startPrintFunc(
-                devices[i],
-                context,
-                printer,
-                widget.data,
-                widget.total,
-                widget.cost,
-                widget.paymentMethod,
-              );
-            },
-          );
-        },
-      );
+                    startPrintFunc(
+                        devices[i],
+                        context,
+                        printer,
+                        widget.data,
+                        widget.total,
+                        widget.cost,
+                        widget.paymentMethod,
+                        widget.phone,
+                        widget.customer);
+                  },
+                );
+              },
+            );
     } else {
       return Center(
         child: Column(
@@ -241,7 +255,7 @@ printContent(
 }
 
 startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
-    cost, paymentMethod,
+    cost, paymentMethod, phone, customer,
     {checkAlreadyDevice = false, changeState = ""}) async {
   CoolAlert.show(
     context: context,
@@ -249,7 +263,8 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
     barrierDismissible: false,
     text: "Punching Order",
   );
-  var response = await punchOrder(total, cost, paymentMethod);
+  var response = await punchOrder(total, cost, paymentMethod,
+      customerPhone: phone, customerName: customer);
   if (response == false) {
     Navigator.of(context, rootNavigator: true).pop();
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -268,12 +283,12 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
     try {
       if (await printer.isConnected) {
         conditionalStatements(selectedDevice, context, printer, data, total,
-            cost, paymentMethod, response, checkAlreadyDevice,changeState);
+            cost, paymentMethod, response, checkAlreadyDevice, changeState);
       } else {
         await printer.connect(selectedDevice).then((value) async {
           if ((await printer.isConnected)!) {
             conditionalStatements(selectedDevice, context, printer, data, total,
-                cost, paymentMethod, response, checkAlreadyDevice,changeState);
+                cost, paymentMethod, response, checkAlreadyDevice, changeState);
           } else {
             Navigator.of(context, rootNavigator: true).pop();
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -296,7 +311,7 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
 }
 
 conditionalStatements(selectedDevice, context, printer, data, total, cost,
-    paymentMethod, response, checkAlreadyDevice,refresh) async {
+    paymentMethod, response, checkAlreadyDevice, refresh) async {
   await printContent(selectedDevice, context, printer, data, total, cost,
       paymentMethod, response);
   Navigator.of(context, rootNavigator: true).pop();
@@ -316,9 +331,7 @@ conditionalStatements(selectedDevice, context, printer, data, total, cost,
       Navigator.of(context, rootNavigator: true).pop();
       if (checkAlreadyDevice == false) {
         Navigator.pop(context);
-      }
-      else
-      {
+      } else {
         refresh();
       }
     },
@@ -327,11 +340,9 @@ conditionalStatements(selectedDevice, context, printer, data, total, cost,
       Navigator.of(context, rootNavigator: true).pop();
       if (checkAlreadyDevice == false) {
         Navigator.pop(context);
+      } else {
+        refresh();
       }
-      else
-        {
-          refresh();
-        }
     },
   );
 }

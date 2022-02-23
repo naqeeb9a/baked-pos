@@ -100,6 +100,7 @@ iconsRow(context, snapshot) {
                   snapshot["qty"] = quantity;
                   snapshot["discounted_price"] = snapshot["sale_price"];
                   snapshot["item_discount"] = "0";
+                  snapshot["discount_person"] = "";
                   snapshot['setState'] = () {
                     changeState(() {});
                   };

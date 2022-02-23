@@ -3,12 +3,11 @@ import 'package:baked_pos/utils/app_routes.dart';
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/utils/dynamic_sizes.dart';
 import 'package:baked_pos/widgets/buttons.dart';
+import 'package:baked_pos/widgets/custom_search2.dart';
 import 'package:baked_pos/widgets/essential_widgets.dart';
 import 'package:baked_pos/widgets/menu_cards.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
-
-import '../widgets/Search.dart';
 
 class MenuExtension extends StatefulWidget {
   final dynamic customSnapshot, check, setstate1;
@@ -106,8 +105,9 @@ class _MenuExtensionState extends State<MenuExtension> {
                             showSearch(
                               useRootNavigator: true,
                               context: context,
-                              delegate: CustomSearchDelegate(
-                                  widget.customSnapshot[customIndex]["item"]),
+                              delegate: CustomSearchDelegateMenu(
+                                  widget.customSnapshot[customIndex]["item"],
+                                  changeState),
                             ).then((value) => changeState(() {}));
                           },
                           child: Container(
@@ -166,10 +166,12 @@ class _MenuExtensionState extends State<MenuExtension> {
                                           crossAxisSpacing:
                                               dynamicWidth(context, 0.02)),
                                   itemBuilder: (context, index) => menuCards(
-                                      context,
-                                      widget.customSnapshot[customIndex]
-                                          ["item"],
-                                      index)),
+                                          context,
+                                          widget.customSnapshot[customIndex]
+                                              ["item"],
+                                          index, () {
+                                        changeState(() {});
+                                      })),
                             ),
                     ),
                   ],
@@ -205,7 +207,7 @@ class _MenuExtensionState extends State<MenuExtension> {
                   showSearch(
                     useRootNavigator: true,
                     context: context,
-                    delegate: CustomSearchDelegate(snapshot),
+                    delegate: CustomSearchDelegateMenu(snapshot, changeState),
                   ).then((value) => changeState(() {}));
                 },
                 child: Container(
@@ -254,7 +256,9 @@ class _MenuExtensionState extends State<MenuExtension> {
                             mainAxisSpacing: dynamicWidth(context, 0.02),
                             crossAxisSpacing: dynamicWidth(context, 0.02)),
                         itemBuilder: (context, index) =>
-                            menuCards(context, snapshot, index)),
+                            menuCards(context, snapshot, index, () {
+                              changeState(() {});
+                            })),
                   ),
           ),
         ],

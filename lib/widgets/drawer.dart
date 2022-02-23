@@ -464,7 +464,9 @@ class _CartCardsState extends State<CartCards> {
           ),
           InkWell(
             onTap: () {
+              var change = cartItems[widget.index]["changeState"];
               cartItems.remove(cartItems[widget.index]);
+              change();
               widget.function();
             },
             child: const Icon(

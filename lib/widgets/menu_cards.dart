@@ -3,7 +3,7 @@ import 'package:baked_pos/utils/dynamic_sizes.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 
-menuCards(context, snapshot, index) {
+menuCards(context, snapshot, index, changeState) {
   return Container(
     decoration: BoxDecoration(
         color: myWhite,
@@ -67,10 +67,7 @@ menuCards(context, snapshot, index) {
         Padding(
           padding:
               EdgeInsets.symmetric(horizontal: dynamicWidth(context, 0.02)),
-          child: iconsRow(
-            context,
-            snapshot[index],
-          ),
+          child: iconsRow(context, snapshot[index], changeState),
         ),
         heightBox(context, 0.005),
       ],
@@ -78,7 +75,7 @@ menuCards(context, snapshot, index) {
   );
 }
 
-iconsRow(context, snapshot) {
+iconsRow(context, snapshot, changeState2) {
   var quantity = 1;
   return StatefulBuilder(builder: (context, changeState) {
     var customText = "Add to Cart";
@@ -101,6 +98,7 @@ iconsRow(context, snapshot) {
                   snapshot["discounted_price"] = snapshot["sale_price"];
                   snapshot["item_discount"] = "0";
                   snapshot["discount_person"] = "";
+                  snapshot["changeState"] = changeState2;
                   snapshot['setState'] = () {
                     changeState(() {});
                   };

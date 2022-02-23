@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 
 import 'menu_cards.dart';
 
-class CustomSearchDelegate extends SearchDelegate {
-  dynamic menu;
+class CustomSearchDelegateMenu extends SearchDelegate {
+  dynamic menu, stateChange;
 
-  CustomSearchDelegate(this.menu);
+  CustomSearchDelegateMenu(this.menu, this.stateChange);
 
   @override
   ThemeData appBarTheme(BuildContext context) {
@@ -99,7 +99,7 @@ class CustomSearchDelegate extends SearchDelegate {
                 ),
                 itemCount: matchQuery.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return menuCards(context, matchQuery, index);
+                  return menuCards(context, matchQuery, index, stateChange);
                 },
               ),
             ),
@@ -137,7 +137,7 @@ class CustomSearchDelegate extends SearchDelegate {
                 ),
                 itemCount: matchQuery.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return menuCards(context, matchQuery, index);
+                  return menuCards(context, matchQuery, index, stateChange);
                 },
               ),
             ),

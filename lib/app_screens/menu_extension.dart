@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 
 class MenuExtension extends StatefulWidget {
   final dynamic customSnapshot, check, setstate1;
+
   const MenuExtension(
       {Key? key,
       required this.customSnapshot,
@@ -25,6 +26,7 @@ class MenuExtension extends StatefulWidget {
 class _MenuExtensionState extends State<MenuExtension> {
   bool loading = false;
   dynamic data;
+
   @override
   void initState() {
     widget.check == true ? getMenuGridNow() : null;

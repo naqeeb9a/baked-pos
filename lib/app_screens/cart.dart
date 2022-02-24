@@ -10,7 +10,6 @@ import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Cart extends StatefulWidget {
@@ -104,6 +103,8 @@ class _CartState extends State<Cart> {
                           content:
                               text(context, "Cart is empty", 0.04, myWhite)));
                     } else {
+
+                      print("xcbcg $cartItems");
                       phone.text = "";
                       _text.text = "";
                       showDialog(
@@ -120,7 +121,7 @@ class _CartState extends State<Cart> {
                                   children: [
                                     LottieBuilder.asset(
                                       "assets/contact.json",
-                                      width: dynamicWidth(context, 0.4),
+                                      width: dynamicWidth(context, 0.3),
                                     ),
                                     TextFormField(
                                       controller: _text,

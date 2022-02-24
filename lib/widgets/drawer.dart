@@ -4,7 +4,6 @@ import 'package:baked_pos/utils/dynamic_sizes.dart';
 import 'package:baked_pos/widgets/form_fields.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
@@ -273,9 +272,9 @@ class _CartCardsState extends State<CartCards> {
                                 const Divider(),
                                 getRow("Discount 4", "40"),
                                 const Divider(),
-                                getRow("Discount 5", "50"),
+                                getRow("Director's Discount", "50"),
                                 const Divider(),
-                                getRow("Discount 6", "100"),
+                                getRow("Owner Discount", "100"),
                                 const Divider(),
                                 text(context, "Custom Discount in %: ", 0.04,
                                     myBrown),

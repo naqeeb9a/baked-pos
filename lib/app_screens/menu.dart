@@ -21,6 +21,7 @@ class _MenuPageState extends State<MenuPage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
     super.build(context);

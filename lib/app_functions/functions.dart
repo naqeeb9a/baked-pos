@@ -51,7 +51,6 @@ getMenu() async {
 punchOrder(total, cost, paymentType,
     {customerName = "", customerPhone = ""}) async {
   var filteredItems = [];
-  dynamic discount = 0;
 
   filterFunction() {
     for (var item in cartItems) {
@@ -71,9 +70,18 @@ punchOrder(total, cost, paymentType,
   }
 
   discountFunction() {
+    dynamic discount = 0;
+
     for (var item in cartItems) {
-      discount += (int.parse(item['sale_price'].toString()) -
-          int.parse(item['discounted_price'].toString()));
+      var temp = 0;
+      temp = int.parse(item['sale_price'].toString()) -
+          int.parse(item['discounted_price'].toString());
+
+      var temp2 = 0;
+
+      temp2 = temp * int.parse(item['qty'].toString());
+
+      discount += temp2;
     }
     return discount;
   }

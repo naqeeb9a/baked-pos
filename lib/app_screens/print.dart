@@ -206,6 +206,7 @@ printContent(
                 .toStringAsFixed(0),
             1,
           );
+    printer.printCustom("${data[i]['discount_person']}", 1, 0);
     printer.printCustom("-------------", 1, 1);
   }
 

@@ -278,8 +278,7 @@ class _CartCardsState extends State<CartCards> {
                                 const Divider(),
                                 text(context, "Custom Discount in %: ", 0.04,
                                     myBrown),
-                                inputTextField(
-                                    context, "Custom Discount", _text,
+                                inputTextField(context, _text,
                                     keyboard: TextInputType.number),
                                 const Divider(),
                                 coloredButton(context, "Submit", myYellow,

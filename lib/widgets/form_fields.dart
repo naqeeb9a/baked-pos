@@ -4,13 +4,14 @@ import 'package:flutter/services.dart';
 
 import '../utils/config.dart';
 
-Widget inputTextField(context, label, myController,
+Widget inputTextField(context, myController,
     {function,
     function2,
     keyboard = TextInputType.emailAddress,
     password = false}) {
   return Container(
-    color: myWhite,
+    decoration:
+        BoxDecoration(color: myWhite, borderRadius: BorderRadius.circular(10)),
     child: TextFormField(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (function == "")
@@ -47,13 +48,13 @@ Widget inputTextField(context, label, myController,
       ),
       decoration: InputDecoration(
         enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: myBrown),
+          borderSide: BorderSide(color: noColor),
         ),
         focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: myBrown),
+          borderSide: BorderSide(color: noColor),
         ),
         border: const UnderlineInputBorder(
-          borderSide: BorderSide(color: myBrown),
+          borderSide: BorderSide(color: noColor),
         ),
         contentPadding: EdgeInsets.symmetric(
           horizontal: dynamicWidth(context, .05),

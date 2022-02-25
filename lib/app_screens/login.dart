@@ -33,108 +33,102 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: myWhite,
-      body: (loading == true)
-          ? Center(
-              child: loader(context),
-            )
-          : SafeArea(
-              child: Container(
-                height: dynamicHeight(context, 1),
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: const AssetImage("assets/login_background.png"),
-                        fit: BoxFit.cover,
-                        colorFilter: ColorFilter.mode(
-                            myBlack.withOpacity(0.2), BlendMode.darken))),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: dynamicWidth(context, 0.05)),
-                    child: Form(
-                      key: _formKey,
-                      child: Center(
-                        child: SingleChildScrollView(
+      body: SafeArea(
+        child: Container(
+          height: dynamicHeight(context, 1),
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: const AssetImage("assets/login_background.png"),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                      myBlack.withOpacity(0.2), BlendMode.darken))),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Padding(
+              padding:
+                  EdgeInsets.symmetric(horizontal: dynamicWidth(context, 0.05)),
+              child: Form(
+                key: _formKey,
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        heightBox(context, .04),
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              color: myWhite.withOpacity(0.2),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(20),
+                              ),
+                              border: Border.all(
+                                  width: 1.5, color: myWhite.withOpacity(0.2))),
+                          child: Image.asset(
+                            "assets/logo.png",
+                            color: myBlack,
+                            width: dynamicWidth(context, 0.3),
+                          ),
+                        ),
+                        heightBox(context, .04),
+                        text(
+                          context,
+                          "TEAM LOGIN",
+                          .08,
+                          myYellow,
+                          bold: true,
+                        ),
+                        heightBox(context, .04),
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              color: myWhite.withOpacity(0.2),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(20),
+                              ),
+                              border: Border.all(
+                                  width: 1.5, color: myWhite.withOpacity(0.2))),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              heightBox(context, .04),
-                              Container(
-                                padding: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                    color: myWhite.withOpacity(0.2),
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(20),
-                                    ),
-                                    border: Border.all(
-                                        width: 1.5,
-                                        color: myWhite.withOpacity(0.2))),
-                                child: Image.asset(
-                                  "assets/logo.png",
-                                  color: myBlack,
-                                  width: dynamicWidth(context, 0.3),
-                                ),
-                              ),
-                              heightBox(context, .04),
-                              text(
+                              text(context, "Email", .05, myWhite),
+                              heightBox(context, .01),
+                              inputTextField(context, email, enabled: loading),
+                              heightBox(context, .02),
+                              text(context, "Password", .05, myWhite),
+                              heightBox(context, .01),
+                              inputTextField(
                                 context,
-                                "TEAM LOGIN",
-                                .08,
-                                myYellow,
-                                bold: true,
+                                password,
+                                password: true,
+                                enabled: loading,
+                                function2: () {
+                                  setState(() {
+                                    obscureText = !obscureText;
+                                  });
+                                },
                               ),
-                              heightBox(context, .04),
-                              Container(
-                                padding: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                    color: myWhite.withOpacity(0.2),
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(20),
-                                    ),
-                                    border: Border.all(
-                                        width: 1.5,
-                                        color: myWhite.withOpacity(0.2))),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    text(context, "Email", .05, myWhite),
-                                    heightBox(context, .01),
-                                    inputTextField(
-                                      context,
-                                      email,
-                                    ),
-                                    heightBox(context, .02),
-                                    text(context, "Password", .05, myWhite),
-                                    heightBox(context, .01),
-                                    inputTextField(
-                                      context,
-                                      password,
-                                      password: true,
-                                      function2: () {
-                                        setState(() {
-                                          obscureText = !obscureText;
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              heightBox(context, .1),
-                              coloredButton(context, "SIGN IN", myYellow,
-                                  width: dynamicWidth(context, 0.3),
-                                  function: () {
-                                signInLogic();
-                              }),
-                              heightBox(context, .04),
                             ],
                           ),
                         ),
-                      ),
+                        heightBox(context, .1),
+                        (loading == true)
+                            ? loginLoader(context)
+                            : coloredButton(context, "Sign in", myYellow,
+                                width: dynamicWidth(context, 0.3),
+                                function: () {
+                                signInLogic();
+                              }),
+                        heightBox(context, .04),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
+          ),
+        ),
+      ),
     );
   }
 

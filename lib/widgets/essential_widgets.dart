@@ -1,6 +1,7 @@
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/utils/dynamic_sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 bar(
   context, {
@@ -38,5 +39,13 @@ loader(context) {
         width: dynamicWidth(context, 0.3),
       ),
     ),
+  );
+}
+
+loginLoader(context) {
+  return LottieBuilder.asset(
+    "assets/loginLoading.json",
+    width: dynamicWidth(context, 0.3),
+    height: dynamicHeight(context, 0.07),
   );
 }

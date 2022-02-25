@@ -106,7 +106,7 @@ class _CartState extends State<Cart> {
                         ),
                       );
                     } else {
-                      print("xcbcg $cartItems");
+              
                       phone.text = "";
                       _text.text = "";
                       showDialog(

@@ -145,8 +145,6 @@ class _ProfileState extends State<Profile> {
                                                 "open",
                                               );
 
-                                              print("\n\n\n ohgf $apiResult");
-
                                               if (apiResult.toString() ==
                                                   "true") {
                                                 showToast(
@@ -161,8 +159,6 @@ class _ProfileState extends State<Profile> {
                                                     fontSize: dynamicWidth(
                                                         context, .05),
                                                   ),
-                                                  animationBuilder:
-                                                      const Miui10AnimBuilder(),
                                                 );
                                                 // ScaffoldMessenger.of(
                                                 //         dialogContext)
@@ -254,8 +250,6 @@ class _ProfileState extends State<Profile> {
                                                 registerBalance.text,
                                                 "close",
                                               );
-
-                                              print("\n\n\n ohgf $apiResult");
 
                                               if (apiResult.toString() ==
                                                   "true") {

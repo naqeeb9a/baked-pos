@@ -37,7 +37,6 @@ dependencies:
   google_fonts: ^2.1.0
   email_validator: ^2.0.1
   intl: ^0.17.0
-  
   shared_preferences: ^2.0.11
   http: ^0.13.4
   lottie: ^1.2.1
@@ -52,6 +51,7 @@ dependencies:
   blue_thermal_printer: ^1.2.0
   path_provider: ^2.0.8
   permission_handler: ^8.3.0
+  oktoast: ^3.1.5
  
 
 

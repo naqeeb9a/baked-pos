@@ -97,13 +97,15 @@ class _CartState extends State<Cart> {
                   fontSize: 0.035,
                   function: () async {
                     if (cartItems.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
                           backgroundColor: myRed,
                           duration: const Duration(seconds: 2),
                           content:
-                              text(context, "Cart is empty", 0.04, myWhite)));
+                              text(context, "Cart is empty", 0.04, myWhite),
+                        ),
+                      );
                     } else {
-
                       print("xcbcg $cartItems");
                       phone.text = "";
                       _text.text = "";
@@ -135,6 +137,7 @@ class _CartState extends State<Cart> {
                                     ),
                                     TextFormField(
                                       controller: phone,
+                                      keyboardType: TextInputType.phone,
                                       decoration: InputDecoration(
                                         hintText: "Example : 0300xxxxxxx",
                                         border: OutlineInputBorder(

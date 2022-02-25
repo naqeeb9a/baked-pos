@@ -137,3 +137,33 @@ punchOrder(total, cost, paymentType,
     return false;
   }
 }
+
+startRegister(balance, type) async {
+  dynamic bodyJson = {
+    "user_id": "${userResponse["id"]}",
+    "opening_balance": "$balance",
+    "type": "$type",
+  };
+
+  try {
+    var response = await http.post(
+      Uri.parse(callBackUrl + "/api/register"),
+      body: json.encode(bodyJson),
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      },
+    ).timeout(const Duration(seconds: 10), onTimeout: () {
+      return http.Response('Error', 408);
+    });
+    var jsonData = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return jsonData["data"]["status"];
+    } else {
+      return false;
+    }
+  } catch (e) {
+    return false;
+  }
+}

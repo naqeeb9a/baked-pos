@@ -215,8 +215,11 @@ class _CartCardsState extends State<CartCards> {
       decoration: BoxDecoration(
           color: int.parse(cartItems[widget.index]["item_discount"]) != 0
               ? myGreen.withOpacity(0.2)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(dynamicWidth(context, 0.02))),
+              : myWhite.withOpacity(0.2),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(20),
+          ),
+          border: Border.all(width: 1.5, color: myWhite.withOpacity(0.2))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

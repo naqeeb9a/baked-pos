@@ -113,7 +113,7 @@ class _BasicPageState extends State<BasicPage>
                 text: "Home",
                 icon: Icon(
                   Icons.home_outlined,
-                  color: myYellow,
+                  color: myWhite,
                 )),
             Tab(
               text: "Cart",
@@ -130,7 +130,7 @@ class _BasicPageState extends State<BasicPage>
                   showBadge: cartItems.isEmpty ? false : true,
                   child: const Icon(
                     LineIcons.shoppingCart,
-                    color: myYellow,
+                    color: myWhite,
                   ),
                 );
               }),
@@ -139,7 +139,7 @@ class _BasicPageState extends State<BasicPage>
                 text: "Profile",
                 icon: Icon(
                   Icons.person_outline,
-                  color: myYellow,
+                  color: myWhite,
                 )),
           ],
         ),

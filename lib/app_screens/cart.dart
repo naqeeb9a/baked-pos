@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:baked_pos/app_screens/print.dart';
 import 'package:baked_pos/utils/config.dart';
@@ -53,121 +54,139 @@ class _CartState extends State<Cart> {
 
     return Scaffold(
       backgroundColor: myWhite,
-      body: Column(
-        children: [
-          heightBox(context, 0.02),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body: Container(
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/cart.jpg"), fit: BoxFit.cover)),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Column(
             children: [
-              text(context, "Your Cart", 0.05, myBrown),
+              heightBox(context, 0.02),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  text(context, "Your Cart", 0.05, myBrown, bold: true),
+                ],
+              ),
+              Divider(
+                thickness: 1,
+                color: myBlack.withOpacity(0.5),
+              ),
+              cartItemsCards(),
+              Container(
+                margin: EdgeInsets.symmetric(
+                    horizontal: dynamicWidth(context, 0.02)),
+                padding: EdgeInsets.symmetric(
+                    horizontal: dynamicWidth(context, 0.04)),
+                decoration: BoxDecoration(
+                    color: myGrey.withOpacity(0.3),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(dynamicWidth(context, 0.04)),
+                        topRight:
+                            Radius.circular(dynamicWidth(context, 0.04)))),
+                child: Column(
+                  children: [
+                    dividerRowWidgets(
+                        context,
+                        "TOTAL 5% GST: (Card)",
+                        "PKR " +
+                            ((getTotal() * 0.05) + getTotal())
+                                .toStringAsFixed(0),
+                        check: true),
+                    dividerRowWidgets(
+                        context,
+                        "TOTAL 16% GST: (Cash)",
+                        "PKR " +
+                            ((getTotal() * 0.16) + getTotal())
+                                .toStringAsFixed(0),
+                        check: true),
+                    heightBox(context, 0.02),
+                    coloredButton(
+                      context,
+                      "Place Order",
+                      myYellow,
+                      fontSize: 0.035,
+                      function: () async {
+                        if (cartItems.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: myRed,
+                              duration: const Duration(seconds: 2),
+                              content:
+                                  text(context, "Cart is empty", 0.04, myWhite),
+                            ),
+                          );
+                        } else {
+                          phone.text = "";
+                          _text.text = "";
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title:
+                                      const Text("Enter Name and Phone number"),
+                                  content: SizedBox(
+                                    height:
+                                        MediaQuery.of(context).size.width * 1,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.7,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        LottieBuilder.asset(
+                                          "assets/contact.json",
+                                          width: dynamicWidth(context, 0.3),
+                                        ),
+                                        TextFormField(
+                                          controller: _text,
+                                          decoration: InputDecoration(
+                                            hintText: "Example : Joe",
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0),
+                                            ),
+                                          ),
+                                        ),
+                                        TextFormField(
+                                          controller: phone,
+                                          keyboardType: TextInputType.phone,
+                                          decoration: InputDecoration(
+                                            hintText: "Example : 0300xxxxxxx",
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0),
+                                            ),
+                                          ),
+                                        ),
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .pop();
+                                              placeOrderLogic(
+                                                  getTotal(),
+                                                  getCost(),
+                                                  phone.text,
+                                                  _text.text);
+                                            },
+                                            child: const Text("Proceed"))
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              });
+                        }
+                      },
+                    ),
+                    heightBox(context, 0.02),
+                  ],
+                ),
+              )
             ],
           ),
-          Divider(
-            thickness: 1,
-            color: myBlack.withOpacity(0.5),
-          ),
-          cartItemsCards(),
-          Container(
-            padding:
-                EdgeInsets.symmetric(horizontal: dynamicWidth(context, 0.02)),
-            decoration: BoxDecoration(
-                color: myGrey.withOpacity(0.2),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(dynamicWidth(context, 0.04)),
-                    topRight: Radius.circular(dynamicWidth(context, 0.04)))),
-            child: Column(
-              children: [
-                dividerRowWidgets(
-                    context,
-                    "TOTAL 5% GST: (Card)",
-                    "PKR " +
-                        ((getTotal() * 0.05) + getTotal()).toStringAsFixed(0),
-                    check: true),
-                dividerRowWidgets(
-                    context,
-                    "TOTAL 16% GST: (Cash)",
-                    "PKR " +
-                        ((getTotal() * 0.16) + getTotal()).toStringAsFixed(0),
-                    check: true),
-                heightBox(context, 0.02),
-                coloredButton(
-                  context,
-                  "Place Order",
-                  myYellow,
-                  fontSize: 0.035,
-                  function: () async {
-                    if (cartItems.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: myRed,
-                          duration: const Duration(seconds: 2),
-                          content:
-                              text(context, "Cart is empty", 0.04, myWhite),
-                        ),
-                      );
-                    } else {
-              
-                      phone.text = "";
-                      _text.text = "";
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text("Enter Name and Phone number"),
-                              content: SizedBox(
-                                height: MediaQuery.of(context).size.width * 1,
-                                width: MediaQuery.of(context).size.width * 0.7,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    LottieBuilder.asset(
-                                      "assets/contact.json",
-                                      width: dynamicWidth(context, 0.3),
-                                    ),
-                                    TextFormField(
-                                      controller: _text,
-                                      decoration: InputDecoration(
-                                        hintText: "Example : Joe",
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                        ),
-                                      ),
-                                    ),
-                                    TextFormField(
-                                      controller: phone,
-                                      keyboardType: TextInputType.phone,
-                                      decoration: InputDecoration(
-                                        hintText: "Example : 0300xxxxxxx",
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                        ),
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop();
-                                          placeOrderLogic(getTotal(), getCost(),
-                                              phone.text, _text.text);
-                                        },
-                                        child: const Text("Proceed"))
-                                  ],
-                                ),
-                              ),
-                            );
-                          });
-                    }
-                  },
-                ),
-                heightBox(context, 0.02),
-              ],
-            ),
-          )
-        ],
+        ),
       ),
     );
   }

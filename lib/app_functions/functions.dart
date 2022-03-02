@@ -138,17 +138,23 @@ punchOrder(total, cost, paymentType,
   }
 }
 
-startRegister(balance, type) async {
-  dynamic bodyJson = {
+registerHandling(type, {balance}) async {
+  dynamic openingBody = {
     "user_id": "${userResponse["id"]}",
     "opening_balance": "$balance",
+    "type": "$type",
+  };
+
+  dynamic closingBody = {
+    "user_id": "${userResponse["id"]}",
     "type": "$type",
   };
 
   try {
     var response = await http.post(
       Uri.parse(callBackUrl + "/api/register"),
-      body: json.encode(bodyJson),
+      body:
+          type == "close" ? json.encode(closingBody) : json.encode(openingBody),
       headers: {
         'Content-type': 'application/json',
         'Accept': 'application/json',
@@ -159,7 +165,7 @@ startRegister(balance, type) async {
     var jsonData = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      return jsonData["data"]["status"];
+      return jsonData["data"]["message"];
     } else {
       return false;
     }

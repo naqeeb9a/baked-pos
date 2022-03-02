@@ -140,9 +140,9 @@ class _ProfileState extends State<Profile> {
                                                       rootNavigator: true)
                                                   .pop();
                                               var apiResult =
-                                                  await startRegister(
-                                                registerBalance.text,
+                                                  await registerHandling(
                                                 "open",
+                                                balance: registerBalance.text,
                                               );
 
                                               if (apiResult.toString() ==
@@ -217,87 +217,37 @@ class _ProfileState extends State<Profile> {
                             Icons.send_to_mobile,
                             "Change Shift",
                             function: () async {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text("Enter Opening Balance"),
-                                    content: SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              .2,
-                                      width: MediaQuery.of(context).size.width *
-                                          .7,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          TextFormField(
-                                            controller: registerBalance,
-                                            keyboardType: TextInputType.number,
-                                            decoration: InputDecoration(
-                                              hintText: "Example : 2000",
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(5.0),
-                                              ),
-                                            ),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              var apiResult =
-                                                  await startRegister(
-                                                registerBalance.text,
-                                                "close",
-                                              );
-
-                                              if (apiResult.toString() ==
-                                                  "true") {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    backgroundColor: myRed,
-                                                    duration: const Duration(
-                                                        seconds: 2),
-                                                    content: text(
-                                                      context,
-                                                      "Shift started Successfully",
-                                                      0.04,
-                                                      myWhite,
-                                                    ),
-                                                  ),
-                                                );
-                                              } else {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    backgroundColor: myRed,
-                                                    duration: const Duration(
-                                                        seconds: 2),
-                                                    content: text(
-                                                      context,
-                                                      "Something went wrong!!",
-                                                      0.04,
-                                                      myWhite,
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                              registerBalance.clear();
-                                            },
-                                            child: text(
-                                              context,
-                                              "End",
-                                              .04,
-                                              myWhite,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
+                              var apiResult = await registerHandling(
+                                "close",
                               );
+
+                              if (apiResult.toString() == "Success") {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    backgroundColor: myRed,
+                                    duration: const Duration(seconds: 2),
+                                    content: text(
+                                      context,
+                                      "Shift Closed Successfully",
+                                      0.04,
+                                      myWhite,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    backgroundColor: myRed,
+                                    duration: const Duration(seconds: 2),
+                                    content: text(
+                                      context,
+                                      "Something went wrong!!",
+                                      0.04,
+                                      myWhite,
+                                    ),
+                                  ),
+                                );
+                              }
                             },
                           )
                         : Container(),

@@ -165,7 +165,10 @@ registerHandling(type, {balance}) async {
     var jsonData = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      return jsonData["data"]["message"];
+
+      print("jsonresponse ${jsonData["data"]}");
+
+      return jsonData["data"]["status"];
     } else {
       return false;
     }

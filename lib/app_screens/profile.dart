@@ -221,7 +221,7 @@ class _ProfileState extends State<Profile> {
                                 "close",
                               );
 
-                              if (apiResult.toString() == "Success") {
+                              if (apiResult.toString() == "True") {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     backgroundColor: myRed,

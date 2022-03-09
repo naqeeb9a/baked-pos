@@ -255,6 +255,33 @@ printContent(
   printer.paperCut();
 }
 
+printSalesContent(BluetoothDevice selectedDevice, context, printer, data) {
+  printer.printCustom("Baked", 2, 1);
+  printer.printCustom("Lahore,Pakistan", 1, 1);
+
+  printer.printNewLine();
+
+  printer.printCustom("...............................", 1, 1);
+
+  for (var i = 0; i < data.length; i++) {
+    printer.printLeftRight("${data[i]['name']}", "${data[i]['qty']}", 1);
+    printer.printCustom("-------------", 1, 1);
+  }
+  printer.printNewLine();
+
+  printer.printCustom("...............................", 1, 1);
+
+  printer.printCustom("Shop # 6 PAF Market Lahore.", 1, 1);
+  printer.printCustom("+92 304 5222533", 1, 1);
+  printer.printCustom(DateFormat.yMEd().add_jm().format(DateTime.now()), 1, 1);
+
+  printer.printNewLine();
+  printer.printNewLine();
+  printer.printCustom(" ", 1, 1);
+
+  printer.paperCut();
+}
+
 startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
     cost, paymentMethod, phone, customer,
     {checkAlreadyDevice = false, changeState = ""}) async {
@@ -268,10 +295,18 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
       customerPhone: phone, customerName: customer);
   if (response == false) {
     Navigator.of(context, rootNavigator: true).pop();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
         backgroundColor: myRed,
         duration: const Duration(seconds: 2),
-        content: text(context, "Check your Internet", 0.04, myWhite)));
+        content: text(
+          context,
+          "Check your Internet",
+          0.04,
+          myWhite,
+        ),
+      ),
+    );
   } else {
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -292,11 +327,18 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
                 cost, paymentMethod, response, checkAlreadyDevice, changeState);
           } else {
             Navigator.of(context, rootNavigator: true).pop();
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
                 backgroundColor: myRed,
                 duration: const Duration(seconds: 2),
-                content: text(context, "Check your Printer and try again", 0.04,
-                    myWhite)));
+                content: text(
+                  context,
+                  "Check your Printer and try again",
+                  0.04,
+                  myWhite,
+                ),
+              ),
+            );
           }
         });
       }
@@ -308,6 +350,44 @@ startPrintFunc(BluetoothDevice selectedDevice, context, printer, data, total,
           content: text(
               context, "Check your Printer and try again", 0.04, myWhite)));
     }
+  }
+}
+
+printSales(BluetoothDevice selectedDevice, context, printer, data) async {
+  CoolAlert.show(
+    context: context,
+    type: CoolAlertType.loading,
+    barrierDismissible: false,
+    text: "Printing",
+  );
+  try {
+    await printer.connect(selectedDevice).then((value) async {
+      if ((await printer.isConnected)!) {
+        Navigator.of(context, rootNavigator: true).pop();
+        await printSalesContent(selectedDevice, context, printer, data);
+      } else {
+        Navigator.of(context, rootNavigator: true).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: myRed,
+            duration: const Duration(seconds: 2),
+            content: text(
+              context,
+              "Check your Printer and try again",
+              0.04,
+              myWhite,
+            ),
+          ),
+        );
+      }
+    });
+  } catch (e) {
+    Navigator.of(context, rootNavigator: true).pop();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: myRed,
+        duration: const Duration(seconds: 2),
+        content:
+            text(context, "Check your Printer and try again", 0.04, myWhite)));
   }
 }
 

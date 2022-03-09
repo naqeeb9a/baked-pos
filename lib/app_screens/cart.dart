@@ -161,17 +161,18 @@ class _CartState extends State<Cart> {
                                           ),
                                         ),
                                         ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.of(context,
-                                                      rootNavigator: true)
-                                                  .pop();
-                                              placeOrderLogic(
-                                                  getTotal(),
-                                                  getCost(),
-                                                  phone.text,
-                                                  _text.text);
-                                            },
-                                            child: const Text("Proceed"))
+                                          onPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop();
+                                            placeOrderLogic(
+                                                getTotal(),
+                                                getCost(),
+                                                phone.text,
+                                                _text.text);
+                                          },
+                                          child: const Text("Proceed"),
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -321,30 +322,32 @@ class _CartState extends State<Cart> {
 
   cartItemsCards() {
     return Expanded(
-        child: Scrollbar(
-      interactive: true,
-      showTrackOnHover: true,
-      trackVisibility: true,
-      isAlwaysShown: true,
-      thickness: dynamicWidth(context, 0.01),
-      radius: Radius.circular(dynamicWidth(context, 0.1)),
-      child: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: dynamicWidth(context, 0.02)),
-        itemCount: cartItems.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: dynamicHeight(context, 0.01),
-            ),
-            child: CartCards(
-                context: context,
-                index: index,
-                function: () {
-                  setState(() {});
-                }),
-          );
-        },
+      child: Scrollbar(
+        interactive: true,
+        showTrackOnHover: true,
+        trackVisibility: true,
+        isAlwaysShown: true,
+        thickness: dynamicWidth(context, 0.01),
+        radius: Radius.circular(dynamicWidth(context, 0.1)),
+        child: ListView.builder(
+          padding:
+              EdgeInsets.symmetric(horizontal: dynamicWidth(context, 0.02)),
+          itemCount: cartItems.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: dynamicHeight(context, 0.01),
+              ),
+              child: CartCards(
+                  context: context,
+                  index: index,
+                  function: () {
+                    setState(() {});
+                  }),
+            );
+          },
+        ),
       ),
-    ));
+    );
   }
 }

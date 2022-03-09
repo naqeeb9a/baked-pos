@@ -1,6 +1,5 @@
 import 'dart:math';
 
-
 import 'package:baked_pos/utils/config.dart';
 import 'package:baked_pos/utils/dynamic_sizes.dart';
 import 'package:baked_pos/widgets/text_widget.dart';
@@ -20,10 +19,10 @@ Widget inputFieldsHome(text1, hintText1, context,
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        text(context, text1, 0.04, myWhite),
+        text(context, text1, 0.04, myBrown),
         heightBox(context, .01),
         Container(
-          color: myWhite,
+          color: myBrown,
           padding: EdgeInsets.symmetric(
             horizontal: dynamicWidth(context, 0.04),
           ),
@@ -112,6 +111,8 @@ Widget inputFieldsHome(text1, hintText1, context,
                   : TextFormField(
                       controller: controller,
                       keyboardType: keyBoardType,
+                      textInputAction: TextInputAction.next,
+                      cursorColor: myWhite,
                       inputFormatters: [
                         keyBoardType == TextInputType.number
                             ? FilteringTextInputFormatter.allow(
@@ -133,6 +134,13 @@ Widget inputFieldsHome(text1, hintText1, context,
                               ),
                       ],
                       decoration: InputDecoration(
+                        isDense: true,
+                        hintStyle: const TextStyle(
+                          color: myWhite,
+                        ),
+                        labelStyle: const TextStyle(
+                          color: myWhite,
+                        ),
                         enabled: enable,
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,

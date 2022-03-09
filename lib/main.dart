@@ -152,6 +152,10 @@ checkLoginStatus(context1) async {
   dynamic temp = loginUser.getString("userResponse");
   userResponse = temp == null ? "" : await json.decode(temp);
 
+  SharedPreferences registerData = await SharedPreferences.getInstance();
+  dynamic temp1 = registerData.getString("registerResponse");
+  registerResponse = temp1 == null ? "" : await json.decode(temp1);
+
   if (temp == null) {
     Navigator.pushAndRemoveUntil(
         context1,

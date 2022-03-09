@@ -62,21 +62,21 @@ class _ProfileState extends State<Profile> {
                       heightBox(context, .01),
                       text(
                         context,
-                        userResponse['designation'],
+                        userResponse['designation'].toString(),
                         .04,
                         myBlack,
                       ),
                       heightBox(context, .01),
                       text(
                         context,
-                        userResponse['phone'],
+                        userResponse['phone'].toString(),
                         .04,
                         myBlack,
                       ),
                       heightBox(context, .01),
                       text(
                         context,
-                        userResponse['email_address'],
+                        userResponse['email_address'].toString(),
                         .04,
                         myBlack,
                       ),
@@ -136,63 +136,13 @@ class _ProfileState extends State<Profile> {
                                           ),
                                           ElevatedButton(
                                             onPressed: () async {
-                                              Navigator.of(context,
-                                                      rootNavigator: true)
-                                                  .pop();
-                                              var apiResult =
-                                                  await registerHandling(
-                                                "open",
-                                                balance: registerBalance.text,
-                                              );
-
-                                              if (apiResult.toString() ==
-                                                  "true") {
-                                                showToast(
-                                                  'Shift started Successfully',
-                                                  position:
-                                                      ToastPosition.center,
-                                                  backgroundColor: myBrown,
-                                                  radius: dynamicWidth(
-                                                      context, .01),
-                                                  textStyle: TextStyle(
-                                                    color: myWhite,
-                                                    fontSize: dynamicWidth(
-                                                        context, .05),
-                                                  ),
-                                                );
-                                                // ScaffoldMessenger.of(
-                                                //         dialogContext)
-                                                //     .showSnackBar(
-                                                //   SnackBar(
-                                                //     backgroundColor: myRed,
-                                                //     duration: const Duration(
-                                                //         seconds: 2),
-                                                //     content: text(
-                                                //       context,
-                                                //       "Shift started Successfully",
-                                                //       0.04,
-                                                //       myWhite,
-                                                //     ),
-                                                //   ),
-                                                // );
-                                              } else {
-                                                ScaffoldMessenger.of(
-                                                        dialogContext)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    backgroundColor: myRed,
-                                                    duration: const Duration(
-                                                        seconds: 2),
-                                                    content: text(
-                                                      context,
-                                                      "Something went wrong!!",
-                                                      0.04,
-                                                      myWhite,
-                                                    ),
-                                                  ),
-                                                );
+                                              if (registerBalance.text
+                                                  .toString()
+                                                  .isNotEmpty) {
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .pop();
                                               }
-                                              registerBalance.clear();
                                             },
                                             child: text(
                                               context,
@@ -206,7 +156,25 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   );
                                 },
-                              );
+                              ).then((value) async {
+                                var apiResult = await registerOpen(
+                                  "open",
+                                  registerBalance.text,
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    backgroundColor: myRed,
+                                    duration: const Duration(seconds: 2),
+                                    content: text(
+                                      context,
+                                      apiResult.toString(),
+                                      0.04,
+                                      myWhite,
+                                    ),
+                                  ),
+                                );
+                                registerBalance.clear();
+                              });
                             },
                           )
                         : Container(),
@@ -215,39 +183,23 @@ class _ProfileState extends State<Profile> {
                         ? profileRow(
                             context,
                             Icons.send_to_mobile,
-                            "Change Shift",
+                            "End Shift",
                             function: () async {
-                              var apiResult = await registerHandling(
+                              var apiResult = await registerClose(
                                 "close",
                               );
-
-                              if (apiResult.toString() == "True") {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    backgroundColor: myRed,
-                                    duration: const Duration(seconds: 2),
-                                    content: text(
-                                      context,
-                                      "Shift Closed Successfully",
-                                      0.04,
-                                      myWhite,
-                                    ),
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: myRed,
+                                  duration: const Duration(seconds: 2),
+                                  content: text(
+                                    context,
+                                    apiResult.toString(),
+                                    0.04,
+                                    myWhite,
                                   ),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    backgroundColor: myRed,
-                                    duration: const Duration(seconds: 2),
-                                    content: text(
-                                      context,
-                                      "Something went wrong!!",
-                                      0.04,
-                                      myWhite,
-                                    ),
-                                  ),
-                                );
-                              }
+                                ),
+                              );
                             },
                           )
                         : Container(),
@@ -262,60 +214,6 @@ class _ProfileState extends State<Profile> {
                                 context,
                                 const Inventory(),
                               );
-                              //   showDialog(
-                              //     context: context,
-                              //     barrierDismissible: true,
-                              //     builder: (BuildContext dialogContext) {
-                              //       return AlertDialog(
-                              //         title:
-                              //             const Text("Update Inventory"),
-                              //         content: SizedBox(
-                              //           height:
-                              //               MediaQuery.of(context).size.width * 0.9,
-                              //           width:
-                              //               MediaQuery.of(context).size.width * 0.7,
-                              //           child: Column(
-                              //             mainAxisAlignment:
-                              //                 MainAxisAlignment.spaceEvenly,
-                              //             children: [
-                              //               LottieBuilder.asset(
-                              //                 "assets/inventory.json",
-                              //                 width: dynamicWidth(context, 0.3),
-                              //               ),
-                              //               TextFormField(
-                              //                 controller: TextEditingController(),
-                              //                 decoration: InputDecoration(
-                              //                   hintText: "Example : Joe",
-                              //                   border: OutlineInputBorder(
-                              //                     borderRadius:
-                              //                         BorderRadius.circular(5.0),
-                              //                   ),
-                              //                 ),
-                              //               ),
-                              //               TextFormField(
-                              //                 controller: TextEditingController(),
-                              //                 decoration: InputDecoration(
-                              //                   hintText: "Example : 0300xxxxxxx",
-                              //                   border: OutlineInputBorder(
-                              //                     borderRadius:
-                              //                         BorderRadius.circular(5.0),
-                              //                   ),
-                              //                 ),
-                              //               ),
-                              //               ElevatedButton(
-                              //                 onPressed: () {
-                              //                   Navigator.of(context,
-                              //                           rootNavigator: true)
-                              //                       .pop();
-                              //                 },
-                              //                 child: const Text("Done"),
-                              //               )
-                              //             ],
-                              //           ),
-                              //         ),
-                              //       );
-                              //     },
-                              //   );
                             },
                           )
                         : Container(),

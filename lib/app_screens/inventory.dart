@@ -22,7 +22,7 @@ class Inventory extends StatefulWidget {
 class _InventoryState extends State<Inventory> {
   List controllers = [];
 
-  String ids = "", statuses = "";
+  String ids = "", statuses = "", controllerText = "";
 
   @override
   Widget build(BuildContext context) {
@@ -175,6 +175,10 @@ class _InventoryState extends State<Inventory> {
                             controllers.clear();
                             ids = "";
                             statuses = "";
+                            controllers = List.generate(
+                              snapshot.data.length,
+                              (i) => TextEditingController(),
+                            );
                             return SizedBox(
                               width: dynamicWidth(context, 1),
                               height: dynamicHeight(context, 1),
@@ -183,45 +187,36 @@ class _InventoryState extends State<Inventory> {
                                   children: [
                                     SizedBox(
                                       width: dynamicWidth(context, .8),
-                                      height: dynamicHeight(context, 1.76),
-                                      child: ListView.builder(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        itemCount: snapshot.data.length,
-                                        itemBuilder: (context, i) {
-                                          final controller =
-                                              TextEditingController();
-                                          controllers.add(controller);
-                                          ids == ""
-                                              ? ids = ids +
-                                                  snapshot.data[i]['id']
-                                                      .toString()
-                                              : ids = ids +
-                                                  "," +
-                                                  snapshot.data[i]['id']
-                                                      .toString();
-                                          statuses == ""
-                                              ? statuses = statuses + "MINUS"
-                                              : statuses =
-                                                  statuses + "," + "MINUS";
-
-                                          return Padding(
-                                            padding: EdgeInsets.symmetric(
-                                              vertical:
-                                                  dynamicHeight(context, .01),
-                                            ),
-                                            child: inputFieldsHome(
-                                              snapshot.data[i]['name']
-                                                  .toString(),
-                                              snapshot.data[i]['name']
-                                                  .toString(),
-                                              context,
-                                              keyBoardType:
-                                                  TextInputType.number,
-                                              controller: controllers[i],
-                                            ),
-                                          );
-                                        },
+                                      height: dynamicHeight(context, .66),
+                                      child: Scrollbar(
+                                        interactive: true,
+                                        showTrackOnHover: true,
+                                        trackVisibility: true,
+                                        thickness: dynamicWidth(context, 0.01),
+                                        radius: Radius.circular(
+                                          dynamicWidth(context, 0.1),
+                                        ),
+                                        child: ListView.builder(
+                                          itemCount: snapshot.data.length,
+                                          itemBuilder: (context, i) {
+                                            return Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                vertical:
+                                                    dynamicHeight(context, .01),
+                                              ),
+                                              child: inputFieldsHome(
+                                                snapshot.data[i]['name']
+                                                    .toString(),
+                                                snapshot.data[i]['name']
+                                                    .toString(),
+                                                context,
+                                                keyBoardType:
+                                                    TextInputType.number,
+                                                controller: controllers[i],
+                                              ),
+                                            );
+                                          },
+                                        ),
                                       ),
                                     ),
                                     Padding(
@@ -230,32 +225,65 @@ class _InventoryState extends State<Inventory> {
                                         bottom: dynamicHeight(context, .4),
                                       ),
                                       child: coloredButton(
-                                          context, "Update", myYellow,
-                                          width: dynamicWidth(context, .6),
-                                          function: () {
-                                        String contollerText = "";
-                                        for (var element in controllers) {
-                                          contollerText == ""
-                                              ? contollerText = contollerText +
-                                                  element.text.toString()
-                                              : contollerText = contollerText +
-                                                  "," +
-                                                  element.text.toString();
-                                          print("foreach $statuses");
-                                          print("foreach1 $ids");
+                                        context,
+                                        "Update",
+                                        myYellow,
+                                        width: dynamicWidth(context, .6),
+                                        function: () async {
+                                          for (int i = 0; i < 19; i++) {
+                                            ids == ""
+                                                ? ids = ids +
+                                                    snapshot.data[i]['id']
+                                                        .toString()
+                                                : ids = ids +
+                                                    "," +
+                                                    snapshot.data[i]['id']
+                                                        .toString();
+                                            statuses == ""
+                                                ? statuses = statuses + "MINUS"
+                                                : statuses =
+                                                    statuses + "," + "MINUS";
+
+                                            controllerText == ""
+                                                ? controllerText =
+                                                    controllerText +
+                                                        controllers[i]
+                                                            .text
+                                                            .toString()
+                                                : controllerText =
+                                                    controllerText +
+                                                        "," +
+                                                        controllers[i]
+                                                            .text
+                                                            .toString();
+                                          }
+
                                           print(
-                                              "foreach2 $contollerText === ${controllers.length}");
-                                        }
+                                              "\n\n\n\n controllers =>$controllerText<= + =>$ids<= + =>$statuses<=");
 
-                                        var temp = inventoryUpdate(
-                                          ids,
-                                          contollerText,
-                                          statuses,
-                                        );
+                                          dynamic tempResponse =
+                                              await inventoryUpdate(
+                                            ids,
+                                            controllerText,
+                                            statuses,
+                                          );
 
-
-                                        print("temp ===== $temp");
-                                      }),
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              backgroundColor: myRed,
+                                              duration:
+                                                  const Duration(seconds: 2),
+                                              content: text(
+                                                context,
+                                                tempResponse.toString(),
+                                                0.04,
+                                                myWhite,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ],
                                 ),

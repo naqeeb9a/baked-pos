@@ -117,7 +117,9 @@ class _MenuPageState extends State<MenuPage>
                     radius: dynamicWidth(context, 0.16),
                     backgroundColor: myYellow,
                     backgroundImage: AssetImage(
-                      item["image"] ?? "assets/cat_image.png",
+                      item["image"].toString() == "null"
+                          ? "assets/cat_image.png"
+                          : item["image"].toString(),
                     ),
                     child: CircleAvatar(
                       backgroundColor: myBlack.withOpacity(0.6),

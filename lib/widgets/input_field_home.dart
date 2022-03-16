@@ -113,6 +113,9 @@ Widget inputFieldsHome(text1, hintText1, context,
                       keyboardType: keyBoardType,
                       textInputAction: TextInputAction.next,
                       cursorColor: myWhite,
+                      style: const TextStyle(
+                        color: myWhite,
+                      ),
                       inputFormatters: [
                         keyBoardType == TextInputType.number
                             ? FilteringTextInputFormatter.allow(

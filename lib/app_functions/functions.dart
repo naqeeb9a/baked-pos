@@ -262,7 +262,6 @@ inventoryList() async {
 }
 
 inventoryUpdate(ids, amount, status) async {
-  print("abc");
   dynamic body = {
     "user_id": "${userResponse["id"]}",
     "employee_id": "${userResponse["id"]}",
@@ -274,7 +273,6 @@ inventoryUpdate(ids, amount, status) async {
   };
 
   try {
-    print("abc5 $body");
     var response = await http.post(
       Uri.parse(callBackUrl + "/api/inventoryadd"),
       body: json.encode(body),
@@ -287,19 +285,12 @@ inventoryUpdate(ids, amount, status) async {
     });
     var jsonData = jsonDecode(response.body);
 
-    print("abcd ${response.statusCode}");
-
     if (response.statusCode == 200) {
-      print("abc2 $jsonData");
-      return jsonData["data"];
-    } else if (response.statusCode == 400) {
-      print("abc3 $jsonData");
-      return jsonData["data"];
+      return jsonData["message"];
     } else {
       return false;
     }
   } catch (e) {
-    print("abce $e");
     return false;
   }
 }
